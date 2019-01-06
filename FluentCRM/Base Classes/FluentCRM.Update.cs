@@ -37,12 +37,6 @@ namespace FluentCRM.Base_Classes
             throw new NotImplementedException();
         }
 
-        ICanExecute IEntitySet.WeakUpdateEntity<T>(string attributesToUpdate, Func<EntityWrapper, T> getUpdateValue,
-            params string[] additionalAttributes)
-        {
-            throw new NotImplementedException();
-        }
-
         ICanExecute ICanExecute.Clear(string attributeToClear, params string[] additionalAttributesToClear)
         {
             throw new NotImplementedException();

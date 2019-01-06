@@ -7,14 +7,18 @@
     <owners>Roger Hill</owners>
     <licenseUrl>https://github.com/rogerhillgsy/FluentCRM/LICENSE</licenseUrl>
     <projectUrl>https://github.com/rogerhillgsy/FluentCRM/</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <iconUrl>https://github.com/rogerhillgsy/FluentCRM/Logo.png
+    </iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Package description</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <description>Package that provides a streamline, Fluent interface to Microsoft Dynamics CRM</description>
+    <releaseNotes>Initial Release.</releaseNotes>
     <copyright>Copyright 2018</copyright>
-    <tags>Tag1 Tag2</tags>
+    <tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
     <dependencies>
-      <dependency id="SampleDependency" version="1.0" />
+      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="FluentCRM\bin\*.dll" target="bin" />
+  </files>
 </package>
