@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentCRM.Interfaces;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 
-namespace FluentCRM.Base_Classes
+namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {
@@ -100,26 +98,85 @@ namespace FluentCRM.Base_Classes
 
         ICanExecute ICanExecute.UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
         {
-            throw new NotImplementedException();
+            return ((IEntitySet) this).UseEntity(action, attribute1, attributes);
+        }
+
+        ICanExecute IEntitySet.UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
+        {
+            var allAttributes = new List<string> {attribute1};
+            allAttributes.AddRange(attributes);
+            if (allAttributes.Exists(s => s == AllColumns))
+                throw new ArgumentException("Cannot specify AllColumns here");
+            Trace($"Adding columns [{String.Join(",", allAttributes)}] to column set");
+
+            var alias = LinkEntity?.EntityAlias;
+            if (alias != null) alias += ".";
+
+            _actionList.Add(
+                new Tuple<string[], Func<EntityWrapper, string, bool?>>(
+                    allAttributes.ToArray(),
+                    (entity, c) =>
+                    {
+                        foreach (var c1 in allAttributes)
+                        {
+                            var column = alias + c1;
+                            if (entity != null &&
+                                ( column == AllColumns ||
+                                entity.Contains(column)))
+                            {
+                                action(entity);
+                                return true;
+                            }
+                        }
+
+                        Trace($"Columns not found so no action taken: {string.Join(",", allAttributes)}");
+                        return false;
+                    }
+                ));
+
+            return this;
         }
 
         ICanExecute ICanExecute.UseEntity(Action<string, EntityWrapper> action, string attribute1,
             params string[] attributes)
         {
-            throw new NotImplementedException();
-        }
-
-        ICanExecute IEntitySet.UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
-        {
-            throw new NotImplementedException();
+            return ((IEntitySet) this).UseEntity(action, attribute1, attributes);
         }
 
         ICanExecute IEntitySet.UseEntity(Action<string, EntityWrapper> action, string attribute1,
             params string[] attributes)
         {
-            throw new NotImplementedException();
-        }
+            var allAttributes = new List<string> {attribute1};
+            allAttributes.AddRange(attributes);
+            if (allAttributes.Exists(s => s == AllColumns)) throw new ArgumentException("Cannot specify AllColumns here" );
+            Trace($"Adding columns [{String.Join(",", allAttributes) }] to column set");
 
+            var alias = LinkEntity?.EntityAlias;
+            if (alias != null) alias += ".";
+
+            _actionList.Add(
+                new Tuple<string[], Func<EntityWrapper, string, bool?>>(
+                    allAttributes.ToArray(),
+                    (entity, c) =>
+                    {
+                        foreach (var c1 in allAttributes)
+                        {
+                            var column = alias + c1;
+                            if (entity != null &&
+                                entity.Contains(column))
+                            {
+                                action(column, entity);
+                                return true;
+                            }
+                        }
+
+                        Trace($"Columns not found so no action taken: {string.Join(",", allAttributes)}");
+                        return false;
+                    }
+                ));
+
+            return this;
+        }
         #endregion
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using FluentCRM.Interfaces;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace FluentCRM.Base_Classes
+namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {

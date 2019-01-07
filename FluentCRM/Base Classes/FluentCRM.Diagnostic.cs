@@ -1,7 +1,6 @@
 ﻿using System;
-using FluentCRM.Interfaces;
 
-namespace FluentCRM.Base_Classes
+namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {

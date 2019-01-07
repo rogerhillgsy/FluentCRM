@@ -67,6 +67,7 @@
     <Compile Include="Base Classes\FluentCRM.Use.cs" />
     <Compile Include="Base Classes\FluentCRM.Utility.cs" />
     <Compile Include="FluentAccount.cs" />
+    <Compile Include="FluentContact.cs" />
     <Compile Include="Interfaces\IAnotherWhere.cs" />
     <Compile Include="Interfaces\ICanExecute.cs" />
     <Compile Include="Interfaces\ICreateEntity.cs" />

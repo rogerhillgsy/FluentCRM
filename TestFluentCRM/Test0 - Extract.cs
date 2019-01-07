@@ -78,7 +78,7 @@ namespace TestFluentCRM
         {
             var context = TestUtilities.TestContext1();
             var account1 = context.Data["account"].First().Value;
-            FluentCRM.Base_Classes.FluentCRM.StaticService = context.GetOrganizationService();
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
 
             FluentAccount.Account( account1.Id)
                 .Trace( s => Debug.WriteLine(s))
@@ -95,7 +95,7 @@ namespace TestFluentCRM
         {
             var context = TestUtilities.TestContext1();
             var account1 = context.Data["account"].First().Value;
-            FluentCRM.Base_Classes.FluentCRM.StaticService = context.GetOrganizationService();
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
 
             FluentAccount.Account()
                 .Trace( s => Debug.WriteLine(s))

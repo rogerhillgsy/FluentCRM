@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentCRM.Base_Classes;
 using Microsoft.Xrm.Sdk;
 
-namespace FluentCRM.Interfaces
+namespace FluentCRM
 {
     /// <summary>
     /// Interface that refers to an Fluent CRM instance that potentially refers to a set of one or more Entities, but is not ready to execute as no actions have been defined on it.
@@ -22,6 +19,8 @@ namespace FluentCRM.Interfaces
 
         ICanExecute WeakUpdate<T>(string attributeToUpdate, T updateValue, params string[] additionalAttributes);
         ICanExecute WeakUpdate<T>(string attributeToUpdate, Func<EntityWrapper,T> getUpdateValue, params string[] additionalAttributes);
+        [Obsolete]
+        ICanExecute WeakUpdateEntity<T>(string attributesToUpdate, Func<EntityWrapper,T> getUpdateValue, params string[] additionalAttributes);
 
         ICanExecute Count(Action<int?> action);
         ICanExecute Exists(Action<bool> action);
@@ -33,6 +32,6 @@ namespace FluentCRM.Interfaces
 
         ICanExecute Clear(string attributeToClear, params string[] additionalAttributesToClear);
         ICanExecute Delete();
-        ICanExecute Join<T>(Action<IJoinable> target) where T : Base_Classes.FluentCRM, new();
+        ICanExecute Join<T>(Action<IJoinable> target) where T : FluentCRM, new();
     }
 }

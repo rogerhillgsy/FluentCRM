@@ -16,6 +16,8 @@ namespace TestFluentCRM
             {
                 Id = Guid.NewGuid(),
                 ["name"] = "Account1",
+                ["name2"] = "Account name 2",
+                ["name3"] = "name3",
                 ["phone1"] = "123456",
                 ["address1_country"] = "UK",
                 ["statecode"] = 0
@@ -25,12 +27,23 @@ namespace TestFluentCRM
             {
                 Id = Guid.NewGuid(),
                 ["name"] = "Account2",
+                ["name2"] = "",
                 ["phone1"] = "654321",
                 ["address1_country"] = "UK",
                 ["statecode"] = 0
             };
 
             var account3= new Entity("account")
+            {
+                Id = Guid.NewGuid(),
+                ["name"] = "Account3",
+                ["name2"] = null,
+                ["phone1"] = "222333",
+                ["address1_country"] = "US",
+                ["statecode"] = 0
+            };
+
+            var account4= new Entity("account")
             {
                 Id = Guid.NewGuid(),
                 ["name"] = "Account3",
@@ -71,7 +84,7 @@ namespace TestFluentCRM
             };
 
             var context = new XrmFakedContext();
-            context.Initialize(new List<Entity>{ account1, account2, account3, contact1, contact2, contact3 });
+            context.Initialize(new List<Entity>{ account1, account2, account3, account4, contact1, contact2, contact3 });
 
             return context;
         }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using FluentCRM.Interfaces;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace FluentCRM.Base_Classes
+namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {
@@ -37,6 +36,20 @@ namespace FluentCRM.Base_Classes
         {
             Trace("Equals...");
             AddCriteria(new ConditionExpression(_whereAttribute, ConditionOperator.Equal, value));
+            return this;
+        }
+
+        public IEntitySet NotEqual<T>(T value)
+        {
+            Trace("Not Equal...");
+            AddCriteria(new ConditionExpression(_whereAttribute, ConditionOperator.NotEqual, value));
+            return this;
+        }
+
+        public IEntitySet Condition<T>(ConditionOperator op, T value)
+        {
+            Trace($"Operator {op.ToString()}");
+            AddCriteria(new ConditionExpression(_whereAttribute, op, value));
             return this;
         }
 

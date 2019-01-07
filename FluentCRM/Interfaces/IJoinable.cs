@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentCRM.Base_Classes;
+using Microsoft.Xrm.Sdk;
 
-namespace FluentCRM.Interfaces
+namespace FluentCRM
 {
     public interface IJoinable
     {
@@ -11,10 +9,13 @@ namespace FluentCRM.Interfaces
         IJoinable UseAttribute<T>( Action<string, T> action, string attribute1, params string[] attributes);
         IJoinable UseEntity( Action<EntityWrapper> action, string attribute1, params string[] attributes);
         ICanExecute UseEntity( Action<string, EntityWrapper> action, string attribute1, params string[] attributes);
-        ICanExecute Join<T>(Action<IJoinable> target) where T : IJoinable, new();
+        ICanExecute Join<T>(Action<IJoinable> target) where T : FluentCRM, new();
 
         string LogicalName { get; }
         string JoinAttribute(string JoinEntity);
         IJoinable Outer { get; }
+
+        IJoinable Factory(IOrganizationService service);
+
     }
 }

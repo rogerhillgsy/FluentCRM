@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xrm.Sdk;
 
-namespace FluentCRM.Interfaces
+namespace FluentCRM
 {
     /// <summary>
     /// Interface to use where we are looking to create a new entity.

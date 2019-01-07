@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentCRM.Interfaces;
 using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
 {
-    public class FluentAccount  : Base_Classes.FluentCRM
+    public class FluentAccount  : FluentCRM
     {
         private const string _logicalName = "account";
 

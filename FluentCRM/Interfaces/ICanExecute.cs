@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentCRM.Base_Classes;
 using Microsoft.Xrm.Sdk;
 
-namespace FluentCRM.Interfaces
+namespace FluentCRM
 {
     /// <summary>
     ///  Used where the entity is in a state where it can potentially be executed to carry out the deferred actions etc that have been set up in previous calls on the Fluent CRM object.
@@ -35,12 +32,11 @@ namespace FluentCRM.Interfaces
 
         ICanExecute Clear(string attributeToClear, params string[] additionalAttributesToClear);
         ICanExecute Delete();
-        ICanExecute Join<T>(Action<IJoinable> target) where T : Base_Classes.FluentCRM, new();
+        ICanExecute Join<T>(Action<IJoinable> target) where T : FluentCRM, new();
 
-        ICanExecute BeforeEachRecord(Action<EntityWrapper> action);
-        ICanExecute AfterEachRecord(Action<EntityWrapper> action);
+        ICanExecute BeforeEachEntity(Action<EntityWrapper> action);
+        ICanExecute AfterEachEntity(Action<EntityWrapper> action);
 
         void Execute( Action preExecute = null, Action<int,int> postExecute = null );
     }
 }
- 

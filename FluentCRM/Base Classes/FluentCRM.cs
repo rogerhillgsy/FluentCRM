@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DirectoryServices.ActiveDirectory;
-using System.Text;
-using FluentCRM.Interfaces;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace FluentCRM.Base_Classes
+namespace FluentCRM
 {
     public abstract partial class FluentCRM : IUnknownEntity, IEntitySet, IAnotherWhere, INeedsWhereCriteria
     {
@@ -50,7 +47,7 @@ namespace FluentCRM.Base_Classes
             LogicalName = logicalName;
             if (StaticService == null)
             {
-                throw new ArgumentNullException("FluentCRM static service is null");
+                Trace("Warning: FluentCRM static service is null");
             }
 
             Service = StaticService;
