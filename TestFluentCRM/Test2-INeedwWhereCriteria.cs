@@ -128,5 +128,20 @@ namespace TestFluentCRM
             FluentAccount.Account().Where(attributeName).Condition(op, attributeValue).Count(c => count = c).Execute();
             Assert.AreEqual(expectedCount, count);
         }
+
+        [DataRow("name",  ConditionOperator.Contains, "Account", 4)]
+        [DataRow("name",  ConditionOperator.EndsWith , "1", 1)]
+        [DataRow("address1_country",ConditionOperator.Contains, "U", 4)]
+        [DataRow("address1_country",ConditionOperator.BeginsWith, "U", 4)]
+        [DataRow("address1_country",ConditionOperator.EndsWith, "S", 2)]
+        [DataRow("statecode", ConditionOperator.GreaterEqual, 0, 4)]
+        [DataTestMethod]
+        public void TestCondition2(string attributeName, ConditionOperator op, object attributeValue, int expectedCount)
+        {
+            int? count = 0;
+            FluentAccount.Account().Where(attributeName).Condition(op, attributeValue).Count(c => count = c).Execute();
+            Assert.AreEqual(expectedCount, count);
+        }
+
     }
 }

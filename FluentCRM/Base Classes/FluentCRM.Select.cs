@@ -46,6 +46,13 @@ namespace FluentCRM
             return this;
         }
 
+        public IEntitySet BeginsWith(string s)
+        {
+            Trace($"Begins with...{s}");
+            AddCriteria(new ConditionExpression(_whereAttribute, ConditionOperator.BeginsWith, s));
+            return this;
+        }
+
         public IEntitySet Condition<T>(ConditionOperator op, T value)
         {
             Trace($"Operator {op.ToString()}");
@@ -124,7 +131,7 @@ namespace FluentCRM
                             }
                         },
                         // Note that paging is unreliable, and can return the same record on two different pages
-                        PageInfo = new PagingInfo {Count = 5000, PageNumber = 1, PagingCookie = null},
+                        PageInfo = new PagingInfo {Count = _pageSize, PageNumber = 1, PagingCookie = null},
                     };
                 }
 

@@ -11,6 +11,7 @@ namespace FluentCRM
         IEntitySet In<T>(params T[] inVals);
         IEntitySet GreaterThan<T>(T value);
         IEntitySet LessThan<T>(T value);
+        IEntitySet BeginsWith(string s);
         IEntitySet Condition<T>(ConditionOperator op, T value);
     }
 }

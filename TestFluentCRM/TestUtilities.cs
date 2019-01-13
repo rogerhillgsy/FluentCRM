@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FakeXrmEasy;
+using FakeXrmEasy.Extensions;
 using Microsoft.Xrm.Sdk;
 
 namespace TestFluentCRM
 {
     public class TestUtilities
     {
-        public static XrmFakedContext TestContext1()
+        public static List<Entity> List1()
         {
-            var account1= new Entity("account")
+            var account1 = new Entity("account")
             {
                 Id = Guid.NewGuid(),
                 ["name"] = "Account1",
@@ -23,7 +24,7 @@ namespace TestFluentCRM
                 ["statecode"] = 0
             };
 
-            var account2= new Entity("account")
+            var account2 = new Entity("account")
             {
                 Id = Guid.NewGuid(),
                 ["name"] = "Account2",
@@ -33,7 +34,7 @@ namespace TestFluentCRM
                 ["statecode"] = 0
             };
 
-            var account3= new Entity("account")
+            var account3 = new Entity("account")
             {
                 Id = Guid.NewGuid(),
                 ["name"] = "Account3",
@@ -43,10 +44,10 @@ namespace TestFluentCRM
                 ["statecode"] = 0
             };
 
-            var account4= new Entity("account")
+            var account4 = new Entity("account")
             {
                 Id = Guid.NewGuid(),
-                ["name"] = "Account3",
+                ["name"] = "Account4",
                 ["phone1"] = "222333",
                 ["address1_country"] = "US",
                 ["statecode"] = 0
@@ -83,10 +84,28 @@ namespace TestFluentCRM
                 ["phone"] = "796543212"
             };
 
+            return new List<Entity> {account1, account2, account3, account4, contact1, contact2, contact3};
+        }
+
+        public static XrmFakedContext TestContext1()
+        {
+            var list = List1();
             var context = new XrmFakedContext();
-            context.Initialize(new List<Entity>{ account1, account2, account3, account4, contact1, contact2, contact3 });
+            context.Initialize( list);
 
             return context;
         }
+
+        public static XrmFakedContext TestContext2()
+        {
+            var list = List1();
+            var account1Copy = list.First().Clone();
+            list.Add(account1Copy);
+            var context = new XrmFakedContext();
+            context.Initialize( list);
+
+            return context;
+        }
+
     }
 }

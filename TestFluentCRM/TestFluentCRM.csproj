@@ -83,6 +83,7 @@
     <Compile Include="Test2-INeedwWhereCriteria.cs" />
     <Compile Include="TestUtilities.cs" />
     <Compile Include="Test1-IUnknownEntity.cs" />
+    <Compile Include="Test3-IEntitySet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

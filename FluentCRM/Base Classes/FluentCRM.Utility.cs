@@ -5,6 +5,9 @@ namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {
+        private bool _distinct = false;
+        private int _pageSize = 5000;
+
         #region "Ordering and Counting"
 
         ICanExecute ICanExecute.Distinct()
@@ -16,6 +19,12 @@ namespace FluentCRM
         IEntitySet IEntitySet.Distinct()
         {
             return (IEntitySet) ((ICanExecute) this).Distinct();
+        }
+
+        ICanExecute ICanExecute.PageSize(int i)
+        {
+            _pageSize = i;
+            return this;
         }
 
         private ICanExecute Order(string attribute, OrderType orderingType)

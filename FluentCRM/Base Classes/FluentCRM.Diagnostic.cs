@@ -6,7 +6,6 @@ namespace FluentCRM
     {
         private Action<string> _traceFunction;
         private Action<string> _timerFunction;
-        private bool _distinct = false;
 
         #region "Diagnostic methods"
 
