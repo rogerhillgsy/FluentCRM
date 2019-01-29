@@ -68,11 +68,15 @@
     <Compile Include="Base Classes\FluentCRM.Utility.cs" />
     <Compile Include="FluentAccount.cs" />
     <Compile Include="FluentContact.cs" />
+    <Compile Include="FluentPrimaryContact.cs" />
     <Compile Include="Interfaces\IAnotherWhere.cs" />
     <Compile Include="Interfaces\ICanExecute.cs" />
     <Compile Include="Interfaces\ICreateEntity.cs" />
     <Compile Include="Interfaces\IEntitySet.cs" />
     <Compile Include="Interfaces\IJoinable.cs" />
+    <Compile Include="Interfaces\IJoinableAnotherWhere.cs" />
+    <Compile Include="Interfaces\IJoinableEntitySet.cs" />
+    <Compile Include="Interfaces\IJoinableNeedsWhereCriteria.cs" />
     <Compile Include="Interfaces\INeedsWhereCriteria.cs" />
     <Compile Include="Interfaces\IUnknownEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

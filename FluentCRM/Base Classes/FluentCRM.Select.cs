@@ -6,7 +6,8 @@ namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {
-        private QueryExpression _queryExpression;
+        //private QueryExpression _queryExpression;
+        public QueryExpression _queryExpression;
 
         #region "Entity Selection functions"
 

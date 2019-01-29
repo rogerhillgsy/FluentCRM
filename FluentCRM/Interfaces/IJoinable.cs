@@ -16,6 +16,6 @@ namespace FluentCRM
         IJoinable Outer { get; }
 
         IJoinable Factory(IOrganizationService service);
-
+        IJoinableNeedsWhereCriteria Where(string attributeName);
     }
 }

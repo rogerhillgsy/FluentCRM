@@ -139,6 +139,12 @@ namespace FluentCRM
                 _queryExpression.PageInfo.PagingCookie = null;
                 _queryExpression.PageInfo.PageNumber = 1;
             }
+
+            // Look after any criteria in linked entities.
+            foreach (var linkedEntity in LinkedEntities)
+            {
+                linkedEntity.PrepareLinkedCriteria();
+            }
         }
 
         /// <summary>

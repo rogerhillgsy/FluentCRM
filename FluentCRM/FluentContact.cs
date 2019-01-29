@@ -10,7 +10,7 @@ namespace FluentCRM
 
         private FluentContact(Guid id, IOrganizationService service) : base (_logicalName,id,service) {}
 
-        private FluentContact(IOrganizationService service) : base(_logicalName, service) {}
+        protected FluentContact(IOrganizationService service) : base(_logicalName, service) {}
 
         private FluentContact(Guid id) : base(_logicalName, id) {}
 

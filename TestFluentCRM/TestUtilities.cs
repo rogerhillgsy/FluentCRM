@@ -61,6 +61,7 @@ namespace TestFluentCRM
                 ["parentcustomerid"] = account1.ToEntityReference(),
                 ["telephone1"] = "12345677",
                 ["telephone2"] = "23456789",
+                ["mobilephone"] = "07454115454",
                 ["phone"] = "776543212"
             };
 
@@ -71,6 +72,7 @@ namespace TestFluentCRM
                 ["lastname"] = "Spade",
                 ["parentcustomerid"] = account1.ToEntityReference(),
                 ["telephone2"] = "3456789",
+                ["mobilephone"] = "07454113434",
                 ["phone"] = "76543212"
             };
 
@@ -81,8 +83,11 @@ namespace TestFluentCRM
                 ["lastname"] = "Watson",
                 ["parentcustomerid"] = account2.ToEntityReference(),
                 ["telephone1"] = "34567789",
+                ["mobilephone"] = "07454116464",
                 ["phone"] = "796543212"
             };
+
+            account1["primarycontactid"] = contact1.ToEntityReference();
 
             return new List<Entity> {account1, account2, account3, account4, contact1, contact2, contact3};
         }

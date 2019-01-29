@@ -9,7 +9,7 @@ using Microsoft.Xrm.Sdk;
 namespace TestFluentCRM
 {
     [TestClass]
-    public class Test1IUnknownEntity
+    public class Test1_IUnknownEntity
     {
         private XrmFakedContext _context;
         private IOrganizationService _orgService;
@@ -159,14 +159,17 @@ namespace TestFluentCRM
         public void TestJoin1()
         {
             var message = string.Empty;
-            FluentAccount.Account(_orgService).Where("name").Equals("Account2").
+            FluentAccount.Account(_orgService).
                 Trace( s => Debug.WriteLine(s)).
                 Join<FluentContact>( c => c.UseAttribute( (string n) =>
                 {
                     Debug.WriteLine($"Contact name is {n}");
                     message = "Join succeeded";
-                }, "firstname") ).
-                UseAttribute( (string a) => Debug.Write($"Account Name is {a}"), "name").Execute();
+                }, "firstname") 
+                    .Where("firstname").Equals("Sam")).               
+                UseAttribute( (string a) => Debug.Write($"Account Name is {a}"), "name").
+                Count(c => Assert.AreEqual(1,c)).
+                Execute();
 
             Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
         }
