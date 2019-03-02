@@ -52,4 +52,4 @@ FluentContact.Contact(contact.Id,  service)
 
 Adds a WeakExtractEntity clause. This will call the closue with an "entity" fetched with the listed attributes.
 
-[Another File](another)
+[Another File](another.md)
