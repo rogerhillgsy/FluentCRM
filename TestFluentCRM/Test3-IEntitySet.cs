@@ -494,7 +494,7 @@ namespace TestFluentCRM
         }
 
         /// <summary>
-        /// Clear appears to be broke
+        /// Clear appears to be broken in FakeXrmEasy
         /// Setting an entity field to null and updating does not appear to clear that field in FakeXrmEasy.
         /// </summary>
         [TestMethod]

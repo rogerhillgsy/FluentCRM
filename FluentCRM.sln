@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentEntity", "FluentEntity\FluentEntity.csproj", "{86D897D3-24A8-471B-9EC6-8EE4D6F25139}"
 EndProject
@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{B18AA2B8-CE8C-45AF-8137-9789FFB43745}"
 	ProjectSection(SolutionItems) = preProject
 		Package.nuspec = Package.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

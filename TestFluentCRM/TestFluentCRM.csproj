@@ -40,6 +40,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ExternalDll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalDll\bin\Debug\ExternalDll.dll</HintPath>
+    </Reference>
     <Reference Include="FakeItEasy, Version=3.2.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.3.2.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
@@ -112,6 +116,11 @@
     <Compile Include="Test3-IEntitySet.cs" />
     <Compile Include="TestClear.cs" />
     <Compile Include="Test4-ICanExecute.cs" />
+    <Compile Include="Test5-IAnotherWhere.cs" />
+    <Compile Include="Test6-ICreateEntity.cs" />
+    <Compile Include="Test7-IJoinable.cs" />
+    <Compile Include="Test8-IEntityWrapper.cs" />
+    <Compile Include="WikiExamples.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

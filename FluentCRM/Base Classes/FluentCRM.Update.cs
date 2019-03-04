@@ -104,7 +104,7 @@ namespace FluentCRM
 
         ICanExecute ICanExecute.Clear(string attributeToClear, params string[] additionalAttributesToClear)
         {
-            return ((ICanExecute) this).Clear(attributeToClear, additionalAttributesToClear);
+            return Clear(attributeToClear, additionalAttributesToClear);
         }
 
         public ICanExecute Clear(string attributeToClear, params string[] additionalAttributesToClear)

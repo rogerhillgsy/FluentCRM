@@ -8,7 +8,7 @@ using Microsoft.Xrm.Sdk.Query;
 namespace TestFluentCRM
 {
     [TestClass]
-    public class Test2_INeedwWhereCriteria
+    public class Test2_INeedWhereCriteria
     {
 
         private XrmFakedContext _context;

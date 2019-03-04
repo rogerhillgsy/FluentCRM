@@ -104,5 +104,36 @@ namespace TestFluentCRM
 
             }
         }
+
+        [TestMethod]
+        public void TestDelete()
+        {
+
+        }
+
+        [TestMethod]
+        public void TestJoin()
+        {
+
+        }
+
+        [TestMethod]
+        public void TestBeforeEachRecord()
+        {
+
+        }
+
+        [TestMethod]
+        public void TestAfterEachRecord()
+        {
+
+        }
+
+        [TestMethod]
+        public void TestExecute()
+        {
+
+        }
+
     }
 }
