@@ -109,7 +109,7 @@ namespace FluentCRM
 
                     if (_updateRequired)
                     {
-                        Trace( $"Updating entity {_update.LogicalName}/{_update.Id} - {String.Join(",", _update.Attributes.Keys)}");
+                        Trace( $"Updating entity {_update.LogicalName}/{_update.Id} - {String.Join(",", _update.Attributes.Keys)} - {String.Join(",", _update.Attributes.Values)}");
                         stopwatch.Restart();
                         Service.Update(_update);
                         _updateCount++;

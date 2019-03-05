@@ -35,7 +35,6 @@ namespace FluentCRM
         ICanExecute Delete();
         ICanExecute Join<T>(Action<IJoinable> target) where T : FluentCRM, new();
 
-        ICanExecute BeforeEachEntity(Action<EntityWrapper> action);
         ICanExecute AfterEachEntity(Action<EntityWrapper> action);
 
         void Execute( Action preExecute = null, Action<int,int> postExecute = null );

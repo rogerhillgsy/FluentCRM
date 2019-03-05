@@ -21,7 +21,8 @@ namespace TestFluentCRM
                 ["name3"] = "name3",
                 ["phone1"] = "123456",
                 ["address1_country"] = "UK",
-                ["statecode"] = 0
+                ["statecode"] = 0,
+                ["description"] = "",
             };
 
             var account2 = new Entity("account")
@@ -31,7 +32,8 @@ namespace TestFluentCRM
                 ["name2"] = "",
                 ["phone1"] = "654321",
                 ["address1_country"] = "UK",
-                ["statecode"] = 0
+                ["statecode"] = 0,
+                ["description"] = "",
             };
 
             var account3 = new Entity("account")
@@ -41,7 +43,8 @@ namespace TestFluentCRM
                 ["name2"] = null,
                 ["phone1"] = "222333",
                 ["address1_country"] = "US",
-                ["statecode"] = 0
+                ["statecode"] = 0,
+                ["description"] = "",
             };
 
             var account4 = new Entity("account")
@@ -50,7 +53,8 @@ namespace TestFluentCRM
                 ["name"] = "Account4",
                 ["phone1"] = "222333",
                 ["address1_country"] = "US",
-                ["statecode"] = 0
+                ["statecode"] = 0,
+                ["description"] = "",
             };
 
             var contact1 = new Entity("contact")
@@ -88,6 +92,7 @@ namespace TestFluentCRM
             };
 
             account1["primarycontactid"] = contact1.ToEntityReference();
+            account2["primarycontactid"] = contact3.ToEntityReference();
 
             return new List<Entity> {account1, account2, account3, account4, contact1, contact2, contact3};
         }

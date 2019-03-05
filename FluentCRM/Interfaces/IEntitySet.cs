@@ -33,5 +33,8 @@ namespace FluentCRM
         ICanExecute Clear(string attributeToClear, params string[] additionalAttributesToClear);
         ICanExecute Delete();
         ICanExecute Join<T>(Action<IJoinable> target) where T : FluentCRM, new();
+
+        ICanExecute BeforeEachEntity(Action<EntityWrapper> action);
+
     }
 }
