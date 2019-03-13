@@ -82,8 +82,10 @@
     <Compile Include="Interfaces\INeedsWhereCriteria.cs" />
     <Compile Include="Interfaces\IUnknownEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\XMLUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base Classes\FluentCRM.Create.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

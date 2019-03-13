@@ -70,7 +70,8 @@ namespace FluentCRM
                                     if (alias != null &&
                                         entity.GetAttributeValue<AliasedValue>(column).Value is T)
                                     {
-                                        action(column, (T) entity.GetAttributeValue<AliasedValue>(column).Value);
+                                        var nakedColumn = column.Substring(alias.Length);
+                                        action(nakedColumn, (T) entity.GetAttributeValue<AliasedValue>(column).Value);
                                         return true;
                                     }
                                     else
@@ -93,7 +94,7 @@ namespace FluentCRM
         public ICanExecute UseEntity(Action<string, EntityWrapper> action, string attribute1,
             params string[] attributes)
         {
-            return ((ICanExecute) this).UseAttribute(action, attribute1, attributes);
+            return ((ICanExecute) this).UseEntity(action, attribute1, attributes);
         }
 
         ICanExecute ICanExecute.UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
@@ -162,6 +163,7 @@ namespace FluentCRM
                         foreach (var c1 in allAttributes)
                         {
                             var column = alias + c1;
+                            entity.Alias = alias;
                             if (entity != null &&
                                 entity.Contains(column))
                             {

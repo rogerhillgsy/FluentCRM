@@ -563,6 +563,7 @@ namespace TestFluentCRM
             var context = TestUtilities.TestContext2();
             var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
             var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
 
             // Join account to contact entity via the primary
             FluentAccount.Account(account2.Id)
@@ -582,7 +583,9 @@ namespace TestFluentCRM
             // This kind of join seems not to work in FakeXrmEasy. Does work with a real CRM system.
             //fa1.Execute();
 
+            // Ensure Environment variable "Password" is set.
             var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
+            cnString = Environment.ExpandEnvironmentVariables(cnString);
             using (var crmSvc = new CrmServiceClient(cnString))
             {
                 var orgService = crmSvc.OrganizationServiceProxy;

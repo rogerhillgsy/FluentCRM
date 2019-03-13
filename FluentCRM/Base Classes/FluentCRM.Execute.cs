@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using FluentCRM.Utility;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
@@ -172,6 +173,7 @@ namespace FluentCRM
                 EntityCollection result;
                 try
                 {
+                    // Trace($"_queryexpression = {XMLUtilities.ToString(_queryExpression)}");
                     result = Service.RetrieveMultiple(_queryExpression);
                     _entities = result.Entities;
                     _queryExpression.PageInfo.PageNumber++;

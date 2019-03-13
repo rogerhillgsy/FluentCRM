@@ -13,7 +13,7 @@ namespace FluentCRM
 
         string LogicalName { get; }
         string JoinAttribute(string JoinEntity);
-        IJoinable Outer { get; }
+        IJoinable Outer();
 
         IJoinable Factory(IOrganizationService service);
         IJoinableNeedsWhereCriteria Where(string attributeName);

@@ -144,7 +144,11 @@ namespace FluentCRM
             return null;
         }
 
-        public IJoinable Outer { get; }
+        public IJoinable Outer()
+        {
+            LinkEntity.JoinOperator = JoinOperator.LeftOuter;
+            return this;
+        }
         #endregion
 
         protected FluentCRM()

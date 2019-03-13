@@ -42,6 +42,7 @@ namespace TestFluentCRM
         public void TestClearLive()
         {
             var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
+            cnString = Environment.ExpandEnvironmentVariables(cnString);
             using (var crmSvc = new CrmServiceClient(cnString))
             {
                 EntityWrapper entity1 = null;

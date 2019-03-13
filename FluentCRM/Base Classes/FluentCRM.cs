@@ -5,7 +5,7 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace FluentCRM
 {
-    public abstract partial class FluentCRM : IUnknownEntity, IEntitySet, IAnotherWhere, INeedsWhereCriteria
+    public abstract partial class FluentCRM : IUnknownEntity, IEntitySet, INeedsWhereCriteria, IAnotherWhere
     {
         private Guid _id = Guid.Empty;
 

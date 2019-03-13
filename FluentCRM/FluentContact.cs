@@ -31,7 +31,7 @@ namespace FluentCRM
 
         public static IUnknownEntity Contact()
         {
-            return new FluentAccount();
+            return new FluentContact();
         }
 
         public FluentContact() : base(_logicalName) {}

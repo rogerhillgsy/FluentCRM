@@ -418,7 +418,7 @@ namespace TestFluentCRM
             var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
             var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
             var message = string.Empty;
-            FluentCRM.FluentCRM.StaticService = _orgService;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
 
             // Join account to contact entity via the primary
             FluentAccount.Account(account2.Id, context.GetOrganizationService())
@@ -429,8 +429,6 @@ namespace TestFluentCRM
                 .Count(c => Assert.AreEqual(1, c))
                 .Execute();
 
-            if (false) // Ignore test that will not be passed by FakeXrmEasy. (Passes with 
-            {
                 FluentAccount.Account(account1.Id)
                     .Trace(s => Debug.WriteLine(s))
                     .UseAttribute((string s) => Debug.WriteLine(s), "name")
@@ -438,7 +436,6 @@ namespace TestFluentCRM
                         c.UseAttribute<string>(s => Assert.IsTrue("Doe" == s || s == "Spade"), "lastname"))
                     .Count(c => Assert.AreEqual(2, c))
                     .Execute();
-            }
         }
 
         [TestMethod]
@@ -449,7 +446,7 @@ namespace TestFluentCRM
             //fa1.Execute();
 
             var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
-                cnString= Environment.ExpandEnvironmentVariables(cnString);
+            cnString = Environment.ExpandEnvironmentVariables(cnString);
             using (var crmSvc = new CrmServiceClient(cnString))
             {
                 var orgService = crmSvc.OrganizationServiceProxy;

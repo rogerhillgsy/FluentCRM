@@ -15,6 +15,6 @@ namespace FluentCRM
         ICreateEntity Create(Dictionary<string, Object> attributes);
         ICreateEntity CreateOptionSets(Dictionary<string, string> attributes);
 
-        void Execute( Action preExecute, Action<int,int> postExecute );
+        void Execute( Action preExecute = null, Action<int,int> postExecute = null );
     }
 }
