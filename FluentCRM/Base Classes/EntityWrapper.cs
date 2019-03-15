@@ -90,7 +90,7 @@ namespace FluentCRM
                 Trace($"Optionset values in cache for {attribute}");
             }
             else
-            {
+            {   
                 var attributeRequest = new RetrieveAttributeRequest
                 {
                     EntityLogicalName = Entity.LogicalName,

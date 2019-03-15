@@ -60,6 +60,10 @@ namespace TestFluentCRM
                 FluentContact.Contact(entity1.Id, crmSvc.OrganizationServiceProxy)
                     .UseEntity(e => entity2 = e, "contactid", "telephone1", "fullname")
                     .Execute();
+
+                Assert.IsTrue( entity2.Contains("contactid"));
+                Assert.IsTrue( entity2.Contains("fullname"));
+                Assert.IsFalse( entity2.Contains("telephone1"));
             }
         }
 

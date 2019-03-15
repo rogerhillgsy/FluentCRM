@@ -12,7 +12,12 @@ namespace FluentCRM
 
         #region "Join functions"
 
-        public ICanExecute Delete()
+        IJoinableEntitySet IJoinableEntitySet.Delete()
+        {
+            throw new NotImplementedException();
+        }
+
+        IJoinableEntitySet IJoinableEntitySet.Clear(string attributeToClear, params string[] additionalAttributesToClear)
         {
             throw new NotImplementedException();
         }
@@ -48,7 +53,15 @@ namespace FluentCRM
 
             target(t); // Call to set up the callbacks on linked entity.
             var cols = t._actionList.SelectMany(c => c.Item1).Where(c => c != AllColumns).Distinct().ToArray();
-            t.LinkEntity.Columns = new ColumnSet(cols);
+            if (t._actionList.SelectMany(c => c.Item1).Any(c => c == AllColumns))
+            {
+                Trace($"Fetching All columns");
+                cols = new string[] {} ;
+            }
+            else
+            {
+                t.LinkEntity.Columns = new ColumnSet(cols);
+            }
 
             var resultCols = cols.Select(s => $"{link.EntityAlias}.{s}");
 
@@ -88,48 +101,70 @@ namespace FluentCRM
             return Join<T>(target);
         }
 
-        ICanExecute IJoinableEntitySet.UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
+        IJoinableEntitySet IJoinable.Join<T>(Action<IJoinable> target)
         {
-            throw new NotImplementedException();
+            return (IJoinableEntitySet) Join<T>(target);
         }
 
-        ICanExecute IJoinableEntitySet.UseAttribute<T>(Action<string, T> action, string attribute1,
+        IJoinableEntitySet IJoinableEntitySet.Join<T>(Action<IJoinable> target)
+        {
+            return (IJoinableEntitySet) Join<T>(target);
+        }
+
+        IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
+        {
+            return (IJoinableEntitySet) 
+        }
+
+        IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(Action<string, T> action, string attribute1,
             params string[] attributes)
         {
             throw new NotImplementedException();
         }
 
-        ICanExecute IJoinableEntitySet.UseEntity(Action<EntityWrapper> action, string attribute1,
+
+        IJoinableEntitySet IJoinableEntitySet.UseEntity(Action<string, EntityWrapper, string> action, string attribute1,
             params string[] attributes)
         {
             throw new NotImplementedException();
         }
 
-        public ICanExecute WeakUpdate<T>(string attributeToUpdate, T updateValue)
+        IJoinableEntitySet IJoinableEntitySet.UseEntity(Action<EntityWrapper, string> action, string attribute1,
+            params string[] attributes)
         {
             throw new NotImplementedException();
         }
 
-        public ICanExecute WeakUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
+        public IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, T updateValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
         {
             throw new NotImplementedException();
         }
 
         IJoinableAnotherWhere IJoinableEntitySet.And => _and;
 
-        public IJoinable UseAttribute<T>(Action<string, T> action, string attribute1, params string[] attributes)
+        public IJoinableEntitySet UseAttribute<T>(Action<string, T> action, string attribute1, params string[] attributes)
         {
-            return (IJoinable) ((IEntitySet) this).UseAttribute(action, attribute1, attributes);
+            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute1, attributes);
         }
 
-        public IJoinable UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
+        IJoinableEntitySet IJoinable.UseEntity(Action<EntityWrapper,string> action, string attribute1, params string[] attributes)
         {
-            return (IJoinable) ((IEntitySet) this).UseEntity(action, attribute1, attributes);
+            return (IJoinableEntitySet) UseEntity(action, attribute1, attributes);
         }
 
-        public IJoinable UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
+        IJoinableEntitySet IJoinable.UseEntity(Action<string, EntityWrapper,string> action, string attribute1, params string[] attributes)
         {
-            return (IJoinable) ((IEntitySet) this).UseAttribute(action, attribute1, attributes);
+            return (IJoinableEntitySet) UseEntity(action, attribute1, attributes);
+        }
+
+        public IJoinableEntitySet UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
+        {
+            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute1, attributes);
         }
 
 
@@ -144,7 +179,7 @@ namespace FluentCRM
             return null;
         }
 
-        public IJoinable Outer()
+        public IJoinableEntitySet Outer()
         {
             LinkEntity.JoinOperator = JoinOperator.LeftOuter;
             return this;

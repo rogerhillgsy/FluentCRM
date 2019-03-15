@@ -155,7 +155,7 @@ namespace TestFluentCRM
 
             FluentIncident.Incident(incidentId, context.GetOrganizationService())
                 .Join<FluentAnnotation>(a => a.UseEntity(
-                    (EntityWrapper e ) =>
+                    (EntityWrapper e, string alias) =>
                     {
                         var filename = (string) e["filename"];
                         if (filename?.Contains("Shipping.") ?? false )

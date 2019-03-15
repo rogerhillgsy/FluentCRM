@@ -119,7 +119,7 @@ namespace TestFluentCRM
                         called = true;
                         Assert.AreEqual("Watson", s);
                     }, "lastname").
-                        UseEntity((e) => Debug.WriteLine($"Joined entity called with element logical name {e.Entity.LogicalName}"), "firstname"))
+                        UseEntity((e, a) => Debug.WriteLine($"Joined entity called with element logical name {e.Entity.LogicalName}, alias {a}"), "firstname"))
                 .Count(c => Assert.AreEqual(1, c))
                 .Execute();
 
@@ -146,11 +146,12 @@ namespace TestFluentCRM
                             called = true;
                             Assert.AreEqual("Watson", s);
                         }, "lastname").
-                        UseEntity((name, e) =>
+                        UseEntity((name, e, alias) =>
                         {
                             Assert.AreEqual(e.Alias + "firstname", name );
+                            Assert.AreEqual(alias + "firstname", name );
                             Debug.WriteLine(
-                                    $"Joined entity called with element logical name {e.Entity.LogicalName}");
+                                    $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
                         }, "firstname"))
                 .UseEntity((name, e) =>
                 {

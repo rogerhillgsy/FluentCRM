@@ -159,17 +159,15 @@ namespace TestFluentCRM
         public void TestJoin1()
         {
             var message = string.Empty;
-            FluentAccount.Account(_orgService).
-                Trace( s => Debug.WriteLine(s)).
-                Join<FluentContact>( c => c.UseAttribute( (string n) =>
-                {
-                    Debug.WriteLine($"Contact name is {n}");
-                    message = "Join succeeded";
-                }, "firstname") 
-                    .Where("firstname").Equals("Sam")).               
-                UseAttribute( (string a) => Debug.Write($"Account Name is {a}"), "name").
-                Count(c => Assert.AreEqual(1,c)).
-                Execute();
+            FluentAccount.Account(_orgService).Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(c => c.Where("firstname").Equals("Sam")
+                    .UseAttribute((string n) =>
+                    {
+                        Debug.WriteLine($"Contact name is {n}");
+                        message = "Join succeeded";
+                    }, "firstname"))
+                    .UseAttribute((string a) => Debug.Write($"Account Name is {a}"), "name")
+                .Count(c => Assert.AreEqual(1, c)).Execute();
 
             Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
         }

@@ -48,7 +48,15 @@ namespace FluentCRM
             var moreRecords = true;
 
             var cols = _actionList.SelectMany(c => c.Item1).Where(c => c != AllColumns).Distinct().ToArray();
-            Trace( $"Fetching columns: [{string.Join(", ", cols)}]");
+            if (_actionList.SelectMany(c => c.Item1).Any(c => c == AllColumns))
+            {
+                Trace($"Fetching All columns");
+                cols = new string[] {} ;
+            }
+            else
+            {
+                Trace($"Fetching columns: [{string.Join(", ", cols)}]");
+            }
 
             preExecute?.Invoke();
 
@@ -91,7 +99,8 @@ namespace FluentCRM
                     // Track processed entity Ids to avoid potential duplicates produced by paging.
                     ids.Add(entity.Id);
                     
-                    var wrapper = new EntityWrapper(entity, Service, _traceFunction);
+                    var wrapper = new EntityWrapper(entity, Service,  _traceFunction);
+                    // wrapper.Alias
                     _beforeEachEntityActions.ForEach(a => a(wrapper));
 
                     _actionList.ForEach(a =>

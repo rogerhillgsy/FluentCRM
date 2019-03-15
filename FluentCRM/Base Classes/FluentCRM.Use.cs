@@ -91,23 +91,27 @@ namespace FluentCRM
                 ));
             return this;
         }
-        public ICanExecute UseEntity(Action<string, EntityWrapper> action, string attribute1,
-            params string[] attributes)
-        {
-            return ((ICanExecute) this).UseEntity(action, attribute1, attributes);
-        }
+        //public ICanExecute UseEntity(Action<string, EntityWrapper,string> action, string attribute1,
+        //    params string[] attributes)
+        //{
+        //    return ((ICanExecute) this).UseEntity(action, attribute1, attributes);
+        //}
 
         ICanExecute ICanExecute.UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
         {
-            return ((IEntitySet) this).UseEntity(action, attribute1, attributes);
+            return UseEntity( (EntityWrapper w, string alias ) => action(w), attribute1, attributes);
         }
 
-        ICanExecute IEntitySet.UseEntity(Action<EntityWrapper> action, string attribute1, params string[] attributes)
+        ICanExecute IEntitySet.UseEntity(Action<EntityWrapper> action, string attribute1,
+            params string[] attributes)
+        {
+            return UseEntity( (EntityWrapper w, string alias ) => action(w), attribute1, attributes);
+        }
+
+        ICanExecute UseEntity(Action<EntityWrapper,string> action, string attribute1, params string[] attributes)
         {
             var allAttributes = new List<string> {attribute1};
             allAttributes.AddRange(attributes);
-            if (allAttributes.Exists(s => s == AllColumns))
-                throw new ArgumentException("Cannot specify AllColumns here");
             Trace($"Adding columns [{String.Join(",", allAttributes)}] to column set");
 
             var alias = LinkEntity?.EntityAlias;
@@ -125,7 +129,7 @@ namespace FluentCRM
                                 ( column == AllColumns ||
                                 entity.Contains(column)))
                             {
-                                action(entity);
+                                action(entity, alias);
                                 return true;
                             }
                         }
@@ -145,6 +149,12 @@ namespace FluentCRM
         }
 
         ICanExecute IEntitySet.UseEntity(Action<string, EntityWrapper> action, string attribute1,
+            params string[] attributes)
+        {
+            return UseEntity((string field, EntityWrapper w, string alias) => action(field, w), attribute1, attributes);
+        }
+
+        ICanExecute UseEntity(Action<string, EntityWrapper, string> action, string attribute1,
             params string[] attributes)
         {
             var allAttributes = new List<string> {attribute1};
@@ -167,7 +177,7 @@ namespace FluentCRM
                             if (entity != null &&
                                 entity.Contains(column))
                             {
-                                action(column, entity);
+                                action(column, entity, alias);
                                 return true;
                             }
                         }
