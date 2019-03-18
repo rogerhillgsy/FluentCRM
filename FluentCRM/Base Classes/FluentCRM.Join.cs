@@ -6,7 +6,7 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace FluentCRM
 {
-    public abstract partial class FluentCRM : IJoinable, IJoinableNeedsWhereCriteria, IJoinableEntitySet
+    public abstract partial class FluentCRM : IJoinable, IJoinableNeedsWhereCriteria, IJoinableAnotherWhere, IJoinableEntitySet
     {
         private ICollection<FluentCRM> LinkedEntities { get; } = new List<FluentCRM>();
 
@@ -113,39 +113,43 @@ namespace FluentCRM
 
         IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
         {
-            return (IJoinableEntitySet) 
+            return (IJoinableEntitySet) this.UseAttribute(action, attribute1, attributes);
         }
 
         IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(Action<string, T> action, string attribute1,
             params string[] attributes)
         {
-            throw new NotImplementedException();
+            return (IJoinableEntitySet) this.UseAttribute(action, attribute1, attributes);
         }
 
 
         IJoinableEntitySet IJoinableEntitySet.UseEntity(Action<string, EntityWrapper, string> action, string attribute1,
             params string[] attributes)
         {
-            throw new NotImplementedException();
+            return (IJoinableEntitySet) this.UseEntity(action, attribute1, attributes);
         }
 
         IJoinableEntitySet IJoinableEntitySet.UseEntity(Action<EntityWrapper, string> action, string attribute1,
             params string[] attributes)
         {
-            throw new NotImplementedException();
+            return (IJoinableEntitySet) this.UseEntity(action, attribute1, attributes);
         }
 
         public IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, T updateValue)
         {
-            throw new NotImplementedException();
+            return (IJoinableEntitySet) this.WeakUpdate(attributeToUpdate, updateValue);
         }
 
         public IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
         {
+            return (IJoinableEntitySet) this.WeakUpdate(attributeToUpdate, getUpdateValue);
             throw new NotImplementedException();
         }
 
-        IJoinableAnotherWhere IJoinableEntitySet.And => _and;
+        IJoinableAnotherWhere IJoinableEntitySet.And
+        {
+            get { return (IJoinableAnotherWhere) And; }
+        } 
 
         public IJoinableEntitySet UseAttribute<T>(Action<string, T> action, string attribute1, params string[] attributes)
         {
@@ -230,12 +234,12 @@ namespace FluentCRM
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.Equals<T>(T value)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).Equals(value);
+            return (IJoinableEntitySet) Equals(value);
         }
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.NotEqual<T>(T value)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).NotEqual(value);
+            return (IJoinableEntitySet) NotEqual(value);
         }
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.IsNotNull => (IJoinableEntitySet) (IsNotNull);
@@ -245,27 +249,27 @@ namespace FluentCRM
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.In<T>(params T[] inVals)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).In(inVals);
+            return (IJoinableEntitySet) In(inVals);
         }
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.GreaterThan<T>(T value)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).GreaterThan(value);
+            return (IJoinableEntitySet) GreaterThan(value);
         }
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.LessThan<T>(T value)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).LessThan(value);
+            return (IJoinableEntitySet) LessThan(value);
         }
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.BeginsWith(string s)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).BeginsWith(s);
+            return (IJoinableEntitySet) BeginsWith(s);
         }
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.Condition<T>(ConditionOperator op, T value)
         {
-            return (IJoinableEntitySet) ((INeedsWhereCriteria) this).Condition(op,value);
+            return (IJoinableEntitySet) Condition(op,value);
         }
 
         private void PrepareLinkedCriteria()

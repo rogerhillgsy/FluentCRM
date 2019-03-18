@@ -122,6 +122,7 @@ namespace FluentCRM
                     allAttributes.ToArray(),
                     (entity, c) =>
                     {
+                        entity.Alias = alias;
                         foreach (var c1 in allAttributes)
                         {
                             var column = alias + c1;
@@ -170,6 +171,7 @@ namespace FluentCRM
                     allAttributes.ToArray(),
                     (entity, c) =>
                     {
+                        entity.Alias = alias;
                         foreach (var c1 in allAttributes)
                         {
                             var column = alias + c1;

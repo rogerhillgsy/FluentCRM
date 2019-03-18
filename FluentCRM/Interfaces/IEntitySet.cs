@@ -8,7 +8,7 @@ namespace FluentCRM
     /// </summary>
     public interface IEntitySet
     {
-        ICanExecute Trace(Action<string> action);
+        IEntitySet Trace(Action<string> action);
         IEntitySet Timer(Action<string> timerFunction );
         IOrganizationService Service { get; }
 
@@ -19,8 +19,6 @@ namespace FluentCRM
 
         ICanExecute WeakUpdate<T>(string attributeToUpdate, T updateValue);
         ICanExecute WeakUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
-        [Obsolete]
-        ICanExecute WeakUpdateEntity<T>(string attributesToUpdate, Func<EntityWrapper,T> getUpdateValue, params string[] additionalAttributes);
 
         ICanExecute Count(Action<int?> action);
         ICanExecute Exists(Action<bool> action);

@@ -522,6 +522,97 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
+        public void TestExecute1()
+        {
+            var context = TestUtilities.TestContext2();
+            var message = string.Empty;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            var currentAccount = new AccountDetails();
+            var lastname = string.Empty;
+            var preExecute = false;
+            var postExecute = false;
+
+            // Join account to contact entity via the primary
+            FluentAccount.Account(context.GetOrganizationService())
+                .Where("name").BeginsWith("Account")
+                .UseAttribute((string s) =>
+                {
+                    currentAccount.Name = s;
+                    Assert.IsTrue(s.CompareTo(lastname) > 0);
+                    lastname = s;
+                }, "name")
+                .OrderByAsc("name")
+                .Count(c => Assert.AreEqual(4, c))
+                .Execute(() =>
+                    {
+                        Assert.IsFalse(preExecute);
+                        preExecute = true;
+                        Assert.IsTrue(string.IsNullOrEmpty(lastname));
+                    },
+                    (actionsCalled, updates) =>
+                    {
+                        Assert.IsTrue(preExecute);
+                        Assert.IsFalse(postExecute);
+                        postExecute = false;
+                        Assert.AreEqual(4,actionsCalled);
+                        Assert.AreEqual(0,updates);
+                        Assert.IsFalse(string.IsNullOrEmpty(lastname));
+                    });
+
+        }
+
+        [TestMethod]
+        public void TestExecute2()
+        {
+            var context = TestUtilities.TestContext2();
+            var message = string.Empty;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            var currentAccount = new AccountDetails();
+            var lastname = "ZZZZZ";
+            var preExecute = false;
+            var postExecute = false;
+
+            // Join account to contact entity via the primary
+            FluentAccount.Account(context.GetOrganizationService())
+                .Where("name").BeginsWith("Account")
+                .UseAttribute((string s) =>
+                {
+                    currentAccount.Name = s;
+                    Assert.IsTrue(s.CompareTo(lastname) < 0);
+                    lastname = s;
+                }, "name")
+                .OrderByDesc("name")
+                .And.Where("name2").IsNotNull
+                .WeakUpdate<string>( "name", (v) =>
+                {
+                    if (v == "Account1")
+                    {
+                        return v + "--";
+                    }
+
+                    return v;
+                } )
+                .Count(c => Assert.AreEqual(2, c))
+                .Execute(() =>
+                    {
+                        Assert.IsFalse(preExecute);
+                        preExecute = true;
+                        Assert.IsTrue(lastname == "ZZZZZ");
+                    },
+                    (actionsCalled, updates) =>
+                    {
+                        Assert.IsTrue(preExecute);
+                        Assert.IsFalse(postExecute);
+                        postExecute = false;
+                        Assert.AreEqual(4, actionsCalled);
+                         // Called for both UseAttribute and WeakUpdate calls.
+                        Assert.AreEqual(1, updates);
+                        Assert.IsFalse(string.IsNullOrEmpty(lastname));
+                    });
+
+        }
+
+        [TestMethod]
         public void TestAfterEachRecord()
         {
             var context = TestUtilities.TestContext2();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -303,6 +304,33 @@ namespace TestFluentCRM
             var result = b.ToString();
             Assert.IsFalse( result.Contains("Updating column phone1") );
             Assert.IsFalse( result.Contains("Updating entity account/") );
+            Debug.WriteLine(result);
+        }
+
+        /// <summary>
+        /// Ensure that weak update of constant value off IEntitySet works.
+        /// </summary>
+        [TestMethod]
+        public void TestWeakUpdate7()
+        {
+            var acc1 = _context.Data["account"].Values.Single(n => (string) n["name"] == "Account1");
+            Assert.AreEqual("123456", acc1["phone1"]);
+            var b = new StringBuilder();
+            var newPhone = "43432423423";
+
+            FluentAccount.Account()
+                .Where("name").Equals("Account1")
+                .Trace((s => b.AppendLine(s)))
+                .Distinct()
+                .WeakUpdate("phone1", newPhone)
+                .UseAttribute((string n) => newPhone="999999", "name")
+                .Execute();
+
+            Assert.AreEqual("43432423423", acc1["phone1"]);
+
+            var result = b.ToString();
+            Assert.IsTrue( result.Contains("Updating column phone1") );
+            Assert.IsTrue( result.Contains("Updating entity account/") );
             Debug.WriteLine(result);
         }
 

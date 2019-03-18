@@ -25,9 +25,9 @@ namespace FluentCRM
             return (ICanExecute) ((IUnknownEntity) this).Trace(action);
         }
 
-        ICanExecute IEntitySet.Trace(Action<string> action)
+        IEntitySet IEntitySet.Trace(Action<string> action)
         {
-            return (ICanExecute) ((IUnknownEntity) this).Trace(action);
+            return (IEntitySet) ((IUnknownEntity) this).Trace(action);
         }
 
         /// <summary>

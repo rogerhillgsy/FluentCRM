@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using FakeXrmEasy;
+using FakeXrmEasy.Extensions;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
@@ -179,38 +180,54 @@ namespace TestFluentCRM
         [TestMethod]
         public void TestJoin1()
         {
+            EntityWrapper ew = null;
             EntityWrapper ewa1 = null;
             EntityWrapper ewa2 = null;
-            EntityWrapper ewc = null;
+            var ewa1Alias = string.Empty;
+            var ewa2Alias = string.Empty;
             var ewcAlias = string.Empty;
             FluentAccount.Account()
                 .Where("name").Equals("Account1")
-                .UseEntity((e) => ewa1 = e, "name" )
+                .UseEntity((e) =>
+                {
+                    ewa1Alias = e.Alias;
+                    ewa1 = e;
+                }, "name" )
                 .Join<FluentPrimaryContact>(
-                    c => c.UseEntity((e,a) =>
+                    c => c.UseEntity((e, a) =>
                     {
-                        ewc = e;
+                        ew = e;
+                        ewcAlias = e.Alias;
                     },  "firstname", "lastname"))
-                .UseEntity((e) => ewa2 = e, "name" )
+                .UseEntity((e) =>
+                {
+                     ewa2Alias = e.Alias;
+                    ewa2 = e;
+                }, "name" )
                 .Exists((e) => Assert.IsTrue(e))
                 .Execute();
 
+            // Note that the same EntityWrapper is passed to all of the closures above.
+            // The only thing that should vary between them is the value of the entity.Alias attribute.
+            Assert.IsNotNull(ew);
             Assert.IsNotNull(ewa1);
             Assert.IsNotNull(ewa2);
-            Assert.IsNotNull(ewc);
 
-            Assert.IsTrue(string.IsNullOrEmpty(ewa1.Alias));
-            Assert.IsTrue(string.IsNullOrEmpty(ewa2.Alias));
-            Assert.IsFalse( string.IsNullOrEmpty(ewc.Alias));
+            Assert.AreSame(ew, ewa1);
+            Assert.AreSame(ew, ewa2);
 
-            Assert.IsTrue( ewa1.Contains( "name" ));
-            Assert.IsTrue( ewa1.Contains( ewa1.Alias +  "name" ));
-            Assert.IsTrue( ewa2.Contains( "name" ));
-            Assert.IsTrue( ewa2.Contains( ewa1.Alias +  "name" ));
-            Assert.IsFalse( ewc.Contains( "firstname" ));
-            Assert.IsTrue( ewc.Contains( ewc.Alias +  "firstname" ));
-            Assert.IsFalse( ewc.Contains( "lastname" ));
-            Assert.IsTrue( ewc.Contains( ewc.Alias +  "lastname" ));
+            Assert.IsTrue(string.IsNullOrEmpty(ewa1Alias));
+            Assert.IsTrue(string.IsNullOrEmpty(ewa2Alias));
+            Assert.IsFalse( string.IsNullOrEmpty(ewcAlias));
+
+            Assert.IsTrue( ew.Contains( "name" ));
+            Assert.IsTrue( ew.Contains( ewa1Alias +  "name" ));
+            Assert.IsTrue( ew.Contains( "name" ));
+            Assert.IsTrue( ew.Contains( ewa1Alias +  "name" ));
+            Assert.IsFalse( ew.Contains( "firstname" ));
+            Assert.IsTrue( ew.Contains( ewcAlias +  "firstname" ));
+            Assert.IsFalse( ew.Contains( "lastname" ));
+            Assert.IsTrue( ew.Contains( ewcAlias +  "lastname" ));
         }
     }
 }

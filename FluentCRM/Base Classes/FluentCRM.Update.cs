@@ -28,7 +28,7 @@ namespace FluentCRM
             // Avoid problems where getUpdateValue takes an EntityWrapper - hard to pick up with static type checking.
             if (getUpdateValue is Func<EntityWrapper, T> && typeof(T) != typeof(Object))
             {
-                throw new ArgumentException("Invalid invocation of WeakUpdate - use WeakUpdateEntity()");
+                throw new ArgumentException("Invalid invocation of WeakUpdate - must specify scalar type()");
             }
             Trace($"Update {attributeToUpdate} ");
 
@@ -57,43 +57,6 @@ namespace FluentCRM
                         {
                             Trace($"For update of {attributeToUpdate} in {LogicalName} expected type: {entity.Entity.Attributes[attributeToUpdate].GetType()} type supplied: {typeof(T)}");
                             throw;
-                        }
-                        return true;
-                    }
-                ));
-
-            return this;
-        }
-
-        ICanExecute ICanExecute.WeakUpdateEntity<T>(string attributeToUpdate, Func<EntityWrapper, T> getUpdateValue,
-            params string[] additionalAttributes)
-        {
-            return ((IEntitySet) this).WeakUpdateEntity(attributeToUpdate, getUpdateValue, additionalAttributes);
-        }
-
-        ICanExecute IEntitySet.WeakUpdateEntity<T>(string attributeToUpdate, Func<EntityWrapper, T> getUpdateValue,
-            params string[] additionalAttributes)
-        {
-            Trace($"Update Entity {attributeToUpdate} ");
-            if (additionalAttributes.Length > 0) Trace($"Adding column {additionalAttributes[0]} to column set");
-
-            // Add the action to the first column
-            _actionList.Add(
-                new Tuple<string[], Func<EntityWrapper, string, bool?>>(
-                    (new string[] { attributeToUpdate }).Concat(additionalAttributes).ToArray(),
-                    (entity, c) =>
-                    {
-                        var oldVal = entity.GetAttributeValue<T>(attributeToUpdate);
-                        var newVal = getUpdateValue(entity);
-                        if (newVal == null || newVal.Equals(oldVal))
-                        {
-                            // Do nothing if value has not changed or null was returned.
-                        }
-                        else
-                        {
-                            Trace($"Updating column {attributeToUpdate} = {newVal}");
-                            _update.Attributes[attributeToUpdate] = newVal;
-                            _updateRequired = true;
                         }
                         return true;
                     }

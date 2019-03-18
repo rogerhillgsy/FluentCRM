@@ -66,7 +66,8 @@ namespace TestFluentCRM
                 ["telephone1"] = "12345677",
                 ["telephone2"] = "23456789",
                 ["mobilephone"] = "07454115454",
-                ["phone"] = "776543212"
+                ["phone"] = "776543212",
+                ["size"] = 5
             };
 
             var contact2 = new Entity("contact")
@@ -77,7 +78,8 @@ namespace TestFluentCRM
                 ["parentcustomerid"] = account1.ToEntityReference(),
                 ["telephone2"] = "3456789",
                 ["mobilephone"] = "07454113434",
-                ["phone"] = "76543212"
+                ["phone"] = "76543212",
+                ["size"] = 10
             };
 
             var contact3 = new Entity("contact")

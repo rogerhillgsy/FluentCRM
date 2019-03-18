@@ -5,6 +5,7 @@ using FakeXrmEasy;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace TestFluentCRM
 {
@@ -153,6 +154,303 @@ namespace TestFluentCRM
                             Debug.WriteLine(
                                     $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
                         }, "firstname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestUseEntity3()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account2.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentPrimaryContact>(
+                    c => c.UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Watson", s);
+                        }, "lastname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestUseEntity4()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account2.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentPrimaryContact>(
+                    c => c.Where("firstname").IsNotNull.And.Where("lastname").IsNotNull.UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Watson", s);
+                        }, "lastname")
+                )
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestJoinWhereCriteria()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account2.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentPrimaryContact>(
+                    c => c.Where("firstname").Equals("John").And.Where("lastname").Equals("Watson").UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Watson", s);
+                        }, "lastname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestJoinWhereCriteria2()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(
+                    c => c.Where("firstname").NotEqual("John").And.Where("telephone1").IsNull.UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Spade", s);
+                        }, "lastname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestJoinWhereCriteriaGreaterThan()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(
+                    c => c.Where("size").GreaterThan(5).UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Spade", s);
+                        }, "lastname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestJoinWhereCriteriaLessThan()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(
+                    c => c.Where("size").LessThan(6).UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Doe", s);
+                        }, "lastname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestJoinWhereCriteriaBeginsWith()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(
+                    c => c.Where("telephone2").BeginsWith("3456").UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Spade", s);
+                        }, "lastname"))
+                .UseEntity((name, e) =>
+                {
+                    Assert.AreEqual("name", name);
+                    Debug.WriteLine(e.Entity.LogicalName);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+        // Test form of UseEntity where actual entity name is passed to closure.
+        [TestMethod]
+        public void TestJoinWhereCriteriaCondition()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id)
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(
+                    c => c.Where("lastname").Condition( ConditionOperator.EndsWith, "de").UseEntity((name, e, alias) =>
+                        {
+                            Assert.AreEqual(e.Alias + "firstname", name);
+                            Assert.AreEqual(alias + "firstname", name);
+                            Debug.WriteLine(
+                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                        }, "firstname")
+                        .UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual("Spade", s);
+                        }, "lastname"))
                 .UseEntity((name, e) =>
                 {
                     Assert.AreEqual("name", name);
