@@ -8,7 +8,7 @@ namespace FluentCRM
     {
         private Microsoft.Xrm.Sdk.Entity _newEntity = null;
 
-        ICreateEntity IUnknownEntity.Create(Dictionary<string, object> newAttributes)
+        ICreateEntity IUnknownEntity.Create(IDictionary<string, object> newAttributes)
         {
             CheckCreateRequired();
             foreach (var attribute in newAttributes)
@@ -23,7 +23,7 @@ namespace FluentCRM
             return (ICreateEntity) this;
         }
 
-        ICreateEntity ICreateEntity.Create(Dictionary<string, object> attributes)
+        ICreateEntity ICreateEntity.Create(IDictionary<string, object> attributes)
         {
             return ((IUnknownEntity) this ).Create(attributes);
         }
@@ -33,7 +33,7 @@ namespace FluentCRM
         /// </summary>
         /// <param name="optionSets"></param>
         /// <returns></returns>
-        public ICreateEntity CreateOptionSets(Dictionary<string, string> optionSets)
+        public ICreateEntity CreateOptionSets(IDictionary<string, string> optionSets)
         {
             CheckCreateRequired();
             foreach (var attribute in optionSets)
