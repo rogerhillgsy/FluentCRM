@@ -3,21 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentEntity", "FluentEntity\FluentEntity.csproj", "{86D897D3-24A8-471B-9EC6-8EE4D6F25139}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFluentCRM", "TestFluentCRM\TestFluentCRM.csproj", "{1C3C58DB-0367-4591-B540-05BA0FBC0943}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFluentEntity", "TestFluentEntity\TestFluentEntity.csproj", "{895626D1-B506-4225-AE38-CFE84E8B1FDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentCRM", "FluentCRM\FluentCRM.csproj", "{E2B2357E-A446-4B1E-9B18-F657824D5F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QA Labs 3", "QA Labs 3\QA Labs 3.csproj", "{02E014AD-8127-499C-A21B-2371238D8F0D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Create Nuget Package", "Create Nuget Package\Create Nuget Package.csproj", "{16BD1BE7-2C93-4EE8-917C-9024C6BE4BEA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{B18AA2B8-CE8C-45AF-8137-9789FFB43745}"
 	ProjectSection(SolutionItems) = preProject
-		Package.nuspec = Package.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -27,30 +18,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{86D897D3-24A8-471B-9EC6-8EE4D6F25139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86D897D3-24A8-471B-9EC6-8EE4D6F25139}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86D897D3-24A8-471B-9EC6-8EE4D6F25139}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86D897D3-24A8-471B-9EC6-8EE4D6F25139}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C3C58DB-0367-4591-B540-05BA0FBC0943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1C3C58DB-0367-4591-B540-05BA0FBC0943}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C3C58DB-0367-4591-B540-05BA0FBC0943}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C3C58DB-0367-4591-B540-05BA0FBC0943}.Release|Any CPU.Build.0 = Release|Any CPU
-		{895626D1-B506-4225-AE38-CFE84E8B1FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{895626D1-B506-4225-AE38-CFE84E8B1FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{895626D1-B506-4225-AE38-CFE84E8B1FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{895626D1-B506-4225-AE38-CFE84E8B1FDC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E2B2357E-A446-4B1E-9B18-F657824D5F88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E2B2357E-A446-4B1E-9B18-F657824D5F88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2B2357E-A446-4B1E-9B18-F657824D5F88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2B2357E-A446-4B1E-9B18-F657824D5F88}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02E014AD-8127-499C-A21B-2371238D8F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02E014AD-8127-499C-A21B-2371238D8F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02E014AD-8127-499C-A21B-2371238D8F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02E014AD-8127-499C-A21B-2371238D8F0D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16BD1BE7-2C93-4EE8-917C-9024C6BE4BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16BD1BE7-2C93-4EE8-917C-9024C6BE4BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16BD1BE7-2C93-4EE8-917C-9024C6BE4BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16BD1BE7-2C93-4EE8-917C-9024C6BE4BEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

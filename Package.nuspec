@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
-<package >
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" >
   <metadata>
     <id>FluentCRM</id>
     <version>9.0.1</version>
     <authors>Roger Hill</authors>
     <owners>Roger Hill</owners>
-    <licenseUrl>https://github.com/rogerhillgsy/FluentCRM/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/rogerhillgsy/FluentCRM/FluentCRM/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/rogerhillgsy/FluentCRM/</projectUrl>
     <iconUrl>https://github.com/rogerhillgsy/FluentCRM/Logo.png
     </iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Package that provides a streamline, Fluent interface to Microsoft Dynamics CRM</description>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Package that provides a streamlined, Fluent-style interface to Microsoft Dynamics CRM</description>
     <releaseNotes>Initial Release.</releaseNotes>
-    <copyright>Copyright 2018</copyright>
+    <copyright>Copyright 2019</copyright>
     <tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
     <dependencies>
-      <dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0" />
+      <!--<dependency id="Microsoft.CrmSdk.CoreAssemblies" version="9.0" />-->
     </dependencies>
   </metadata>
   <files>
-    <file src="FluentCRM\bin\*.dll" target="bin" />
+    <!--<file src="FluentCRM\bin\*.dll" target="bin" />-->
   </files>
 </package>

@@ -213,9 +213,6 @@ namespace FluentCRM
         }
 
         private LinkEntity _linkEntity;
-        private IJoinableEntitySet _isNotNull;
-        private IJoinableEntitySet _isNull;
-        private IJoinableAnotherWhere _and;
 
         protected LinkEntity LinkEntity
         {
