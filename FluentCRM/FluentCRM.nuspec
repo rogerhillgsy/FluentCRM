@@ -27,7 +27,7 @@
 	<!-- Set this to false if you don't need to support a license -->
     <!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
 
-	<releaseNotes>Initial Release</releaseNotes>
+	<releaseNotes>Add XML doc comments to interfaces</releaseNotes>
 	<tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
 	
     <dependencies>

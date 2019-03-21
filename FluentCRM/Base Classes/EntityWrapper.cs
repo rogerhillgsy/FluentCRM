@@ -11,10 +11,25 @@ namespace FluentCRM
     {
         private IOrganizationService _service;
         private Action<string> _tracer;
+
+        /// <summary>
+        /// Get or set the Alias value for fields in this entity.
+        /// </summary>
         public string Alias { get; set; }
+
+        /// <summary>
+        /// Return the Underlying SDK entity type.
+        /// </summary>
         public Entity Entity { get; }
+
         private static MemoryCache _optionSetLabelCache;        
 
+        /// <summary>
+        /// Construct a wrapper for the SDK Entity class.
+        /// </summary>
+        /// <param name="e">The underlying CRM SDK entity.</param>
+        /// <param name="service">The Organization service to be used to connect to CRM.</param>
+        /// <param name="tracer">Action function to be used to log and trace actions</param>
         public EntityWrapper(Entity e, IOrganizationService service, Action<string> tracer)
         {
             Entity = e;
@@ -56,16 +71,32 @@ namespace FluentCRM
             set { Entity.Attributes[key] = value; }
         }
 
+        /// <summary>
+        /// Get typed value of a specific attribute 
+        /// </summary>
+        /// <typeparam name="T">Expected type of attribute to be returned.</typeparam>
+        /// <param name="attribute">Logical name of attribute to return.</param>
+        /// <returns></returns>
         public T GetAttributeValue<T>(string attribute)
         {
             return Entity.GetAttributeValue<T>(attribute);
         }
 
+        /// <summary>
+        /// Find out if the underlying entity contains the given attribute.
+        /// </summary>
+        /// <param name="attribute">Logical name of the attribute.</param>
+        /// <returns></returns>
         public bool Contains(string attribute)
         {
             return Entity.Contains(attribute);
         }
 
+        /// <summary>
+        /// Get te              
+        /// </summary>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
         public string OptionString(string attribute)
         {
             if (!Contains(attribute))
