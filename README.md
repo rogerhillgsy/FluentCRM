@@ -53,3 +53,10 @@ FluentContact.Contact(contact.Id,  service)
 Adds a WeakExtractEntity clause. This will call the closue with an "entity" fetched with the listed attributes.
 
 [Another File](another.md)
+=======
+   This leads to the same information in multiple places, leading to mismatches and errors.
+   
+2) The issues around "phantom" updates to CRM attributes, where a poorly written client updates an attribute to the same value and writes it back 
+   to the server. This raises issues with clutter in the audit log, but more importantly can lead to workflows and plugins running even when there
+   has been no change to an attribute.
+
