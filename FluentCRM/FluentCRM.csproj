@@ -76,6 +76,7 @@
     <Compile Include="Entity Classes\FluentContact.cs" />
     <Compile Include="Entity Classes\FluentIncident.cs" />
     <Compile Include="Entity Classes\FluentPrimaryContact.cs" />
+    <None Include="Entity Classes\FluentTemplate.cs" />
     <Compile Include="Interfaces\IAnotherWhere.cs" />
     <Compile Include="Interfaces\ICanExecute.cs" />
     <Compile Include="Interfaces\ICreateEntity.cs" />

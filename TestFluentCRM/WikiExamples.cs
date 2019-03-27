@@ -179,5 +179,35 @@ namespace TestFluentCRM
 
 
         }
+
+        public struct myStruct
+        {
+            public string emailAddress;
+            public string phoneNumber;
+            public string name;
+
+        }
+
+        [TestMethod]
+        private void TestUseEntity()
+        {
+            var context = TestUtilities.TestContext1();
+            var contact1 = new Entity("contact");
+            var service = context.GetOrganizationService();
+            myStruct myStruct;
+        
+            FluentContact.Contact(contact1.Id, service)
+                .UseAttribute((string e) => myStruct.emailAddress = e, "emailaddress1")
+                .UseAttribute<string>(num => myStruct.phoneNumber = num, "mobilephone", "telephone1")
+                .UseEntity((EntityWrapper contact) =>
+                    {
+                        myStruct.name = string.Join(" ", contact["firstname"], contact["lastname"]);
+                    },
+                    "firstname", "lastname")
+                .Execute();
+
+            FluentAccount.Account(Guid.NewGuid())
+                .use
+        }
     }
 }
