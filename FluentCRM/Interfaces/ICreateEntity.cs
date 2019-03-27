@@ -37,6 +37,12 @@ namespace FluentCRM
         /// <param name="attributes">List of optionset name and value pairs used to create the attribute</param>
         ICreateEntity CreateOptionSets(IDictionary<string, string> attributes);
 
+        /// <summary>
+        /// Called to trigger the execution of the FluentCRM object. 
+        /// Start reading all required attributes, carrying out any updates, deleting records etc.
+        /// </summary>
+        /// <param name="preExecute">Called immediately prior to making calls to CRM</param>
+        /// <param name="postExecute">Called when execution has been completed.</param>
         void Execute( Action preExecute = null, Action<int,int> postExecute = null );
     }
 }

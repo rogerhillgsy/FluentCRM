@@ -1,5 +1,8 @@
 ﻿namespace FluentCRM
 {
+    /// <summary>
+    /// Inteface where we need to define another Where clause following an "And"
+    /// </summary>
     public interface IJoinableAnotherWhere
     {
         /// <summary>

@@ -3,6 +3,9 @@ using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
 {
+    /// <summary>
+    /// Interface to represent a class that is being joined to.
+    /// </summary>
     public interface IJoinable
     {
         /// <summary>

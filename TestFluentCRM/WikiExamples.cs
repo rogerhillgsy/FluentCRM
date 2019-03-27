@@ -205,9 +205,6 @@ namespace TestFluentCRM
                     },
                     "firstname", "lastname")
                 .Execute();
-
-            FluentAccount.Account(Guid.NewGuid())
-                .use
         }
     }
 }

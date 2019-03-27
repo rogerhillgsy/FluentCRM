@@ -7,6 +7,9 @@ using Microsoft.Xrm.Sdk.Metadata;
 
 namespace FluentCRM
 {
+    /// <summary>
+    ///  Wrapper class for a CRM Entity that offers additional functionality.
+    /// </summary>
     public class EntityWrapper
     {
         private IOrganizationService _service;

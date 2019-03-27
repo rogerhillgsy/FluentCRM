@@ -60,7 +60,6 @@ namespace FluentCRM
         /// </summary>
         /// <returns>FluentCRM object</returns>
         /// <param name="s">Select entity records where the given attribute starts with this value.</param>
-        /// <typeparam name="T">The type of the value being compared to.</typeparam>
         IJoinableEntitySet BeginsWith(string s);
 
         /// <summary>

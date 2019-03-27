@@ -4,6 +4,9 @@ using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
 {
+    /// <summary>
+    /// Represent FluentCRM object where no specific entity has been selected (yet)
+    /// </summary>
     public interface IUnknownEntity
     {
         /// <summary>

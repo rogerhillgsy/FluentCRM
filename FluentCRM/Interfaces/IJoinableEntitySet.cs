@@ -2,6 +2,9 @@
 
 namespace FluentCRM
 {
+    /// <summary>
+    /// Entity set produced by a Join operation
+    /// </summary>
     public interface IJoinableEntitySet
     {
         /// <summary>
