@@ -70,6 +70,12 @@ namespace FluentCRM
             return Clear(attributeToClear, additionalAttributesToClear);
         }
 
+        /// <summary>
+        /// Clear the specified attribute(s)
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToClear">First attribute to be cleared</param>
+        /// <param name="additionalAttributesToClear">Additional attributes to clear.</param>
         public ICanExecute Clear(string attributeToClear, params string[] additionalAttributesToClear)
         {
             Trace($"Update Entity {attributeToClear} ");

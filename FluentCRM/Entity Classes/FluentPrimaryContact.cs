@@ -7,31 +7,55 @@ using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
 {
+    /// <summary>
+    /// FluentCRM class used to encapsulate join access from an Account to the Primary contact of an Account (or Accounts)
+    /// </summary>
     public class FluentPrimaryContact : FluentContact
     {
-        public override string JoinAttribute(string rightEntityName)
+        /// <summary>
+        /// Internal-use function used to get the name of the "this entity" attribute to be used to join to the specified "foreign" entity .
+        /// </summary>
+        /// <param name="foreignEntityName"></param>
+        /// <returns>Name of "this entity" attribute to be used to join to the given "foreign" entity.</returns>
+        public override string JoinAttribute(string foreignEntityName)
         {
             return "contactid";
         }
 
-        public override string JoinFromAttribute(string leftEntityName)
+        /// <summary>
+        /// Internal-use function used to get the name of the "this entity" attribute to be used to join to the specified "foreign" entity .
+        /// </summary>
+        /// <param name="foreignEntityName"></param>
+        /// <returns>Name of "this entity" attribute to be used to join to the given "foreign" entity.</returns>
+        public override string JoinFromAttribute(string foreignEntityName)
         {
-            if (leftEntityName != "account")
+            if (foreignEntityName != "account")
             {
-                throw  new NotImplementedException("Joining to primary contact - left entity must be an account");
+                throw new NotImplementedException("Joining to primary contact - left entity must be an account");
             }
+
             return "primarycontactid";
         }
 
-        // Various bits of boilerplate to make sure that typing stuff works for the join.
+        /// <summary>
+        /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
+        /// </summary>
+        /// <param name="service">CRM system to fetch entity from</param>
+        /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
             return new FluentPrimaryContact(service);
         }
 
-        private FluentPrimaryContact(IOrganizationService service) : base(service) {}
+        private FluentPrimaryContact(IOrganizationService service) : base(service)
+        {
+        }
 
-        public FluentPrimaryContact() : base() {}
-
+        /// <summary>
+        /// Parameterless constructor required by the language, but not necessarily used.
+        /// </summary>
+        public FluentPrimaryContact() : base()
+        {
+        }
     }
 }

@@ -260,7 +260,6 @@ namespace TestFluentCRM
             var acc1 = _context.Data["account"].Values.Single( n => (string) n["name"] == "Account1");
             
             Assert.AreEqual("123456", acc1[ "phone1"]);
-            var existsCalled = false;
 
             FluentAccount.Account(_orgService)
                 .Where("name").BeginsWith("Account")

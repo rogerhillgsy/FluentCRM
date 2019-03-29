@@ -42,6 +42,10 @@ namespace FluentCRM
             return Order(attribute, OrderType.Descending);
         }
 
+        /// <summary>
+        /// Used to indicate that an additional selection criteria will be applied to the set of selected entities.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
         public IAnotherWhere And
         {
             get

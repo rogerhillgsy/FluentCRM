@@ -11,6 +11,9 @@ namespace FluentCRM
 {
     public abstract partial class FluentCRM : ICanExecute
     {
+        /// <summary>
+        /// Constant value used to cause fluent CRM to fetch all attributes of an entity  **DEPRECATED**
+        /// </summary>
         public const string AllColumns = "All Columns";
         private ColumnSet _columnSet = new ColumnSet();
         private int _fetchedEntityCount;
@@ -24,12 +27,22 @@ namespace FluentCRM
 
         #region "Execute CRM operations and actions"
 
+        /// <summary>
+        /// Closure called before each entity is processed.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="action">Called after the entity has been read with the entity value.</param>
         public ICanExecute BeforeEachEntity(Action<EntityWrapper> action)
         {
             _beforeEachEntityActions.Add(action);
             return this;
         }
 
+        /// <summary>
+        /// Closure called after each entity has been read and all closures called (i.e. from UseAttribute)
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="action">Called after the entity has been read with the entity value.</param>
         public ICanExecute AfterEachEntity(Action<EntityWrapper> action)
         {
             _afterEachEntityActions.Add(action);
@@ -142,12 +155,12 @@ namespace FluentCRM
                 _columnSet = new ColumnSet(true); // Get all attributes.
             }
 
-            if (_queryExpression != null)
+            if (QueryExpression != null)
             {
-                _queryExpression.ColumnSet = _columnSet;
-                _queryExpression.Orders.AddRange(_orders);
-                _queryExpression.PageInfo.PagingCookie = null;
-                _queryExpression.PageInfo.PageNumber = 1;
+                QueryExpression.ColumnSet = _columnSet;
+                QueryExpression.Orders.AddRange(_orders);
+                QueryExpression.PageInfo.PagingCookie = null;
+                QueryExpression.PageInfo.PageNumber = 1;
             }
 
             // Look after any criteria in linked entities.
@@ -177,16 +190,16 @@ namespace FluentCRM
                     _entities = new Collection<Entity>();
                 }
             }
-            else if (_queryExpression != null)
+            else if (QueryExpression != null)
             {
                 EntityCollection result;
                 try
                 {
                     // Trace($"_queryexpression = {XMLUtilities.ToString(_queryExpression)}");
-                    result = Service.RetrieveMultiple(_queryExpression);
+                    result = Service.RetrieveMultiple(QueryExpression);
                     _entities = result.Entities;
-                    _queryExpression.PageInfo.PageNumber++;
-                    _queryExpression.PageInfo.PagingCookie = result.PagingCookie;
+                    QueryExpression.PageInfo.PageNumber++;
+                    QueryExpression.PageInfo.PagingCookie = result.PagingCookie;
                     return result.MoreRecords;
                 }
                 catch (Exception ex)

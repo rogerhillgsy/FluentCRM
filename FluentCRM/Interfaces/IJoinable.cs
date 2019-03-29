@@ -82,6 +82,7 @@ namespace FluentCRM
 
         /// <summary>
         /// Internal function used to return a new instance of the joined-to FluentCRM object.
+        /// </summary>
         /// <returns>FluentCRM object</returns>
         /// <param name="service">OrganizationService used to connect to CRM.</param>
         IJoinable Factory(IOrganizationService service);

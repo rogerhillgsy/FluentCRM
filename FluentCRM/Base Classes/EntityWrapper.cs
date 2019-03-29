@@ -13,7 +13,7 @@ namespace FluentCRM
     public class EntityWrapper
     {
         private IOrganizationService _service;
-        private Action<string> _tracer;
+        private readonly Action<string> _tracer;
 
         /// <summary>
         /// Get or set the Alias value for fields in this entity.
@@ -141,6 +141,9 @@ namespace FluentCRM
                 .UserLocalizedLabel.Label;
         }
 
+        /// <summary>
+        /// ID of the underlying entity represented by this EntityWrapper.
+        /// </summary>
         public Guid Id => Entity.Id;
 
         private void Trace(string format, params string[] args)

@@ -22,6 +22,12 @@ namespace FluentCRM
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Join the current entity to the specified FluentCRM entity.
+        /// </summary>
+        /// <returns>FluentCRM entity</returns>
+        /// <param name="target">Closure used to configure the joined entity.</param>
+        /// <typeparam name="T">The type of entity joined to.</typeparam>
         public ICanExecute Join<T>(Action<IJoinable> target) where T : FluentCRM, new()
         {
             // Force use of RetrieveMultiple() rather than just Retrieve.
@@ -135,14 +141,30 @@ namespace FluentCRM
             return (IJoinableEntitySet) this.UseEntity(action, attribute1, attributes);
         }
 
+        /// <summary>
+        /// Update a given attribute in the current entity. Do so in a "weak" fashion.
+        /// If the value is unchanged, no update will occur. (Including setting a null value to null)
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="updateValue">Value to be used to update the attribute</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
         public IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, T updateValue)
         {
-            return (IJoinableEntitySet) this.WeakUpdate(attributeToUpdate, updateValue);
+            return (IJoinableEntitySet) ((IEntitySet) this).WeakUpdate(attributeToUpdate, updateValue);
         }
 
+        /// <summary>
+        /// Update a given attribute in the current entity. Do so in a "weak" fashion.
+        /// If the value is unchanged, no update will occur. (Including setting a null value to null)
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="getUpdateValue">Closure that returns the value to be used to update the attribute.</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
         public IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
         {
-            return (IJoinableEntitySet) this.WeakUpdate(attributeToUpdate, getUpdateValue);
+            return (IJoinableEntitySet) ((IEntitySet)this).WeakUpdate(attributeToUpdate, getUpdateValue);
             throw new NotImplementedException();
         }
 
@@ -151,9 +173,19 @@ namespace FluentCRM
             get { return (IJoinableAnotherWhere) And; }
         } 
 
-        public IJoinableEntitySet UseAttribute<T>(Action<string, T> action, string attribute1, params string[] attributes)
+        /// <summary>
+        /// Read an attribute from the current entity and call the action closure with the attribute value as argument.
+        /// If the attribute has a null value, the closure will not be called.
+        /// If multiple attributes are specified, then the first non-null value will be used to call the action closure.
+        /// </summary>
+        /// <returns>FluentCRM Object</returns>
+        /// <param name="action">Closure to be called with the name of the attribute and the value of the attribute (if not null)</param>
+        /// <param name="attribute">The logical name of the attribute that we will try to extract</param>
+        /// <param name="optionalAttributes">Optional attributes that we will try to use if the first attribute is null</param>
+        /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
+        public IJoinableEntitySet UseAttribute<T>(Action<string, T> action, string attribute, params string[] optionalAttributes)
         {
-            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute1, attributes);
+            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute, optionalAttributes);
         }
 
         IJoinableEntitySet IJoinable.UseEntity(Action<EntityWrapper,string> action, string attribute1, params string[] attributes)
@@ -166,23 +198,46 @@ namespace FluentCRM
             return (IJoinableEntitySet) UseEntity(action, attribute1, attributes);
         }
 
-        public IJoinableEntitySet UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
+        /// <summary>
+        /// Read an attribute from the current entity and call the action closure with the attribute value as argument.
+        /// If the attribute has a null value, the closure will not be called.
+        /// If multiple attributes are specified, then the first non-null value will be used to call the action closure.
+        /// </summary>
+        /// <returns>FluentCRM Object</returns>
+        /// <param name="action">Closure to be called with the name of the attribute and the value of the attribute (if not null)</param>
+        /// <param name="attribute">The logical name of the attribute that we will try to extract</param>
+        /// <param name="optionalAttributes">Optional attributes that we will try to use if the first attribute is null</param>
+        /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
+        public IJoinableEntitySet UseAttribute<T>(Action<T> action, string attribute, params string[] optionalAttributes)
         {
-            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute1, attributes);
+            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute, optionalAttributes);
         }
 
 
-        public virtual string JoinAttribute(string JoinEntity)
+        /// <summary>
+        /// Returns the name of the lookup attribute to be used to join to the given entity.
+        /// </summary>
+        /// <returns>The attribute.</returns>
+        /// <param name="joinEntity">Join entity.</param>
+        public virtual string JoinAttribute(string joinEntity)
         {
             throw new NotImplementedException();
         }
 
-        // Use in non-standard join scenarios, such as Account to primary contact.
-        public virtual string JoinFromAttribute(string leftEntityName)
+        /// <summary>
+        /// Internal-use function used to get the name of the "this entity" attribute to be used to join to the specified "foreign" entity .
+        /// </summary>
+        /// <param name="foreignEntityName"></param>
+        /// <returns>Name of "this entity" attribute to be used to join to the given "foreign" entity.</returns>
+        public virtual string JoinFromAttribute(string foreignEntityName)
         {
             return null;
         }
 
+        /// <summary>
+        /// Used to spectify that an outer join is to be used.
+        /// </summary>
+        /// <returns>The outer.</returns>
         public IJoinableEntitySet Outer()
         {
             LinkEntity.JoinOperator = JoinOperator.LeftOuter;
@@ -190,23 +245,45 @@ namespace FluentCRM
         }
         #endregion
 
+        /// <summary>
+        /// Constructor required for Join operation.
+        /// </summary>
         protected FluentCRM()
         {
             GetAlias = () => $"a.{AliasCount++}";
         }
 
+        /// <summary>
+        /// Used to ensure that constructed alias names are unique.
+        /// </summary>
         protected int AliasCount = 1;
 
+        /// <summary>
+        /// Function used to get alias values for joined entities.
+        /// </summary>
         protected Func<string> _getAlias;
 
+        /// <summary>
+        /// Base function used to get unique alias values.
+        /// </summary>
         protected Func<string> GetAlias
         {
             get { return _getAlias ?? (_getAlias = () => $"a{AliasCount++}"); }
             set { _getAlias = value; }
         }
 
+        /// <summary>
+        /// Abstract factory function used to construct an instance of the target entity.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
         public abstract IJoinable Factory(IOrganizationService service);
 
+        /// <summary>
+        /// Select joined entity records where the given attribute meets some condition
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeName">Logical name that is the subject of the condition</param>
         public IJoinableNeedsWhereCriteria Where(string attributeName)
         {
             return (IJoinableNeedsWhereCriteria) ((IUnknownEntity) this).Where(attributeName);
@@ -214,6 +291,9 @@ namespace FluentCRM
 
         private LinkEntity _linkEntity;
 
+        /// <summary>
+        /// Link value used in joins to related entities.
+        /// </summary>
         protected LinkEntity LinkEntity
         {
             get
@@ -227,6 +307,9 @@ namespace FluentCRM
             }
         }
 
+        /// <summary>
+        /// Used to return the Primary key of the current entity.
+        /// </summary>
         public virtual string PrimaryKey => $"{LogicalName}id";
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.Equals<T>(T value)
@@ -263,6 +346,12 @@ namespace FluentCRM
         {
             return (IJoinableEntitySet) BeginsWith(s);
         }
+
+        IJoinableEntitySet IJoinableNeedsWhereCriteria.Condition(ConditionOperator op)
+        {
+            return (IJoinableEntitySet) Condition(op);
+        }
+
 
         IJoinableEntitySet IJoinableNeedsWhereCriteria.Condition<T>(ConditionOperator op, T value)
         {

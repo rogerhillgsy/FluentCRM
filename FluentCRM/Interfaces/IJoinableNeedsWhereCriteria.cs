@@ -2,6 +2,9 @@
 
 namespace FluentCRM
 {
+    /// <summary>
+    /// Interface used where FluentCRM requires that some kind of criteria be specified following a Where() clause.
+    /// </summary>
     public interface IJoinableNeedsWhereCriteria
     {
         /// <summary>
@@ -61,6 +64,13 @@ namespace FluentCRM
         /// <returns>FluentCRM object</returns>
         /// <param name="s">Select entity records where the given attribute starts with this value.</param>
         IJoinableEntitySet BeginsWith(string s);
+
+        /// <summary>
+        /// Add criteria that the Where-attribute matches the given condition and value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="op">ConditionalOperator from the CRM SDK.</param>
+        IJoinableEntitySet Condition(ConditionOperator op );   
 
         /// <summary>
         /// Add criteria that the Where-attribute matches the given condition and value

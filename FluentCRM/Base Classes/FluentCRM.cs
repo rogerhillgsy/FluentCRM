@@ -5,12 +5,21 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace FluentCRM
 {
+    /// <summary>
+    /// Base class used to provide a Fluent-style interface for interacting with Microsoft Dynamics CRM
+    /// </summary>
     public abstract partial class FluentCRM : IUnknownEntity, IEntitySet, INeedsWhereCriteria, IAnotherWhere
     {
         private Guid _id = Guid.Empty;
 
+        /// <summary>
+        /// IOrganizationService that will be used by the FluentCRM instance.
+        /// </summary>
         public IOrganizationService Service { get; }
 
+        /// <summary>
+        /// Logical name of the entity associated with the current FluentCRM instance.
+        /// </summary>
         public virtual string LogicalName { get; }
 
         private Entity _update;
@@ -28,20 +37,37 @@ namespace FluentCRM
 
         #region "Constructors and Factory functions"
 
+        /// <summary>
+        /// Construct FluentCRM instance with the given logical name and IOrganizationService for accssing CRM.
+        /// </summary>
+        /// <param name="logicalName">CRM logical name of the entity to be accessed</param>
+        /// <param name="service">Connection to be used to access CRM.</param>
         protected FluentCRM(string logicalName, IOrganizationService service)
         {
             LogicalName = logicalName;
             Service = service;
         }
 
+        /// <summary>
+        /// Construct FluentCRM instance with the given logical name and IOrganizationService for accessing CRM.
+        /// </summary>
+        /// <param name="logicalName">CRM logical name of the entity to be accessed</param>
+        /// <param name="id">Guid of a specific entity to be operated on.</param>
+        /// <param name="service">Connection to be used to access CRM.</param>
         protected FluentCRM(string logicalName, Guid id, IOrganizationService service) : this(logicalName, service)
         {
             _id = id;
         }
 
-      
+        /// <summary>
+        /// Used to set or return a CRM connection that can be used globally by all FluentCRM objects.
+        /// </summary>
         public static IOrganizationService StaticService { get; set; } = null;
 
+        /// <summary>
+        /// Select specific entity with given id value using the static organization service specified by FluentCRM.StaticService
+        /// </summary>
+        /// <param name="logicalName">CRM logical name of the entity to be accessed</param>
         protected FluentCRM(string logicalName )
         {
             LogicalName = logicalName;
@@ -53,6 +79,11 @@ namespace FluentCRM
             Service = StaticService;
         }
 
+        /// <summary>
+        /// Select specific entity with given id value using the static organization service specified by FluentCRM.StaticService
+        /// </summary>
+        /// <param name="logicalName">CRM logical name of the entity to be accessed</param>
+        /// <param name="id">Guid of a specific entity to be operated on.</param>
         protected FluentCRM(string logicalName, Guid id) : this(logicalName)
         {
             _id = id;

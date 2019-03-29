@@ -119,5 +119,16 @@ namespace TestFluentCRM
             return context;
         }
 
+        public static XrmFakedContext TestContext3(Entity additionalEntity, params Entity[] additionalEntities)
+        {
+            var list = List1();
+            list.Add(additionalEntity);
+            list.AddRange(additionalEntities);
+            var context = new XrmFakedContext();
+            context.Initialize( list);
+
+            return context;
+        }
+
     }
 }

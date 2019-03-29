@@ -120,6 +120,7 @@
     <Compile Include="Test6-ICreateEntity.cs" />
     <Compile Include="Test7-IJoinable.cs" />
     <Compile Include="Test8-IEntityWrapper.cs" />
+    <Compile Include="Test10-SpecificEntities.cs" />
     <Compile Include="WikiExamples.cs" />
   </ItemGroup>
   <ItemGroup>

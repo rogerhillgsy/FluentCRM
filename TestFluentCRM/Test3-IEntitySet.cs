@@ -606,7 +606,7 @@ namespace TestFluentCRM
                     .Count(c => Assert.AreEqual(1, c))
                 ; //.Execute();
 
-            var qe = ((FluentCRM.FluentCRM) fa1)._queryExpression;
+            var qe = ((FluentCRM.FluentCRM) fa1).QueryExpression;
 
             // This kind of join seems not to work in FakeXrmEasy. Does work with a real CRM system.
             //fa1.Execute();

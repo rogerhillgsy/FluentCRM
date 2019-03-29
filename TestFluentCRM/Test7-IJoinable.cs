@@ -312,6 +312,26 @@ namespace TestFluentCRM
                 .Execute();
 
             Assert.IsTrue(called);
+
+
+            // Join account to contact entity via the primary
+FluentAccount.Account(account1.Id)
+.Join<FluentContact>(
+    c => c.UseAttribute<string>(s =>
+        {
+            Debug.WriteLine(s);
+        }, "lastname"))
+.Execute();
+
+FluentAccount.Account(account1.Id)
+    .Join<FluentPrimaryContact>(
+        c => c.UseAttribute<string>(s =>
+        {
+            Debug.WriteLine(s);
+        }, "lastname"))
+    .Execute();
+
+
         }
 
         // Test form of UseEntity where actual entity name is passed to closure.
@@ -493,19 +513,20 @@ namespace TestFluentCRM
         public void TestJoin2()
         {
             var calls = 0;
-              Action<string, string> processAttribute = (string attr, string val) =>
-              {
-                  Debug.WriteLine($"ProcessAttribute :{attr}/{val}");
-                  calls++;
-              };
+
+            void ProcessAttribute(string attr, string val)
+            {
+                Debug.WriteLine($"ProcessAttribute :{attr}/{val}");
+                calls++;
+            }
 
             // Look for contacts of account
             FluentAccount.Account()
                 .Where("name").Equals("Account1")
                 .Join<FluentContact>(
-                    c => c.UseAttribute(processAttribute, "firstname")
-                        .UseAttribute(processAttribute, "lastname")
-                        .UseAttribute(processAttribute, "firstname")
+                    c => c.UseAttribute((Action<string, string>) ProcessAttribute, "firstname")
+                        .UseAttribute((Action<string, string>) ProcessAttribute, "lastname")
+                        .UseAttribute((Action<string, string>) ProcessAttribute, "firstname")
                     )
                 .Exists( (e) => Assert.IsTrue(e))
                 .Count((c) => Assert.AreEqual(2, c))
@@ -518,35 +539,38 @@ namespace TestFluentCRM
         public void TestLogicalName()
         {
             var calls = 0;
-            Action<string, string> processAttribute = (string attr, string val) =>
+
+            void ProcessAttribute(string attr, string val)
             {
                 Debug.WriteLine($"ProcessAttribute :{attr}/{val}");
                 calls++;
-            };
+            }
 
-             FluentAccount.Account()
+            FluentAccount.Account()
                 .Where("name").Equals("Account1")
                 .Join<FluentContact>(
                     c =>
                     {
                         Assert.AreEqual("contact", c.LogicalName);
-                        c.UseAttribute(processAttribute, "firstname")
-                             .UseAttribute(processAttribute, "lastname")
-                             .UseAttribute(processAttribute, "firstname");
+                        c.UseAttribute((Action<string, string>) ProcessAttribute, "firstname")
+                             .UseAttribute((Action<string, string>) ProcessAttribute, "lastname")
+                             .UseAttribute((Action<string, string>) ProcessAttribute, "firstname");
                     })
                 .Exists((e) => Assert.IsTrue(e))
-                .Count((c) => Assert.AreEqual(2, c));
+                .Count((c) => Assert.AreEqual(2, c))
+                .Execute();
         }
 
         [TestMethod]
         public void TestJoinAttribute()
         {
             var calls = 0;
-            Action<string, string> processAttribute = (string attr, string val) =>
+
+            void ProcessAttribute(string attr, string val)
             {
                 Debug.WriteLine($"ProcessAttribute :{attr}/{val}");
                 calls++;
-            };
+            }
 
             FluentAccount.Account()
                 .Where("name").Equals("Account1")
@@ -555,11 +579,12 @@ namespace TestFluentCRM
                     {
                         Assert.AreEqual( "parentcustomerid", c.JoinAttribute("account"));
                         Assert.AreEqual( "contactid", c.JoinAttribute("annotation"));
-                        c.UseAttribute(processAttribute, "firstname")
-                            .UseAttribute(processAttribute, "firstname");
+                        c.UseAttribute((Action<string, string>) ProcessAttribute, "firstname")
+                            .UseAttribute((Action<string, string>) ProcessAttribute, "firstname");
                     })
                 .Exists((e) => Assert.IsTrue(e))
-                .Count((c) => Assert.AreEqual(2, c));
+                .Count((c) => Assert.AreEqual(2, c))
+                .Execute();
         }
 
         [TestMethod]

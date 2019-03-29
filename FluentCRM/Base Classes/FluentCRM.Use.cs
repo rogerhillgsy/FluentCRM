@@ -123,20 +123,8 @@ namespace FluentCRM
                     (entity, c) =>
                     {
                         entity.Alias = alias;
-                        //foreach (var c1 in allAttributes)
-                        //{
-                            //var column = alias + c1;
-                            //if (entity != null &&
-                            //    ( column == AllColumns ||
-                            //    entity.Contains(column)))
-                            //{
-                                action(entity, alias);
-                                return true;
-                            //}
-                        //}
-
-                        Trace($"Columns not found so no action taken: {string.Join(",", allAttributes)}");
-                        return false;
+                        action(entity, alias);
+                        return true;
                     }
                 ));
 

@@ -2,23 +2,24 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace FluentCRM
 {
     /// <summary>
-    /// FluentCRM class used to encapsulate access to the Account Entity
+    /// FluentCRM class used to encapsulate access to the UserSettings Entity
     /// </summary>
-    public class FluentAccount : FluentCRM
+    public class FluentUserSettings : FluentCRM
     {
 
-        private const string _logicalName = "account";
+        private const string _logicalName = "usersettings";
 
         #region "Constructors etc required by Language"
-        private FluentAccount(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
+        private FluentUserSettings(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentAccount(IOrganizationService service) : base(_logicalName, service) { }
+        private FluentUserSettings(IOrganizationService service) : base(_logicalName, service) { }
 
-        private FluentAccount(Guid id) : base(_logicalName, id) { }
+        private FluentUserSettings(Guid id) : base(_logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
@@ -26,9 +27,9 @@ namespace FluentCRM
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Account(Guid id, IOrganizationService service)
+        public static IEntitySet UserSettings(Guid id, IOrganizationService service)
         {
-            return new FluentAccount(id, service);
+            return new FluentUserSettings(id, service);
         }
 
         /// <summary>
@@ -36,9 +37,9 @@ namespace FluentCRM
         /// </summary>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Account(IOrganizationService service)
+        public static IUnknownEntity UserSettings(IOrganizationService service)
         {
-            return new FluentAccount(service);
+            return new FluentUserSettings(service);
         }
 
         /// <summary>
@@ -46,24 +47,24 @@ namespace FluentCRM
         /// </summary>
         /// <param name="id">Guid of entity to operator on</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Account(Guid id)
+        public static IEntitySet UserSettings(Guid id)
         {
-            return new FluentAccount(id);
+            return new FluentUserSettings(id);
         }
 
         /// <summary>
         /// Select a (sub)set of the specified entity using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Account()
+        public static IUnknownEntity UserSettings()
         {
-            return new FluentAccount();
+            return new FluentUserSettings();
         }
 
         /// <summary>
         /// Parameterless constructor required by the language, but not necessarily used.
         /// </summary>
-        public FluentAccount() : base(_logicalName) { }
+        public FluentUserSettings() : base(_logicalName) { }
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
@@ -72,7 +73,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
-            return new FluentAccount(service);
+            return new FluentUserSettings(service);
         }
         #endregion
 
@@ -101,8 +102,32 @@ namespace FluentCRM
             }
             else
             {
-                return "accountid";
+                return "usersettingsid";
             }
+        }
+
+
+
+        /// <summary>
+        /// Extract user settngsrecord for the current user.
+        /// </summary>
+        /// <returns></returns>
+        public static ICanExecute CurrentUserSettings()
+        {
+            var rv = (IUnknownEntity) new FluentUserSettings();
+            return  (ICanExecute) rv.Where("systemuserid").Condition(ConditionOperator.EqualUserId);
+        }
+
+
+        /// <summary>
+        /// Extract systemuser record for the current user.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public static ICanExecute CurrentUserSettings(IOrganizationService service)
+        {
+            var rv = (IUnknownEntity) new FluentUserSettings(service);
+            return  (ICanExecute) rv.Where("systemuserid").Condition(ConditionOperator.EqualUserId);
         }
     }
 }

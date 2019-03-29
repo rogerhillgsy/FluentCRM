@@ -39,10 +39,9 @@ namespace FluentCRM
             foreach (var attribute in optionSets)
             {
                 // Ignore null values
-                int intValue;
                 if (!string.IsNullOrEmpty(attribute.Value))
                 {
-                    if (int.TryParse(attribute.Value, out intValue))
+                    if (int.TryParse(attribute.Value, out int intValue))
                     {
 
                         var intOption = new OptionSetValue(intValue);
@@ -52,16 +51,20 @@ namespace FluentCRM
                     {
                         Trace($"Attribute {attribute.Key} - expected integer - actual {attribute.Value}");
                     }
-
                 }
             }
 
             return this;
         }
 
-        public ICreateEntity Id(Action<EntityReference> extractId)
+        /// <summary>
+        /// Calls the given closure with the Guid of the newly created entity.
+        /// </summary>
+        /// <returns>FluentCRM</returns>
+        /// <param name="returnNewId">Closure called with the Guid of the newly created entity..</param>
+        public ICreateEntity Id(Action<EntityReference> returnNewId)
         {
-            _postExecuteActions.Add(() => extractId(_newEntity.ToEntityReference()));
+            _postExecuteActions.Add(() => returnNewId(_newEntity.ToEntityReference()));
             return this;
         }
 

@@ -88,7 +88,7 @@ namespace FluentCRM
         /// </summary>
         /// <returns>FluentCRM object</returns>
         /// <param name="attributeToUpdate">Attribute to be updated.</param>
-        /// <param name="getUpdateValue">Closure that returns the value to be used to update the attribute.</param>
+        /// <param name="getUpdateValue">Closure that is called with the current value of the attribute and returns the value to be used to update the attribute.</param>
         /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
         ICanExecute WeakUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
 

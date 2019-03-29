@@ -144,6 +144,37 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
+        public void TestFluentCRM4()
+        {
+            var context = TestUtilities.TestContext1();
+            var contact1 = context.Data["contact"].First().Value;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+
+            MyStruct dto = new MyStruct
+            {
+                phoneNumber = "123456",
+                emailAddress = "smith@gmail.com",
+                name = "John Smith"
+            };
+
+
+            FluentContact.Contact(contact1.Id)
+                .WeakUpdate("lastname", (string n) => dto.name )
+                .Execute();
+
+var smithSequence = 0;
+FluentContact.Contact()
+    .Where("lastname").Equals("Smith")
+    .WeakUpdate("new_smithsequence", (int i) => smithSequence++ )
+    .Execute();
+
+            FluentContact.Contact(Guid.NewGuid())
+                .UseAttribute((string s) => Debug.WriteLine(s), "name")
+                .Count(n => Assert.AreEqual(0,n))
+                .Execute();
+        }
+
+        [TestMethod]
         public void JoinDemo()
         {
             var context = TestUtilities.TestContext1();
@@ -153,7 +184,7 @@ namespace TestFluentCRM
             var shippingLabelId = Guid.Empty;
             var shippingUrl = string.Empty;
 
-            FluentIncident.Incident(incidentId, context.GetOrganizationService())
+            FluentCase.Case(incidentId, context.GetOrganizationService())
                 .Join<FluentAnnotation>(a => a.UseEntity(
                     (EntityWrapper e, string alias) =>
                     {
@@ -180,7 +211,7 @@ namespace TestFluentCRM
 
         }
 
-        public struct myStruct
+        public struct MyStruct
         {
             public string emailAddress;
             public string phoneNumber;
@@ -189,12 +220,12 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
-        private void TestUseEntity()
+        public void TestUseEntity()
         {
             var context = TestUtilities.TestContext1();
-            var contact1 = new Entity("contact");
+            var contact1 = context.Data["contact"].First().Value;
             var service = context.GetOrganizationService();
-            myStruct myStruct;
+            MyStruct myStruct;
         
             FluentContact.Contact(contact1.Id, service)
                 .UseAttribute((string e) => myStruct.emailAddress = e, "emailaddress1")

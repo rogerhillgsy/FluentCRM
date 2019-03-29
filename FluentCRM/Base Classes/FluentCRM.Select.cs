@@ -6,8 +6,10 @@ namespace FluentCRM
 {
     public abstract partial class FluentCRM
     {
-        //private QueryExpression _queryExpression;
-        public QueryExpression _queryExpression;
+        /// <summary>
+        /// Return the query expression that will be executed by FluentCRM.
+        /// </summary>
+        public QueryExpression QueryExpression { get; private set; }
 
         #region "Entity Selection functions"
 
@@ -33,6 +35,12 @@ namespace FluentCRM
             return (INeedsWhereCriteria) ((IUnknownEntity) this).Where(attributeName);
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute equals the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="value">Select entity records where the given attribute equals this value.</param>
+        /// <typeparam name="T">The type of the value being compared to.</typeparam>
         public IEntitySet Equals<T>(T value)
         {
             Trace("Equals...");
@@ -40,6 +48,12 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute does not equal the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="value">Select entity records where the given attribute does not equal this value.</param>
+        /// <typeparam name="T">The type of the value being compared to.</typeparam>
         public IEntitySet NotEqual<T>(T value)
         {
             Trace("Not Equal...");
@@ -47,6 +61,11 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute begins with the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="s">Select entity records where the given attribute starts with this string value.</param>
         public IEntitySet BeginsWith(string s)
         {
             Trace($"Begins with...{s}");
@@ -54,6 +73,25 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute matches the given condition and value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="op">ConditionalOperator from the CRM SDK.</param>
+        public IEntitySet Condition(ConditionOperator op )
+        {
+            Trace($"Operator {op.ToString()}");
+            AddCriteria(new ConditionExpression(_whereAttribute, op));
+            return this;
+        }
+
+        /// <summary>
+        /// Add criteria that the Where-attribute matches the given condition and value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="op">ConditionalOperator from the CRM SDK.</param>
+        /// <param name="value">Select entity records where the given attribute and conition matches this value.</param>
+        /// <typeparam name="T">The type of the value being compared to.</typeparam>
         public IEntitySet Condition<T>(ConditionOperator op, T value)
         {
             Trace($"Operator {op.ToString()}");
@@ -61,6 +99,10 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute is not null
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
         public IEntitySet IsNotNull
         {
             get
@@ -71,6 +113,10 @@ namespace FluentCRM
             }
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute is null
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
         public IEntitySet IsNull
         {
             get
@@ -81,6 +127,11 @@ namespace FluentCRM
             }
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute is in the given set of values
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="inVals">Select entity records where the given attribute value is in the given set of values</param>
         public IEntitySet In<T>(params T[] inVals)
         {
             Trace("IsNull...");
@@ -88,6 +139,12 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute is greater than the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="value">Select entity records where the given attribute is greater than this value.</param>
+        /// <typeparam name="T">The type of the value being compared to.</typeparam>
         public IEntitySet GreaterThan<T>(T value)
         {
             Trace("IsNull...");
@@ -95,6 +152,12 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Add criteria that the Where-attribute is less than the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="value">Select entity records where the given attribute is less than this value.</param>
+        /// <typeparam name="T">The type of the value being compared to.</typeparam>
         public IEntitySet LessThan<T>(T value)
         {
             Trace("IsNull...");
@@ -110,13 +173,16 @@ namespace FluentCRM
             }
         }
 
+        /// <summary>
+        /// Query that will be used to select Entity records on which to operate.
+        /// </summary>
         protected QueryExpression Query
         {
             get
             {
-                if (_queryExpression == null)
+                if (QueryExpression == null)
                 {
-                    _queryExpression = new QueryExpression
+                    QueryExpression = new QueryExpression
                     {
                         EntityName = LogicalName,
                         ColumnSet = new ColumnSet(true),
@@ -136,7 +202,7 @@ namespace FluentCRM
                     };
                 }
 
-                return _queryExpression;
+                return QueryExpression;
             }
         }
 

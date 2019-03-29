@@ -6,19 +6,19 @@ using Microsoft.Xrm.Sdk;
 namespace FluentCRM
 {
     /// <summary>
-    /// FluentCRM class used to encapsulate access to the Account Entity
+    /// FluentCRM class used to encapsulate access to the Queue Entity
     /// </summary>
-    public class FluentAccount : FluentCRM
+    public class FluentQueue : FluentCRM
     {
 
-        private const string _logicalName = "account";
+        private const string _logicalName = "queue";
 
         #region "Constructors etc required by Language"
-        private FluentAccount(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
+        private FluentQueue(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentAccount(IOrganizationService service) : base(_logicalName, service) { }
+        private FluentQueue(IOrganizationService service) : base(_logicalName, service) { }
 
-        private FluentAccount(Guid id) : base(_logicalName, id) { }
+        private FluentQueue(Guid id) : base(_logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
@@ -26,9 +26,9 @@ namespace FluentCRM
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Account(Guid id, IOrganizationService service)
+        public static IEntitySet Queue(Guid id, IOrganizationService service)
         {
-            return new FluentAccount(id, service);
+            return new FluentQueue(id, service);
         }
 
         /// <summary>
@@ -36,9 +36,9 @@ namespace FluentCRM
         /// </summary>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Account(IOrganizationService service)
+        public static IUnknownEntity Queue(IOrganizationService service)
         {
-            return new FluentAccount(service);
+            return new FluentQueue(service);
         }
 
         /// <summary>
@@ -46,24 +46,24 @@ namespace FluentCRM
         /// </summary>
         /// <param name="id">Guid of entity to operator on</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Account(Guid id)
+        public static IEntitySet Queue(Guid id)
         {
-            return new FluentAccount(id);
+            return new FluentQueue(id);
         }
 
         /// <summary>
         /// Select a (sub)set of the specified entity using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Account()
+        public static IUnknownEntity Queue()
         {
-            return new FluentAccount();
+            return new FluentQueue();
         }
 
         /// <summary>
         /// Parameterless constructor required by the language, but not necessarily used.
         /// </summary>
-        public FluentAccount() : base(_logicalName) { }
+        public FluentQueue() : base(_logicalName) { }
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
@@ -72,7 +72,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
-            return new FluentAccount(service);
+            return new FluentQueue(service);
         }
         #endregion
 
@@ -101,7 +101,7 @@ namespace FluentCRM
             }
             else
             {
-                return "accountid";
+                return "queueid";
             }
         }
     }

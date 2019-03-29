@@ -40,6 +40,11 @@ namespace FluentCRM
             _traceFunction?.Invoke(String.Format(format, args));
         }
 
+        /// <summary>
+        /// Output messages regarding the excution time of create, read and update operations.
+        /// </summary>
+        /// <param name="timerAction">Action function that can be used to log timer messasges</param>
+        /// <returns>FluentCRM Object</returns>
         public IUnknownEntity Timer(Action<string> timerAction)
         {
             _timerFunction = timerAction;
