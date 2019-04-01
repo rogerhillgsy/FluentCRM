@@ -70,7 +70,7 @@ namespace FluentCRM
             return (IEntitySet) Order(attribute, OrderType.Descending);
         }
 
-        ICanExecute ICanExecute.Exists(Action<bool> action)
+        public ICanExecute Exists(Action<bool> action)
         {
             _actionList.Add(new Tuple<string[], Func<EntityWrapper, string, bool?>>(
                 new string[] {"createdon"},
@@ -85,7 +85,7 @@ namespace FluentCRM
             return this;
         }
 
-        ICanExecute ICanExecute.Exists(Action whenTrue, Action whenFalse)
+        public ICanExecute Exists(Action whenTrue, Action whenFalse)
         {
             return ((ICanExecute) this).Exists(c =>
             {

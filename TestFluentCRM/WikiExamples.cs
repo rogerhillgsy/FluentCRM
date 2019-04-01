@@ -162,11 +162,11 @@ namespace TestFluentCRM
                 .WeakUpdate("lastname", (string n) => dto.name )
                 .Execute();
 
-var smithSequence = 0;
-FluentContact.Contact()
-    .Where("lastname").Equals("Smith")
-    .WeakUpdate("new_smithsequence", (int i) => smithSequence++ )
-    .Execute();
+            var smithSequence = 0;
+            FluentContact.Contact()
+                .Where("lastname").Equals("Smith")
+                .WeakUpdate("new_smithsequence", (int i) => smithSequence++)
+                .Execute();
 
             FluentContact.Contact(Guid.NewGuid())
                 .UseAttribute((string s) => Debug.WriteLine(s), "name")
@@ -189,7 +189,7 @@ FluentContact.Contact()
                     (EntityWrapper e, string alias) =>
                     {
                         var filename = (string) e["filename"];
-                        if (filename?.Contains("Shipping.") ?? false )
+                        if (filename?.Contains("Shipping.") ?? false)
                         {
                             shippingLabelId = (Guid) e["annotationid"];
                         }
@@ -208,7 +208,76 @@ FluentContact.Contact()
             //                an => an.UseAttribute((Guid noteId) => permittedImageIds.Add(noteId), "annotationid"))))
             //    .Execute();
 
+            var contactId = Guid.NewGuid();
+            dynamic dto = null;
 
+            FluentAccount.Account(contactId)
+                .UseAttribute((string account) => dto.name = account, "name")
+                .Join<FluentContact>(
+                    c => c.UseAttribute<string>(contact => dto.fullname = contact, "fullname"))
+                .Execute();
+
+
+            FluentAccount.Account(contactId)
+                .Join<FluentContact>(
+                    c => c.UseEntity( (contact, alias) => dto.fullname = contact.GetAttributeValue<string>( contact.Alias + "fullname"), "fullname"))
+                .Execute();
+
+            Assert.
+        }
+
+        [TestMethod]
+        public void TestDeepJoin()
+        {
+            var roleId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
+
+            var roleEntities = new List<Entity>
+            {
+                new Entity("systemuser")
+                {
+                    Id = userId,
+                },
+                new Entity("systemuserroles")
+                {
+                    Id = Guid.NewGuid(),
+                    ["systemuserid"] = userId,
+                    ["roleid"] = roleId
+                },
+                new Entity("role")
+                {
+                    Id = roleId,
+                    ["name"] = "Test Role"
+                }
+            };
+            var ctx = TestUtilities.TestContext3(roleEntities);
+
+            var hasRole = false;
+FluentSecurityRole.SecurityRole(ctx.GetOrganizationService())
+    .Trace(s => Debug.WriteLine(s))
+    .Where("name").Equals("Test Role")
+    .Join<FluentSystemUserRoles>( 
+        sur => sur.Join<FluentSystemUser>(
+            su => su.Where( "systemuserid").Equals( userId )
+                .UseAttribute( (Guid hr) => hasRole = true, "systemuserid")
+            )
+        )
+    .Execute();
+
+            Assert.IsTrue(hasRole);
+
+            hasRole = false;
+            FluentSecurityRole.SecurityRole(ctx.GetOrganizationService())
+                .Trace(s => Debug.WriteLine(s))
+                .Where("name").Equals("Test Role")
+                .Join<FluentSystemUserRoles>( 
+                    sur => sur.Join<FluentSystemUser>(
+                        su => su.Where( "systemuserid").Equals( userId )
+                            .Exists( () => hasRole = true)
+                    )
+                )
+                .Execute();
+            Assert.IsTrue(hasRole);
         }
 
         public struct MyStruct

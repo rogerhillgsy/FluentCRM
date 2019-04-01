@@ -72,6 +72,21 @@ namespace FluentCRM
         IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
 
         /// <summary>
+        /// Calls the action function with a value that indicates whether the specified entity records exists.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="action">Closure called with a boolean value indicating if the entity record existed.</param>
+        IJoinableEntitySet Exists(Action<bool> action);
+
+        /// <summary>
+        /// Calls one of two action functions to indicate if a record existed (or not)
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="whenTrue">Closure called when one or more matching records were found.</param>
+        /// <param name="whenFalse">Closure called when one or no matching records were found.</param>
+        IJoinableEntitySet Exists(Action whenTrue, Action whenFalse = null);
+
+        /// <summary>
         /// Indicates that an additional where-clause is being introduced.
         /// </summary>
         /// <value>FluentCRM object</value>

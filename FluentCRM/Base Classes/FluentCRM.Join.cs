@@ -168,6 +168,16 @@ namespace FluentCRM
             throw new NotImplementedException();
         }
 
+        IJoinableEntitySet IJoinableEntitySet.Exists(Action<bool> action)
+        {
+            return ((IJoinableEntitySet) this).Exists(action);
+        }
+
+        IJoinableEntitySet IJoinableEntitySet.Exists(Action whenTrue, Action whenFalse)
+        {
+            return ((IJoinableEntitySet) this).Exists(whenTrue, whenFalse);
+        }
+
         IJoinableAnotherWhere IJoinableEntitySet.And
         {
             get { return (IJoinableAnotherWhere) And; }

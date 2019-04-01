@@ -130,5 +130,9 @@ namespace TestFluentCRM
             return context;
         }
 
+        internal static XrmFakedContext TestContext3(List<Entity> allEntities)
+        {
+            return TestContext3(allEntities.First(), allEntities.Skip(1).ToArray());
+        }
     }
 }

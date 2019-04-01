@@ -81,11 +81,8 @@ namespace FluentCRM
         /// </summary>
         private readonly Dictionary<string, string> _joinOn = new Dictionary<string, string>
         {
-            // if the join to another entity is through the primary id field, (1:N join) nothing is needed here.
-            // If it is through another field (N:1 join) then the details of the foreign entity and lookup field need to be given here.
-            //
-            // { "foreign entity logical name", "logical name of lookup field in this entity" }
-            //   { "account", "parentcustomerid" } 
+            {"role","roleid"},
+            {"systemuser","systemuserid"}
         };
 
         /// <summary>
@@ -101,7 +98,7 @@ namespace FluentCRM
             }
             else
             {
-                return "systemuserrolesid";
+                return "systemuserroleid";
             }
         }
     }
