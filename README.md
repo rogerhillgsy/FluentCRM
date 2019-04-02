@@ -1,4 +1,5 @@
 # FluentCRM
+
 This project provieds a Fluent-style interface to Micorosft Dynamics CRM using the Microsoft.Xrm.Sdk web interface.
 
 This project arose from the frustrations of working with the existing SDK interface and dealing with various issues: -
@@ -50,13 +51,12 @@ FluentContact.Contact(contact.Id,  service)
                 .Execute();
 ```
 
-Adds a WeakExtractEntity clause. This will call the closue with an "entity" fetched with the listed attributes.
+Adds a WeakExtractEntity clause. This will call the closure with an "entity" fetched contaning  the listed attributes.
 
-[Another File](another.md)
-=======
-   This leads to the same information in multiple places, leading to mismatches and errors.
-   
-2) The issues around "phantom" updates to CRM attributes, where a poorly written client updates an attribute to the same value and writes it back 
-   to the server. This raises issues with clutter in the audit log, but more importantly can lead to workflows and plugins running even when there
-   has been no change to an attribute.
 
+## Building FluentCRM
+
+FluentCRM targets .Net Framework 4.6.2 and Visual Studio 2017 - all of the dependencies will be pulled via nuget.
+
+ can be made to work with earlier VS versions probably wouldn't be a huge effort as there are only a couple of C# lanugage features in use.
+ .Net framework 4.6.2 is only supported by CRM 9.0 (plugins, workflows etc) - but I've only recently made the change, so if you want to build for 4.5.2 for compatibility with earlier versions is should just be a matter of changing build settings and winding the Microsoft.Crmsdk nuget packages back to 9.0.2.5.
