@@ -85,6 +85,8 @@
     <Compile Include="Entity Classes\FluentSecurityRole.cs" />
     <Compile Include="Entity Classes\FluentSystemUser.cs" />
     <Compile Include="Entity Classes\FluentSystemUserRoles.cs" />
+    <Compile Include="Entity Classes\FluentTeam.cs" />
+    <Compile Include="Entity Classes\FluentTeamMembership.cs" />
     <Compile Include="FluentUserSettings.cs" />
     <Compile Include="Interfaces\IAnotherWhere.cs" />
     <Compile Include="Interfaces\ICanExecute.cs" />

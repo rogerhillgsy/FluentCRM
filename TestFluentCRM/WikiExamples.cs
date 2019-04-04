@@ -125,7 +125,6 @@ namespace TestFluentCRM
                 .WeakUpdate<string>("telephone1", (s) => telno)
                 .Execute();
 
-            Debugger.Break();
             telno = string.Empty;
 
             FluentAccount.Account(context.GetOrganizationService())
@@ -133,8 +132,6 @@ namespace TestFluentCRM
                 .UseAttribute((string t) => telno= t, "telephone1", "telephone2","mobilephone","phone1")
                 .WeakUpdate<string>("telephone1",  telno)
                 .Execute();
-
-            Debugger.Break();
 
             FluentAccount.Account(context.GetOrganizationService())
                 .Where("createdon").IsNotNull
