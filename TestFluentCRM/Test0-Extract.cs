@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -6,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace TestFluentCRM
 {
     [TestClass]
-    public class Test1Extract1
+    public class Test0_Extract
     {
         [TestMethod]
         public void TestUseAttribute()
@@ -120,6 +122,24 @@ namespace TestFluentCRM
 
         }
 
+        /// <summary>
+        /// This does not work if run at the same time as other unit tests due to coupling via StaticService.
+        /// </summary>
+        [TestMethod]
+        public void TestMissingOrgService()
+        {
+            var contactId = Guid.NewGuid();
+            dynamic dto = new ExpandoObject();
+            FluentCRM.FluentCRM.StaticService = null;  // Side effect from other tests which may set StaticService value.
+
+            Assert.ThrowsException<ArgumentException>(() =>
+                FluentAccount.Account(contactId)
+                    .UseAttribute((string account) => dto.name = account, "name")
+                    .Join<FluentContact>(
+                        c => c.UseAttribute<string>(contact => dto.fullname = contact, "fullname"))
+                    .Execute());
+
+        }
 
     }
 }

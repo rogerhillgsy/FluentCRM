@@ -48,6 +48,7 @@ namespace FluentCRM
             t.LinkEntity.LinkFromAttributeName = t.JoinFromAttribute(LogicalName) ?? JoinAttribute(t.LogicalName);
             t.LinkEntity.LinkToAttributeName = t.JoinAttribute(LogicalName);
             t.GetAlias = GetAlias; // Make sure that any linked entitites use the same sequence of unique aliases
+            t.ParentEntity = this;
 
             var link = t.LinkEntity;
 
@@ -91,6 +92,10 @@ namespace FluentCRM
 
             return this;
         }
+
+        private FluentCRM TopEntity => ParentEntity?.TopEntity ?? this;
+
+        private FluentCRM ParentEntity { get; set; }
 
         ICanExecute IUnknownEntity.Join<T>(Action<IJoinable> target)
         {
@@ -170,12 +175,14 @@ namespace FluentCRM
 
         IJoinableEntitySet IJoinableEntitySet.Exists(Action<bool> action)
         {
-            return ((IJoinableEntitySet) this).Exists(action);
+            TopEntity.Exists(action);
+            return this;
         }
 
         IJoinableEntitySet IJoinableEntitySet.Exists(Action whenTrue, Action whenFalse)
         {
-            return ((IJoinableEntitySet) this).Exists(whenTrue, whenFalse);
+            TopEntity.Exists(whenTrue, whenFalse);
+            return this;
         }
 
         IJoinableAnotherWhere IJoinableEntitySet.And

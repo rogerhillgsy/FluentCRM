@@ -82,7 +82,33 @@ namespace FluentCRM
         /// <returns></returns>
         public T GetAttributeValue<T>(string attribute)
         {
-            return Entity.GetAttributeValue<T>(attribute);
+            var  rv  = default(T);
+            if (!Entity.Attributes.ContainsKey(attribute))
+            {
+                Trace($"Attribute not found: {attribute}");
+            }
+            else
+            {
+                if (Entity.Attributes[attribute] is AliasedValue)
+                {
+                    //if (typeof(T) == typeof(AliasedValue))
+                    //{
+                    //    return (T) Entity.Attributes[attribute];
+                    //}
+                    //else
+                    //{
+                        AliasedValue obj = Entity.Attributes[attribute] as AliasedValue;
+
+                        return (T) obj.Value;
+                    // }
+                }
+                else
+                {
+                    return Entity.GetAttributeValue<T>(attribute);
+                }
+            }
+
+            return rv;
         }
 
         /// <summary>
@@ -96,7 +122,7 @@ namespace FluentCRM
         }
 
         /// <summary>
-        /// Get te              
+        /// Get text of Option set value.           
         /// </summary>
         /// <param name="attribute"></param>
         /// <returns></returns>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -112,7 +113,7 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
-        public void TestFluentCRM3()
+            public void TestFluentCRM3()
         {
             var context = TestUtilities.TestContext1();
             var account1 = context.Data["account"].First().Value;
@@ -208,22 +209,23 @@ namespace TestFluentCRM
             //                an => an.UseAttribute((Guid noteId) => permittedImageIds.Add(noteId), "annotationid"))))
             //    .Execute();
 
-            var contactId = Guid.NewGuid();
-            dynamic dto = null;
+            dynamic dto = new ExpandoObject();
 
-            FluentAccount.Account(contactId)
+            FluentAccount.Account(account1.Id, context.GetOrganizationService())
                 .UseAttribute((string account) => dto.name = account, "name")
                 .Join<FluentContact>(
-                    c => c.UseAttribute<string>(contact => dto.fullname = contact, "fullname"))
+                    c => c.UseAttribute<string>(contact => dto.fullname = contact, "firstname"))
                 .Execute();
+            Assert.IsTrue( ((IDictionary<string, object>)dto).ContainsKey("fullname"));
+            dto.fullname = null;
 
-
-            FluentAccount.Account(contactId)
+            FluentAccount.Account(account1.Id, context.GetOrganizationService())
                 .Join<FluentContact>(
-                    c => c.UseEntity( (contact, alias) => dto.fullname = contact.GetAttributeValue<string>( contact.Alias + "fullname"), "fullname"))
+                    c => c.UseEntity( (contact, alias) => 
+                        dto.fullname = contact.GetAttributeValue<string>( contact.Alias + "firstname"), "firstname"))
                 .Execute();
 
-            Assert.
+            Assert.IsNotNull(dto.fullname);
         }
 
         [TestMethod]
@@ -253,16 +255,16 @@ namespace TestFluentCRM
             var ctx = TestUtilities.TestContext3(roleEntities);
 
             var hasRole = false;
-FluentSecurityRole.SecurityRole(ctx.GetOrganizationService())
-    .Trace(s => Debug.WriteLine(s))
-    .Where("name").Equals("Test Role")
-    .Join<FluentSystemUserRoles>( 
-        sur => sur.Join<FluentSystemUser>(
-            su => su.Where( "systemuserid").Equals( userId )
-                .UseAttribute( (Guid hr) => hasRole = true, "systemuserid")
-            )
-        )
-    .Execute();
+            FluentSecurityRole.SecurityRole(ctx.GetOrganizationService())
+                .Trace(s => Debug.WriteLine(s))
+                .Where("name").Equals("Test Role")
+                .Join<FluentSystemUserRoles>(
+                    sur => sur.Join<FluentSystemUser>(
+                        su => su.Where("systemuserid").Equals(userId)
+                            .UseAttribute((Guid hr) => hasRole = true, "systemuserid")
+                    )
+                )
+                .Execute();
 
             Assert.IsTrue(hasRole);
 
@@ -270,10 +272,10 @@ FluentSecurityRole.SecurityRole(ctx.GetOrganizationService())
             FluentSecurityRole.SecurityRole(ctx.GetOrganizationService())
                 .Trace(s => Debug.WriteLine(s))
                 .Where("name").Equals("Test Role")
-                .Join<FluentSystemUserRoles>( 
+                .Join<FluentSystemUserRoles>(
                     sur => sur.Join<FluentSystemUser>(
-                        su => su.Where( "systemuserid").Equals( userId )
-                            .Exists( () => hasRole = true)
+                        su => su.Where("systemuserid").Equals(userId)
+                            .Exists(() => hasRole = true)
                     )
                 )
                 .Execute();

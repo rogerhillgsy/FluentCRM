@@ -589,14 +589,16 @@ namespace TestFluentCRM
         public void TestJoin1()
         {
             var context = TestUtilities.TestContext2();
-            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
-            var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
+            var account1 = context.Data["account"]
+                .Where(a => a.Value.GetAttributeValue<string>("name").Equals("Account1")).First().Value;
+            var account2 = context.Data["account"]
+                .Where(a => a.Value.GetAttributeValue<string>("name").Equals("Account2")).First().Value;
             FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
 
             // Join account to contact entity via the primary
             FluentAccount.Account(account2.Id)
-                .Trace( s => Debug.WriteLine(s))
-                .Join<FluentContact>( c => c.UseAttribute<string>(s => Assert.AreEqual("Watson", s) , "lastname"))
+                .Trace(s => Debug.WriteLine(s))
+                .Join<FluentContact>(c => c.UseAttribute<string>(s => Assert.AreEqual("Watson", s), "lastname"))
                 .Execute();
 
             var fa1 = FluentAccount.Account(account1.Id)
@@ -610,18 +612,21 @@ namespace TestFluentCRM
 
             // This kind of join seems not to work in FakeXrmEasy. Does work with a real CRM system.
             //fa1.Execute();
+        }
 
-            // Ensure Environment variable "Password" is set.
+        /// <summary>
+        /// Tests join with live CRM - use to ensure that no subtle differences between the test system and "reality" have crept in here.
+        /// </summary>
+        [TestMethod]
+        public void TestJoinLive() {
+
+        // Ensure Environment variable "Password" is set.
             var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
             cnString = Environment.ExpandEnvironmentVariables(cnString);
             using (var crmSvc = new CrmServiceClient(cnString))
             {
                 var orgService = crmSvc.OrganizationServiceProxy;
 
-                var fetchXmlQuery = new QueryExpressionToFetchXmlRequest {Query = qe};
-                var response = (QueryExpressionToFetchXmlResponse)orgService.Execute(fetchXmlQuery);
-
-                Debug.WriteLine( response.FetchXml);
                 var accountId = Guid.Empty;
                 FluentAccount.Account(orgService).Where("name").Equals("Alpine Ski House").UseAttribute((Guid id) => accountId= id, "accountid").Execute();
 

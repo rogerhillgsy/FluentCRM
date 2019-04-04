@@ -438,56 +438,6 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
-        public void TestJoinLive()
-        {
-            // Join test relies on the standard default data in a CRM trial instance.
-            // This kind of join seems not to work in FakeXrmEasy. Does work with a real CRM system.
-            //fa1.Execute();
-
-            var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
-            cnString = Environment.ExpandEnvironmentVariables(cnString);
-            using (var crmSvc = new CrmServiceClient(cnString))
-            {
-                var orgService = crmSvc.OrganizationServiceProxy;
-
-                //var fetchXmlQuery = new QueryExpressionToFetchXmlRequest {Query = qe};
-                //var response = (QueryExpressionToFetchXmlResponse)orgService.Execute(fetchXmlQuery);
-
-                //Debug.WriteLine( response.FetchXml);
-                var accountId = Guid.Empty;
-                FluentAccount.Account(orgService).Where("name").Equals("Alpine Ski House")
-                    .UseAttribute((Guid id) => accountId = id, "accountid").Execute();
-
-                //var accountId = new Guid("AAA19CDD-88DF-E311-B8E5-6C3BE5A8B200");
-                FluentAccount.Account(accountId, orgService)
-                    .Trace(s => Debug.WriteLine(s))
-                    .Join<FluentPrimaryContact>(
-                        c => c.UseAttribute<string>(s => Assert.AreEqual("Cook", s), "lastname"))
-                    .UseAttribute((string s) => Debug.WriteLine(s), "name")
-                    .Count(c => Assert.AreEqual(1, c))
-                    .Execute();
-
-                FluentAccount.Account(accountId, orgService)
-                    .Trace(s => Debug.WriteLine(s))
-                    .UseAttribute((string s) => Debug.WriteLine(s), "name")
-                    .Join<FluentContact>(c => c.UseAttribute<string>(s => Assert.IsNotNull( s), "lastname"))
-                    .Count(c => Assert.AreEqual(5, c))
-                    .Execute();
-            }
-
-            var context = TestUtilities.TestContext2();
-            var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
-
-            FluentAccount.Account(account2.Id, context.GetOrganizationService())
-                .Trace(s => Debug.WriteLine(s))
-                .Join<FluentPrimaryContact>(
-                    c => c.UseAttribute<string>(s => Assert.AreEqual("Watson", s), "lastname"))
-                .UseAttribute((string s) => Debug.WriteLine(s), "name")
-                .Count(c => Assert.AreEqual(1, c))
-                .Execute();
-        }
-
-        [TestMethod]
         public void TestBeforeEachRecord()
         {
             var context = TestUtilities.TestContext2();

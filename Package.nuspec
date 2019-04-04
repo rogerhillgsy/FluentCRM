@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" >
   <metadata>
     <id>FluentCRM</id>
-    <version>9.0.1</version>
+    <version>9.0.2</version>
     <authors>Roger Hill</authors>
     <owners>Roger Hill</owners>
     <licenseUrl>https://github.com/rogerhillgsy/FluentCRM/FluentCRM/LICENSE.txt</licenseUrl>
@@ -11,7 +11,7 @@
     </iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Package that provides a streamlined, Fluent-style interface to Microsoft Dynamics CRM</description>
-    <releaseNotes>Initial Release.</releaseNotes>
+    <releaseNotes>Clean up documentation, minor inconsistencies. Nuget package update. Use .Net 4.6.2 Famework.</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
     <dependencies>

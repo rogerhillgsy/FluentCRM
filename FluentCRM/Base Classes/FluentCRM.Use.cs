@@ -68,10 +68,11 @@ namespace FluentCRM
                                 else
                                 {
                                     if (alias != null &&
-                                        entity.GetAttributeValue<AliasedValue>(column).Value is T)
+                                        entity.Entity.Attributes[column] is AliasedValue )
                                     {
-                                        var nakedColumn = column.Substring(alias.Length);
-                                        action(nakedColumn, (T) entity.GetAttributeValue<AliasedValue>(column).Value);
+                                        var aliasValue = entity.Entity.Attributes[column] as AliasedValue;
+                                        var columnOnly = column.Substring(alias.Length);
+                                        action(columnOnly, (T) aliasValue.Value);
                                         return true;
                                     }
                                     else

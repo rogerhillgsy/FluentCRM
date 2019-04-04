@@ -177,6 +177,10 @@ namespace FluentCRM
         /// <returns></returns>
         private bool FetchAll()
         {
+            if (Service == null)
+            {
+                throw new ArgumentException("CRM Organization service not specified");
+            }
             if (!Guid.Empty.Equals(_id))
             {
                 try

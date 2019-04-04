@@ -16,7 +16,7 @@ namespace TestFluentCRM
     public class TestClear
     {
         [TestMethod]
-        [Ignore] // Doesnt work with Fakes
+        [Ignore] // Doesn't work with Fakes (ATM)
         public void TestClearFake()
         {
             var context = TestUtilities.TestContext2();
@@ -31,40 +31,6 @@ namespace TestFluentCRM
             Assert.IsFalse(contact1.Attributes.ContainsKey("telephone1"));
             var tele2 = contact1.GetAttributeValue<string>("telephone1");
             Assert.IsNull(tele2);
-        }
-
-        /// <summary>
-        /// Test that exposes the differences between FakeXrmEasy and a real CRM system
-        /// In RealCRM, setting an attribute to null, clears that attribute value.
-        /// In FakeXrmEasy it appears to have no effect.
-        /// </summary>
-        [TestMethod]
-        public void TestClearLive()
-        {
-            var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
-            cnString = Environment.ExpandEnvironmentVariables(cnString);
-            using (var crmSvc = new CrmServiceClient(cnString))
-            {
-                EntityWrapper entity1 = null;
-                FluentContact.Contact(crmSvc.OrganizationServiceProxy)
-                    .Where("fullname").Equals("Roger Hill")
-                    .UseEntity(e => entity1 = e, "contactid", "telephone1", "fullname")
-                    .Execute();
-
-                FluentContact.Contact(crmSvc.OrganizationServiceProxy)
-                    .Where("fullname").Equals("Roger Hill")
-                    .Clear("telephone1")
-                    .Execute();
-
-                EntityWrapper entity2 = null;
-                FluentContact.Contact(entity1.Id, crmSvc.OrganizationServiceProxy)
-                    .UseEntity(e => entity2 = e, "contactid", "telephone1", "fullname")
-                    .Execute();
-
-                Assert.IsTrue( entity2.Contains("contactid"));
-                Assert.IsTrue( entity2.Contains("fullname"));
-                Assert.IsFalse( entity2.Contains("telephone1"));
-            }
         }
 
         [TestMethod]

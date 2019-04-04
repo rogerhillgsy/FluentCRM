@@ -92,56 +92,6 @@ namespace TestFluentCRM
             Assert.IsFalse( ew.Contains("parentcustomerid"));
         }
 
-        /// <summary>
-        /// Test getting option set values. Note requires access to live CRM. So may have to ignore it
-        /// Relies on access to a live CRM system with default test data loaded. (online trial eill do)
-        /// </summary>
-        [TestMethod]
-        public void TestOptionString()
-        {
-            var cnString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
-            cnString = Environment.ExpandEnvironmentVariables(cnString);
-            using (var crmSvc = new CrmServiceClient(cnString))
-            {
-                var accountid = Guid.Empty;
-                EntityWrapper ew = null;
-                FluentCRM.FluentCRM.StaticService = crmSvc.OrganizationServiceProxy;
-
-                FluentAccount.Account().Where("name").Equals("Alpine Ski House")
-                    .UseAttribute((Guid id) => accountid = id, "accountid")
-                    .WeakUpdate<OptionSetValue>("customertypecode", new OptionSetValue(1)) // set to "Competitor"
-                    .Exists( (e) => Assert.IsTrue(e, "Alpine Ski House account must exist"))
-                    .Execute();
-
-                // Fetch the option set back
-                FluentAccount.Account(accountid)
-                    .UseEntity((e) => ew = e, "customertypecode","name")
-                    .Execute();
-
-                var stopwatch = new System.Diagnostics.Stopwatch();
-                stopwatch.Start();
-
-                // Get the string equivalent of the customertypecode.
-                var reltype = ew.OptionString("customertypecode");
-
-                stopwatch.Stop();
-                Debug.WriteLine($"Stopwatch elapsed time #1 {stopwatch.ElapsedMilliseconds}ms");
-                Assert.AreEqual("Competitor", reltype);
-
-                stopwatch.Reset();
-                stopwatch.Start();
-                var reltype2 = ew.OptionString("customertypecode");
-
-                Assert.AreEqual("Competitor", reltype2);
-
-                stopwatch.Stop();
-                Debug.WriteLine($"Stopwatch elapsed time from cache {stopwatch.ElapsedMilliseconds}ms");
-                Assert.IsTrue(stopwatch.ElapsedMilliseconds < 100);
-
-                Assert.ThrowsException<ArgumentException>(() => ew.OptionString("name"));
-            }
-        }
-
         [TestMethod]
         public void TestTrace()
         {
