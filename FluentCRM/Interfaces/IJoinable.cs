@@ -78,7 +78,7 @@ namespace FluentCRM
         /// Used to spectify that an outer join is to be used.
         /// </summary>
         /// <returns>The outer.</returns>
-        IJoinableEntitySet Outer();
+        IJoinable Outer();
 
         /// <summary>
         /// Internal function used to return a new instance of the joined-to FluentCRM object.

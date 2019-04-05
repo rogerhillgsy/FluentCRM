@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
@@ -288,6 +289,68 @@ namespace TestFluentCRMLive
                 Assert.IsTrue( entity2.Contains("contactid"));
                 Assert.IsTrue( entity2.Contains("fullname"));
                 Assert.IsFalse( entity2.Contains("telephone1"));
+            }
+        }
+
+        /// <summary>
+        /// Test case to showcase joins and Team manipulation.
+        /// Add all enabled users who are not in the team "Decommissioning" to the team "Not Decomissioning
+        /// </summary>
+        [TestMethod]
+        [Ignore]
+        public void UpdateTeamMembership()
+        {
+            // var connectionString = Environment.ExpandEnvironmentVariables("Url=%CRMTESTINSTANCE%;Username=%Account%;Password=%Password%;authtype=Office365;");
+            var connectionString = Environment.ExpandEnvironmentVariables("Url=https://iidv-us-dev.crm.dynamics.com/;Username=%Account%;Password=%Password%;authtype=Office365;");
+            using (var crmSvc = new CrmServiceClient(connectionString))
+            {
+                FluentCRM.FluentCRM.StaticService = crmSvc.OrganizationServiceProxy;
+
+                var notDecommissioningTeam  = new HashSet<Guid>();
+
+                FluentSystemUser.SystemUser()
+                    .Where("accessmode").NotEqual(3)
+                    .And
+                    .Where("accessmode").NotEqual(5)
+                    .And
+                    .Where("isdisabled").Equals("False")
+                    .Join<FluentTeamMembership>(tm =>
+                        tm.Outer().Join<FluentTeam>(t =>
+                            t.Outer().Where("name").Equals("Decommissioning")
+                                .UseAttribute((Guid id) => { }, "teamid")
+                                .AfterEachEntity( e =>
+                                {
+                                    if (e["teamid"] == null)
+                                    {
+                                        notDecommissioningTeam.Add(e.Id);
+                                    }
+                                })
+                        ))
+                    .UseEntity((e) =>
+                    {
+//                        Debug.WriteLine($"FullName { e["fullname"]} guid {e.Id} disabled: {e["isdisabled"]}");
+                    },"fullname","isdisabled")
+                   
+                    .Execute();
+
+                Assert.IsTrue( notDecommissioningTeam.Count > 0);
+
+                var notDecommTeamId = Guid.Empty;
+                FluentTeam.Team().Where("name").Equals("Not Decommissioning").UseAttribute((Guid id)=>notDecommTeamId = id, "teamid").Execute();
+                Assert.IsFalse(Guid.Empty.Equals(notDecommTeamId), "Decommissioning team is not defined");
+
+                //
+                // Go through all users and if they are not a member of the Decommissioning team, add them to "Not Decommissioning"
+                //
+                FluentTeam.Team(notDecommTeamId)
+                    .AddMembersToTeam( notDecommissioningTeam )
+                    .Trace( s => Debug.WriteLine(s))
+                    .Count((int? c) =>
+                    {
+                        Assert.IsTrue( c > 0 );
+                        Debug.WriteLine($"Added {notDecommissioningTeam.Count} users to decommissioning team");
+                    })
+                    .Execute();
             }
         }
     }

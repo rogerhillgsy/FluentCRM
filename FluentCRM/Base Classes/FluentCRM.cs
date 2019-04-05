@@ -10,7 +10,7 @@ namespace FluentCRM
     /// </summary>
     public abstract partial class FluentCRM : IUnknownEntity, IEntitySet, INeedsWhereCriteria, IAnotherWhere
     {
-        private Guid _id = Guid.Empty;
+        protected Guid _id = Guid.Empty;
 
         /// <summary>
         /// IOrganizationService that will be used by the FluentCRM instance.

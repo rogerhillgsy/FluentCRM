@@ -255,7 +255,7 @@ namespace FluentCRM
         /// Used to spectify that an outer join is to be used.
         /// </summary>
         /// <returns>The outer.</returns>
-        public IJoinableEntitySet Outer()
+        public IJoinable Outer()
         {
             LinkEntity.JoinOperator = JoinOperator.LeftOuter;
             return this;
@@ -375,9 +375,29 @@ namespace FluentCRM
             return (IJoinableEntitySet) Condition(op,value);
         }
 
+        IJoinableEntitySet IJoinableEntitySet.AfterEachEntity(Action<EntityWrapper> action)
+        {
+            TopEntity._afterEachEntityActions.Add((e) =>
+            {
+                var oldAlias = e.Alias;
+                e.Alias = LinkEntity.EntityAlias + ".";
+                action.Invoke(e);
+                e.Alias = oldAlias;
+            });
+            return this;
+        }
+
         private void PrepareLinkedCriteria()
         {
-            LinkEntity.LinkCriteria = Query?.Criteria;
+            foreach (var linkedEntity in LinkedEntities)
+            {
+                linkedEntity.PrepareLinkedCriteria();
+            }
+
+            if (LinkEntity != null)
+            {
+                LinkEntity.LinkCriteria = Query?.Criteria;
+            }
         }
     }
 }

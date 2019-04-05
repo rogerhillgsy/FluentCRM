@@ -113,5 +113,13 @@ namespace FluentCRM
         /// <param name="target">Closure used to configure the joined entity.</param>
         /// <typeparam name="T">The type of entity joined to.</typeparam>
         IJoinableEntitySet Join<T>(Action<IJoinable> target) where T : FluentCRM, new();
+
+        /// <summary>
+        /// Closure called after each entity has been read and all closures called (i.e. from UseAttribute)
+        /// Called in context of joined entity.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="action">Called after the entity has been read with the entity value.</param>
+        IJoinableEntitySet AfterEachEntity(Action<EntityWrapper> action);
     }
 }

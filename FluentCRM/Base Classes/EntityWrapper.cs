@@ -91,16 +91,9 @@ namespace FluentCRM
             {
                 if (Entity.Attributes[attribute] is AliasedValue)
                 {
-                    //if (typeof(T) == typeof(AliasedValue))
-                    //{
-                    //    return (T) Entity.Attributes[attribute];
-                    //}
-                    //else
-                    //{
-                        AliasedValue obj = Entity.Attributes[attribute] as AliasedValue;
+                    AliasedValue obj = Entity.Attributes[attribute] as AliasedValue;
 
-                        return (T) obj.Value;
-                    // }
+                    return (T) obj.Value;
                 }
                 else
                 {

@@ -164,10 +164,7 @@ namespace FluentCRM
             }
 
             // Look after any criteria in linked entities.
-            foreach (var linkedEntity in LinkedEntities)
-            {
-                linkedEntity.PrepareLinkedCriteria();
-            }
+            PrepareLinkedCriteria();
         }
 
         /// <summary>
@@ -181,6 +178,7 @@ namespace FluentCRM
             {
                 throw new ArgumentException("CRM Organization service not specified");
             }
+            _entities = new Collection<Entity> ();
             if (!Guid.Empty.Equals(_id))
             {
                 try
@@ -191,7 +189,6 @@ namespace FluentCRM
                 catch (Exception ex)
                 {
                     Trace($"Error fetching {LogicalName} id {_id} message: {ex.Message}");
-                    _entities = new Collection<Entity>();
                 }
             }
             else if (QueryExpression != null)

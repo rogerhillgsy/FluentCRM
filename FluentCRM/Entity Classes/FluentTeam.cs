@@ -1,6 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
@@ -8,7 +11,7 @@ namespace FluentCRM
     /// <summary>
     /// FluentCRM class used to encapsulate access to the Team Entity
     /// </summary>
-    public class FluentTeam : FluentCRM
+    public class FluentTeam : FluentCRM, ITeamSet
     {
 
         private const string _logicalName = "team";
@@ -25,7 +28,7 @@ namespace FluentCRM
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Team(Guid id, IOrganizationService service)
+        public static ITeamSet Team(Guid id, IOrganizationService service)
         {
             return new FluentTeam(id, service);
         }
@@ -45,7 +48,7 @@ namespace FluentCRM
         /// </summary>
         /// <param name="id">Guid of entity to operator on</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Team(Guid id)
+        public static ITeamSet Team(Guid id)
         {
             return new FluentTeam(id);
         }
@@ -102,5 +105,39 @@ namespace FluentCRM
                 return "teamid";
             }
         }
+
+        /// <summary>
+        /// Add list of system users to the selected team.
+        /// </summary>
+        /// <param name="systemUserIds"></param>
+        ICanExecute ITeamSet.AddMembersToTeam(IEnumerable<Guid> systemUserIds)
+        {
+            if (!Guid.Empty.Equals(_id) || QueryExpression != null)
+            {
+                if (systemUserIds.Count() == 0)
+                {
+                    Trace("Empty list of user ids to add to team");
+                }
+                else
+                {
+                    this.UseAttribute((Guid teamid) =>
+                    {
+                        Trace($"Adding {systemUserIds.Count()} ids to team {teamid}");
+                        var response = Service.Execute(new AddMembersTeamRequest
+                        {
+                            TeamId = teamid,
+                            MemberIds = systemUserIds.ToArray()
+                        });
+                    }, "teamid");
+                }
+            }
+
+            return this;
+        }
+    }
+
+    public interface ITeamSet : IEntitySet
+    {
+        ICanExecute AddMembersToTeam(IEnumerable<Guid> systemUserIds );
     }
 }

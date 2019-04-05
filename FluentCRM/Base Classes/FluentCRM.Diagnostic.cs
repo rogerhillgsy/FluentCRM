@@ -35,7 +35,7 @@ namespace FluentCRM
         /// Uses String.Format() style args.
         /// </summary>
         /// <returns></returns>
-        private void Trace(string format, params object[] args)
+        protected void Trace(string format, params object[] args)
         {
             _traceFunction?.Invoke(String.Format(format, args));
         }
