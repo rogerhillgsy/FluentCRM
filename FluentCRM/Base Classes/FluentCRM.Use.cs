@@ -60,7 +60,7 @@ namespace FluentCRM
                             if (entity != null &&
                                 entity.Contains(column))
                             {
-                                if (entity[column] is T)
+                                if (entity.Entity[column] is T )
                                 {
                                     action(column, entity.GetAttributeValue<T>(column));
                                     return true;
@@ -78,7 +78,7 @@ namespace FluentCRM
                                     else
                                     {
                                         var error =
-                                            $"For {column} expected type {entity[column].GetType()} found type {typeof(T)}";
+                                            $"For {column} expected type {entity.GetAttributeValue<T>(column).GetType()} found type {typeof(T)}";
                                         Trace(error);
                                         throw new ArgumentException(error);
                                     }

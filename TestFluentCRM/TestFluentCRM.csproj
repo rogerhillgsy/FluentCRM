@@ -119,6 +119,7 @@
     <Compile Include="Test8-IEntityWrapper.cs" />
     <Compile Include="Test10-SpecificEntities.cs" />
     <Compile Include="LiveTests.cs" />
+    <Compile Include="DecommissioningTests.cs" />
     <Compile Include="WikiExamples.cs" />
   </ItemGroup>
   <ItemGroup>

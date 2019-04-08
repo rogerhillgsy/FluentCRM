@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
@@ -128,5 +129,42 @@ namespace FluentCRM
             var rv = (IUnknownEntity) new FluentSystemUser(service);
             return  (ICanExecute) rv.Where("systemuserid").Condition(ConditionOperator.EqualUserId);
         }
+
+        public ICanExecute AddSecurityRole(Guid securityRoleId)
+        {
+            return AddSecurityRole(new List<Guid> {securityRoleId});
+        }
+
+        public ICanExecute AddSecurityRole(ICollection<Guid> securityRoleIds)
+        {
+            var roles = new EntityReferenceCollection( (from r in securityRoleIds select new EntityReference("role",r)).ToList());
+            Trace("Tracing");
+           return (ICanExecute)   this.UseAttribute((Guid id) =>
+           {
+               Service.Associate( LogicalName,
+                   id,
+                   new Relationship("systemuserroles_association"),
+                   roles);
+           }, "systemuserid");
+        }
+
+        public ICanExecute RemoveSecurityRole(Guid securityRoleId)
+        {
+            return RemoveSecurityRole(new List<Guid> {securityRoleId});
+        }
+
+        public ICanExecute RemoveSecurityRole(ICollection<Guid> securityRoleIds)
+        {
+            var roles = new EntityReferenceCollection( (from r in securityRoleIds select new EntityReference("role",r)).ToList());
+            return (ICanExecute)   this.UseAttribute((Guid id) =>
+            {
+                Service.Disassociate( LogicalName,
+                    id,
+                    new Relationship("systemuserroles_association"),
+                    roles);
+            }, "systemuserid");
+        }
+
+
     }
 }

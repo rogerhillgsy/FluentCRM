@@ -51,7 +51,6 @@ namespace FluentCRM
             get
             {
                 object rv = null;
-                if (!string.IsNullOrEmpty(Alias)) key = Alias + key;
                 if (Entity.Attributes.ContainsKey(key))
                 {
                     if (Alias == null)

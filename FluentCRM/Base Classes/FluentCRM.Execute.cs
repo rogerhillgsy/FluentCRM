@@ -206,6 +206,7 @@ namespace FluentCRM
                 catch (Exception ex)
                 {
                     Trace($"Error in RetrieveMultiple {ex.Message}");
+                    if (ex.Message.Contains("entity doesn't contain attribute")) throw;
                 } 
             }
             else
