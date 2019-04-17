@@ -2,6 +2,8 @@
 
 This project provieds a Fluent-style interface to Micorosft Dynamics CRM using the Microsoft.Xrm.Sdk web interface.
 
+Another way of describing this project is to compare it to JQuery - JQuery makes working with the DOM on a web page much more productive, easier and less error prone. FluentCRM aims to do the same for the Microsoft Dynamics CRM API  
+
 This project arose from the frustrations of working with the existing SDK interface and dealing with various issues: -
 
 1) Using late bound - Having to specificy in multiple places the name of the attribute to load from the server, and then the name to operate on
