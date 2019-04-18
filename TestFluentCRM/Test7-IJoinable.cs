@@ -99,6 +99,37 @@ namespace TestFluentCRM
             Assert.IsTrue(called);
         }
 
+        /// <summary>
+        /// Test use of default values
+        /// </summary>
+        [TestMethod]
+        public void TestUseAttribute4()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account2 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account2")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+
+            Debug.WriteLine($"Account2 Id is {account2.Id}");
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account2.Id )
+                .Trace(s => Debug.WriteLine(s))
+                .UseAttribute((string s) => Debug.WriteLine(s), "name")
+                .Join<FluentPrimaryContact>(
+                    c => c.UseAttribute<string>("Smith", s =>
+                    {
+                        called = true;
+                        Assert.AreEqual("Smith", s);
+                    }, "lastnamemissing"))
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+
         [TestMethod]
         public void TestUseEntity()
         {

@@ -170,6 +170,22 @@ namespace TestFluentCRM
                 .UseAttribute((string s) => Debug.WriteLine(s), "name")
                 .Count(n => Assert.AreEqual(0,n))
                 .Execute();
+
+            var telephone =string.Empty;
+            FluentContact.Contact()
+                .Where("telephone1").IsNull
+                .BeforeEachRecord((e) => telephone = string.Empty)
+                .UseAttribute<string>((t) => telephone = t, "telephone2","telephone3", "mobilephone","address1_telephone1")
+                .WeakUpdate("telephone1", (string n) => telephone )
+                .Execute();
+
+FluentContact.Contact()
+    .Where("accountidname").Equals("Acme Co")
+    .And
+    .Where("telephone1").IsNull
+    .WeakUpdate("telephone1", "01234 56789" )
+    .Execute();
+
         }
 
         [TestMethod]
@@ -304,6 +320,31 @@ namespace TestFluentCRM
                     },
                     "firstname", "lastname")
                 .Execute();
+        }
+
+        [TestMethod]
+        public void TestClosures()
+        {
+            var context = TestUtilities.TestContext1();
+            var contact1 = context.Data["contact"].First().Value;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            MyStruct myStruct;
+
+            // Consider the difference between these two calls
+            var newNumber = "12345678";
+
+            var mobileNumber = string.Empty;
+            FluentContact.Contact(contact1.Id)
+                .UseAttribute((string m) => mobileNumber = m, "mobilephone")
+                .WeakUpdate("telephone1", mobileNumber)
+                .Execute();
+
+            mobileNumber = string.Empty;
+            FluentContact.Contact(contact1.Id)
+                .UseAttribute((string m) => mobileNumber = m, "mobilephone")
+                .WeakUpdate("telephone1", (string s) =>  mobileNumber)
+                .Execute();
+
         }
     }
 }

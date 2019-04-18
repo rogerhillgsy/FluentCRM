@@ -16,7 +16,7 @@
     </iconUrl>
 
 	<!-- Ignore, this will get updated at compile time -->
-    <version>9.0.3</version>
+    <version>9.1.0</version>
 
 	<!-- When empty, this will be set at compile time to the [assembly:AssemblyDescription("")] attribute value -->	
     <summary></summary>
@@ -27,7 +27,7 @@
 	<!-- Set this to false if you don't need to support a license -->
     <!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
 
-	<releaseNotes>Update with case study of decommissioning user accounts using Fluent CRM</releaseNotes>
+	<releaseNotes>Breaking change - rename BeforeEachEntity to BeforeEachRecord and AfterEachEntity to AfterEachRecord. Add UseAttribute() with default value.</releaseNotes>
 	<tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
 	
     <dependencies>

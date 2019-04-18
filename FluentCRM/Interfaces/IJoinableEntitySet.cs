@@ -31,6 +31,31 @@ namespace FluentCRM
         /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
         IJoinableEntitySet UseAttribute<T>( Action<string, T> action, string attribute, params string[] optionalAttributes);
 
+                /// <summary>
+        /// Read an attribute from the current entity and call the action closure with the attribute value as argument.
+        /// If the attribute has a null value, the closure will not be called.
+        /// If multiple attributes are specified, then the first non-null value will be used to call the action closure.
+        /// </summary>
+        /// <returns>FluentCRM Object</returns>
+        /// <param name="action">Closure to be called with the value of the attribute (if not null)</param>
+        /// <param name="attribute">The logical name of the attribute that we will try to extract</param>
+        /// <param name="optionalAttributes">Optional attributes that we will try to use if the first attribute is null</param>
+        /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
+        IJoinableEntitySet UseAttribute<T>( T defaultValue, Action<T> action, string attribute, params string[] optionalAttributes);
+
+        /// <summary>
+        /// Read an attribute from the current entity and call the action closure with the attribute value as argument.
+        /// If the attribute has a null value, the closure will not be called.
+        /// If multiple attributes are specified, then the first non-null value will be used to call the action closure.
+        /// </summary>
+        /// <returns>FluentCRM Object</returns>
+        /// <param name="defaultValue">If all of the candidate attributes are null, the action closure will be called with this value.</param>
+        /// <param name="action">Closure to be called with the name of the attribute and the value of the attribute (if not null)</param>
+        /// <param name="attribute">The logical name of the attribute that we will try to extract</param>
+        /// <param name="optionalAttributes">Optional attributes that we will try to use if the first attribute is null</param>
+        /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
+        IJoinableEntitySet UseAttribute<T>( T defaultValue, Action<string, T> action, string attribute, params string[] optionalAttributes);
+
         /// <summary>
         /// Read a set of attributes from the current entity and call the action closure with the entity as argument.
         /// </summary>
@@ -120,6 +145,6 @@ namespace FluentCRM
         /// </summary>
         /// <returns>FluentCRM object</returns>
         /// <param name="action">Called after the entity has been read with the entity value.</param>
-        IJoinableEntitySet AfterEachEntity(Action<EntityWrapper> action);
+        IJoinableEntitySet AfterEachRecord(Action<EntityWrapper> action);
     }
 }

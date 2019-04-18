@@ -124,14 +124,26 @@ namespace FluentCRM
 
         IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(Action<T> action, string attribute1, params string[] attributes)
         {
-            return (IJoinableEntitySet) this.UseAttribute(action, attribute1, attributes);
+            return (IJoinableEntitySet) this.UseAttribute(default(T), false, (string c, T val) => action(val), attribute1, attributes);
         }
 
         IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(Action<string, T> action, string attribute1,
             params string[] attributes)
         {
-            return (IJoinableEntitySet) this.UseAttribute(action, attribute1, attributes);
+            return (IJoinableEntitySet) this.UseAttribute(default(T), false, action, attribute1, attributes);
         }
+
+        IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(T defaultValue, Action<T> action, string attribute1, params string[] attributes)
+        {
+            return (IJoinableEntitySet) this.UseAttribute(defaultValue, true, (string c, T val) => action(val), attribute1, attributes);
+        }
+
+        IJoinableEntitySet IJoinableEntitySet.UseAttribute<T>(T defaultValue, Action<string, T> action, string attribute1,
+            params string[] attributes)
+        {
+            return (IJoinableEntitySet) this.UseAttribute(defaultValue, true, action, attribute1, attributes);
+        }
+
 
 
         IJoinableEntitySet IJoinableEntitySet.UseEntity(Action<string, EntityWrapper, string> action, string attribute1,
@@ -202,8 +214,14 @@ namespace FluentCRM
         /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
         public IJoinableEntitySet UseAttribute<T>(Action<string, T> action, string attribute, params string[] optionalAttributes)
         {
-            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute, optionalAttributes);
+            return (IJoinableEntitySet) UseAttribute(default(T), false, action, attribute, optionalAttributes);
         }
+
+        public IJoinableEntitySet UseAttribute<T>(T defaultValue,  Action<string, T> action, string attribute, params string[] optionalAttributes)
+        {
+            return (IJoinableEntitySet) UseAttribute(defaultValue, true, action, attribute, optionalAttributes);
+        }
+
 
         IJoinableEntitySet IJoinable.UseEntity(Action<EntityWrapper,string> action, string attribute1, params string[] attributes)
         {
@@ -227,7 +245,12 @@ namespace FluentCRM
         /// <typeparam name="T">The expected type of the attribute that will be returned.</typeparam>
         public IJoinableEntitySet UseAttribute<T>(Action<T> action, string attribute, params string[] optionalAttributes)
         {
-            return (IJoinableEntitySet) ((IEntitySet) this).UseAttribute(action, attribute, optionalAttributes);
+            return (IJoinableEntitySet) UseAttribute(default(T), false, action, attribute, optionalAttributes);
+        }
+
+        public IJoinableEntitySet UseAttribute<T>(T defaultValue, Action<T> action, string attribute, params string[] optionalAttributes)
+        {
+            return (IJoinableEntitySet) UseAttribute(defaultValue, true, action, attribute, optionalAttributes);
         }
 
 
@@ -375,9 +398,9 @@ namespace FluentCRM
             return (IJoinableEntitySet) Condition(op,value);
         }
 
-        IJoinableEntitySet IJoinableEntitySet.AfterEachEntity(Action<EntityWrapper> action)
+        IJoinableEntitySet IJoinableEntitySet.AfterEachRecord(Action<EntityWrapper> action)
         {
-            TopEntity._afterEachEntityActions.Add((e) =>
+            TopEntity._afterEachRecordActions.Add((e) =>
             {
                 var oldAlias = e.Alias;
                 e.Alias = LinkEntity.EntityAlias + ".";

@@ -81,6 +81,68 @@ namespace TestFluentCRM
             Assert.IsTrue(message.Contains("Name2"));
         }
 
+        /// <summary>
+        /// Test use of default value in UseAttribute.
+        /// </summary>
+        [TestMethod]
+        public void TestUseAttribute3()
+        {
+            var message = string.Empty;
+            var message2 = string.Empty;
+            FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                .UseAttribute( (string a) => message = $"Name is {a}", "name")
+                .UseAttribute( (string a) => message2 = $"Name is {a}", "namemissing")
+                .UseAttribute( (string a) => message += "\n Name2 is {a}", "name2").Execute();
+
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
+            Assert.IsTrue(message.Contains("Name2"));
+            Assert.IsTrue(string.IsNullOrWhiteSpace(message2));
+
+
+            message = string.Empty;
+            message2 = string.Empty;
+            FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                .UseAttribute( (string a) => message = $"Name is {a}", "name")
+                .UseAttribute( "default", (string a) => message2 = $"Name is {a}", "namemissing")
+                .Execute();
+
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(message2));
+            Assert.AreEqual("Name is default", message2);
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
+        }
+
+        [DataTestMethod]
+        [DataRow( false, "", "name", "Account1", "name", true )]
+        [DataRow( true, "default", "name", "Account1", "name", true )]
+        [DataRow( false, "", "namemissing", "", "", false )]
+        [DataRow( true, "**Unknown**", "namemissing", "**Unknown**", "", true )]
+        public void TestUseAttribute4( bool hasDefault, string defaultval, string attribute, string expectedVal, string expectedAttr, bool callExpected) 
+        {
+            var called = false;
+            Action<string,string> closure = (attr, value) =>
+            {
+                Debug.WriteLine($"Closure called for attribute {attr} with value {value}");
+                Assert.AreEqual(expectedVal, value, "Expected Value");
+                Assert.AreEqual(expectedAttr, attr, "Expected Attribute");
+                called = true;  
+            };
+
+            if (hasDefault)
+            {
+                FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                    .UseAttribute<int>((s) => Debug.WriteLine($"Option set val {s}"), "statecode")
+                    .UseAttribute(defaultval, closure,attribute).Execute();
+            }
+            else
+            {
+                FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                    .UseAttribute<int>((s) => Debug.WriteLine($"Option set val {s}"), "statecode")
+                    .UseAttribute(closure, attribute).Execute();
+            }
+
+            Assert.AreEqual(callExpected, called);
+        }
+        
         [TestMethod]
         public void TestWeakUpdate1()
         {
@@ -451,7 +513,7 @@ namespace TestFluentCRM
             FluentAccount.Account()
                 .Trace(s => Debug.WriteLine(s))
                 .Where("name").BeginsWith("Account")
-                .BeforeEachEntity( (e) =>
+                .BeforeEachRecord( (e) =>
                 {                   
                     currentAccount = new AccountDetails();
                     calls++;
@@ -575,14 +637,14 @@ namespace TestFluentCRM
             FluentAccount.Account(context.GetOrganizationService())
                 .Trace(s => Debug.WriteLine(s))
                 .Where("name").BeginsWith("Account")
-                .BeforeEachEntity( (e) =>
+                .BeforeEachRecord( (e) =>
                 {                   
                     currentAccount = new AccountDetails();
                 })
                 .UseAttribute((string s) => currentAccount.Name = s , "name")               
                 .UseAttribute((string s) => currentAccount.Phone = s , "phone1")   
                 .WeakUpdate<string>("description", (s) => $"{currentAccount.Name} - {currentAccount.Phone}")
-                .AfterEachEntity((e) =>
+                .AfterEachRecord((e) =>
                 {
                     accounts.Add(currentAccount);
                     calls++;

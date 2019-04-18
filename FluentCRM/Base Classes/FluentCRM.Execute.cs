@@ -21,8 +21,8 @@ namespace FluentCRM
         private int _actionsCalled;
         private int _updateCount;
         private bool _updateRequired = false;
-        private readonly List<Action<EntityWrapper>> _beforeEachEntityActions = new List<Action<EntityWrapper>>();
-        private readonly List<Action<EntityWrapper>> _afterEachEntityActions = new List<Action<EntityWrapper>>();
+        private readonly List<Action<EntityWrapper>> _beforeEachRecordActions = new List<Action<EntityWrapper>>();
+        private readonly List<Action<EntityWrapper>> _afterEachRecordActions = new List<Action<EntityWrapper>>();
 
 
         #region "Execute CRM operations and actions"
@@ -32,9 +32,9 @@ namespace FluentCRM
         /// </summary>
         /// <returns>FluentCRM object</returns>
         /// <param name="action">Called after the entity has been read with the entity value.</param>
-        public ICanExecute BeforeEachEntity(Action<EntityWrapper> action)
+        public ICanExecute BeforeEachRecord(Action<EntityWrapper> action)
         {
-            _beforeEachEntityActions.Add(action);
+            _beforeEachRecordActions.Add(action);
             return this;
         }
 
@@ -43,9 +43,9 @@ namespace FluentCRM
         /// </summary>
         /// <returns>FluentCRM object</returns>
         /// <param name="action">Called after the entity has been read with the entity value.</param>
-        public ICanExecute AfterEachEntity(Action<EntityWrapper> action)
+        public ICanExecute AfterEachRecord(Action<EntityWrapper> action)
         {
-            _afterEachEntityActions.Add(action);
+            _afterEachRecordActions.Add(action);
             return this;
         }
 
@@ -114,7 +114,7 @@ namespace FluentCRM
                     
                     var wrapper = new EntityWrapper(entity, Service,  _traceFunction);
                     // wrapper.Alias
-                    _beforeEachEntityActions.ForEach(a => a(wrapper));
+                    _beforeEachRecordActions.ForEach(a => a(wrapper));
 
                     _actionList.ForEach(a =>
                         {
@@ -138,7 +138,7 @@ namespace FluentCRM
                         _updateCount++;
                         Timer($"Updated in {stopwatch.Elapsed.TotalSeconds}s");
                     }
-                    _afterEachEntityActions.ForEach(a => a(wrapper));
+                    _afterEachRecordActions.ForEach(a => a(wrapper));
                 }
                 _processedEntityCount++;
             }

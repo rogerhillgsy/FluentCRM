@@ -40,19 +40,19 @@ namespace TestFluentCRM
             const string name = "New Account";
             EntityReference requestRef = null;
 
-            FluentAccount.Account(_orgService)
-                .Create(new Dictionary<string, object>
-                {
-                    {"name", name},
-                    {"emptyAttribute1", "" },
-                    {"emptyAttribute2", null },
-                })
-                .Id((id) => requestRef = id)
-                .Create( new Dictionary<string, object>
-                {
-                    {"address1_city", "New York"}
-                })
-                .Execute();
+FluentAccount.Account(_orgService)
+    .Create(new Dictionary<string, object>
+    {
+        {"name", name},
+        {"emptyAttribute1", "" },
+        {"emptyAttribute2", null },
+    })
+    .Id((id) => requestRef = id)
+    .Create( new Dictionary<string, object>
+    {
+        {"address1_city", "New York"}
+    })
+    .Execute();
 
             Assert.IsNotNull(requestRef);
             Assert.IsNotNull(_context.Data["account"]);

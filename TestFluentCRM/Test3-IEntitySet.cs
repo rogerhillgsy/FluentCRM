@@ -127,6 +127,63 @@ namespace TestFluentCRM
             Assert.AreEqual(account3.GetAttributeValue<string>(resultAttribute), name == "" ? null : name);
         }
 
+        /// <summary>
+        /// Test use of default value on useAttribute.
+        /// </summary>
+        [TestMethod]
+        public void TestUseAttribute5()
+        {
+            var message = string.Empty;
+            FluentAccount.Account().Where("name").Equals("Account1")
+                .UseAttribute( "default", (string a) => message = $"Name is {a}", "name").Execute();
+
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
+
+            message = string.Empty;
+            FluentAccount.Account().Where("name").Equals("Account1")
+                .UseAttribute( (string a) => message = $"Name is {a}", "namemissing").Execute();
+
+            Assert.IsTrue(string.IsNullOrWhiteSpace(message));
+
+            message = string.Empty;
+            FluentAccount.Account().Where("name").Equals("Account1")
+                .UseAttribute( "default", (string a) => message = $"Name is {a}", "namemissing").Execute();
+
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
+            Assert.AreEqual("Name is default", message);
+
+        }
+
+        [DataTestMethod]
+        [DataRow( false, "", "name", "Account1", "name", true )]
+        [DataRow( true, "default", "name", "Account1", "name", true )]
+        [DataRow( false, "", "namemissing", "", "", false )]
+        [DataRow( true, "**Unknown**", "namemissing", "**Unknown**", "", true )]
+        public void TestUseAttribute6( bool hasDefault, string defaultval, string attribute, string expectedVal, string expectedAttr, bool callExpected) 
+        {
+            var called = false;
+            Action<string,string> closure = (attr, value) =>
+            {
+                Debug.WriteLine($"Closure called for attribute {attr} with value {value}");
+                Assert.AreEqual(expectedVal, value, "Expected Value");
+                Assert.AreEqual(expectedAttr, attr, "Expected Attribute");
+                called = true;  
+            };
+
+            if (hasDefault)
+            {
+                FluentAccount.Account().Where("name").Equals("Account1")
+                    .UseAttribute(defaultval, closure,attribute).Execute();
+            }
+            else
+            {
+                FluentAccount.Account().Where("name").Equals("Account1")
+                    .UseAttribute(closure, attribute).Execute();
+            }
+
+            Assert.AreEqual(callExpected, called);
+        }
+        
         [DataRow( new string[] {"name", "name1", "name2"}, "name" )]
         [DataRow( new string[] {"name1", "name", "name2"}, "name" )]
         [DataRow( new string[] {"name3", "name1", "name2"}, "name2" )]

@@ -11,7 +11,7 @@ namespace TestFluentCRM
     public class Test0_Extract
     {
         [TestMethod]
-        public void TestUseAttribute()
+        public void TestUseAttribute1()
         {
             var context = TestUtilities.TestContext1();
             var account1 = context.Data["account"].First().Value;
@@ -25,6 +25,26 @@ namespace TestFluentCRM
                 .Execute();
 
         }
+
+        /// <summary>
+        /// Validate use of default values.
+        /// </summary>
+                [TestMethod]
+        public void TestUseAttribute2()
+        {
+            var context = TestUtilities.TestContext1();
+            var account1 = context.Data["account"].First().Value;
+
+            FluentAccount.Account(account1.Id, context.GetOrganizationService())
+                .Trace( s => Debug.WriteLine(s))
+                .UseAttribute( "default", (string s) => Assert.AreEqual("default", s), "namemissing")
+                .UseAttribute( "defphone", (string s) => Assert.AreEqual("defphone", s), "phone1missing")
+                .UseAttribute(5, (int s) => Assert.AreEqual(5, s), "statecodemissing")
+                .Count( (c) => Assert.AreEqual(1, c ))
+                .Execute();
+
+        }
+
 
         // Test selection of a single entity by Id
         [TestMethod]
