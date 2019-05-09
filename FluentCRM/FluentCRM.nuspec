@@ -19,10 +19,10 @@
     <version>9.1.0</version>
 
 	<!-- When empty, this will be set at compile time to the [assembly:AssemblyDescription("")] attribute value -->	
-    <summary></summary>
+    <summary>FluentCRM</summary>
 	
 	<!-- When empty, this will be set at compile time to the [assembly:AssemblyTitle("")] attribute value -->
-    <description></description>
+    <description>FluentCRM nuget package</description>
     
 	<!-- Set this to false if you don't need to support a license -->
     <!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
