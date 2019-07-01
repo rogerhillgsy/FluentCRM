@@ -219,6 +219,7 @@ namespace TestFluentCRMLive
         [TestCategory("LiveTest")]
         public void Test4_OptionString()
         {
+
             using (var crmSvc = new CrmServiceClient(_connectionString))
             {
                 var accountid = Guid.Empty;

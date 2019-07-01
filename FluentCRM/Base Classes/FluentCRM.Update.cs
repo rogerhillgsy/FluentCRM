@@ -48,7 +48,7 @@ namespace FluentCRM
                             }
                             else
                             {
-                                Trace($"Updating column {attributeToUpdate} = {newVal}");
+                                Trace($"Updating column {attributeToUpdate} = {0}", newVal);
                                 _update.Attributes[attributeToUpdate] = newVal;
                                 _updateRequired = true;
                             }

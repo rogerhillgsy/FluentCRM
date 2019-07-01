@@ -132,7 +132,7 @@ namespace FluentCRM
 
                     if (_updateRequired)
                     {
-                        Trace( $"Updating entity {_update.LogicalName}/{_update.Id} - {String.Join(",", _update.Attributes.Keys)} - {String.Join(",", _update.Attributes.Values)}");
+                        Trace( $"Updating entity {_update.LogicalName}/{_update.Id} - {String.Join(",", _update.Attributes.Keys)} - {escapeBraces(String.Join(",", _update.Attributes.Values))}");
                         stopwatch.Restart();
                         Service.Update(_update);
                         _updateCount++;
@@ -145,6 +145,16 @@ namespace FluentCRM
 
 
             return hasMore;
+        }
+
+        /// <summary>
+        /// Escape any braces included in a parameter inserted into a format string to stop it being interpreted as a format specified.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private string escapeBraces(string input)
+        {
+            return input.Replace("{", "{{").Replace("}", "}}");
         }
 
         private void PrepareFetch(params string[] fields)

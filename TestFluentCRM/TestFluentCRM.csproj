@@ -30,6 +30,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -120,6 +121,7 @@
     <Compile Include="Test10-SpecificEntities.cs" />
     <Compile Include="LiveTests.cs" />
     <Compile Include="DecommissioningTests.cs" />
+    <Compile Include="TestIssues.cs" />
     <Compile Include="WikiExamples.cs" />
   </ItemGroup>
   <ItemGroup>

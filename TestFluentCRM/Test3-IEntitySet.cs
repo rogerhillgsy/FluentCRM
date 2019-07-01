@@ -675,6 +675,7 @@ namespace TestFluentCRM
         /// Tests join with live CRM - use to ensure that no subtle differences between the test system and "reality" have crept in here.
         /// </summary>
         [TestMethod]
+        [TestCategory("LiveTest")]
         public void TestJoinLive() {
 
         // Ensure Environment variable "Password" is set.
