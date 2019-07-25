@@ -64,7 +64,7 @@ namespace FluentCRM
             if (_actionList.SelectMany(c => c.Item1).Any(c => c == AllColumns))
             {
                 Trace($"Fetching All columns");
-                cols = new string[] {} ;
+                cols = Array.Empty<string>();
             }
             else
             {
@@ -132,9 +132,17 @@ namespace FluentCRM
 
                     if (_updateRequired)
                     {
-                        Trace( $"Updating entity {_update.LogicalName}/{_update.Id} - {String.Join(",", _update.Attributes.Keys)} - {escapeBraces(String.Join(",", _update.Attributes.Values))}");
+                        Trace( $"Updating entity {_update.LogicalName}/{_update.Id} - {String.Join(",", _update.Attributes.Keys)} - {EscapeBraces(String.Join(",", _update.Attributes.Values))}");
                         stopwatch.Restart();
-                        Service.Update(_update);
+                        if (_dryRunUpdate != null)
+                        {
+                            _dryRunUpdate(wrapper);
+                        }
+                        else
+                        {
+                            Service.Update(_update);
+                        }
+
                         _updateCount++;
                         Timer($"Updated in {stopwatch.Elapsed.TotalSeconds}s");
                     }
@@ -152,7 +160,7 @@ namespace FluentCRM
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        private string escapeBraces(string input)
+        private static string EscapeBraces(string input)
         {
             return input.Replace("{", "{{").Replace("}", "}}");
         }

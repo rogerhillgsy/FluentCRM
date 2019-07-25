@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
 {
@@ -6,6 +7,9 @@ namespace FluentCRM
     {
         private Action<string> _traceFunction;
         private Action<string> _timerFunction;
+        private Action<EntityWrapper> _dryRunCreate;
+        private Action<EntityWrapper> _dryRunUpdate;
+        private Action<EntityReference> _dryRunDelete;
 
         #region "Diagnostic methods"
 
@@ -70,6 +74,23 @@ namespace FluentCRM
         IEntitySet IEntitySet.Timer(Action<string> timerAction)
         {
             return (IEntitySet) ((IUnknownEntity) this).Timer(timerAction);
+        }
+
+        /// <summary>
+        /// Read data, but make no actual changes to CRM.
+        /// By default output log messages to Trace and do no updates, optionally call action functions with to-be-updated data.
+        /// </summary>
+        /// <param name="onCreate">Function called instead of a create action.</param>
+        /// <param name="onUpdate">Function called instead of an update action.</param>
+        /// <param name="onDelete">Function called instead of a delete action.</param>
+        /// <returns></returns>
+        ICanExecute ICanExecute.DryRun(Action<EntityWrapper> onCreate =null, Action<EntityWrapper> onUpdate =null,
+            Action<EntityReference> onDelete =null)
+        {
+            _dryRunCreate = onCreate;
+            _dryRunUpdate = onUpdate;
+            _dryRunDelete = onDelete;
+            return this;
         }
 
         #endregion

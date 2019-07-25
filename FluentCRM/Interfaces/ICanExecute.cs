@@ -53,6 +53,17 @@ namespace FluentCRM
         ICanExecute UseAttribute<T>( Action<string, T> action, string attribute, params string[] optionalAttributes);
 
         /// <summary>
+        /// Execute will only read data, but will not make any actual updates to CRM
+        /// Updated values will be logged to Trace.
+        /// Optionally declare action functions to observe the CUD operations.
+        /// </summary>
+        /// <param name="onCreate">Optional. Called when a CRM record would have been created</param>
+        /// <param name="onUpdate">Optional. Called when a CRM record would have been updated</param>
+        /// <param name="onDelete">Optional. Called when a CRM record would have been deleted.</param>
+        /// <returns></returns>
+        ICanExecute DryRun(Action<EntityWrapper> onCreate, Action<EntityWrapper> onUpdate, Action<EntityReference> onDelete);
+
+        /// <summary>
         /// Read an attribute from the current entity and call the action closure with the attribute value as argument.
         /// If the attribute has a null value, the closure will not be called.
         /// If multiple attributes are specified, then the first non-null value will be used to call the action closure.
