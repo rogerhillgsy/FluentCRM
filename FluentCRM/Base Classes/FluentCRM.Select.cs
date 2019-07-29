@@ -35,6 +35,11 @@ namespace FluentCRM
             return (INeedsWhereCriteria) ((IUnknownEntity) this).Where(attributeName);
         }
 
+        IEntitySet IUnknownEntity.All()
+        {
+            return ((IEntitySet)this);
+        }
+
         /// <summary>
         /// Add criteria that the Where-attribute equals the given value
         /// </summary>
@@ -70,6 +75,31 @@ namespace FluentCRM
         {
             Trace($"Begins with...{s}");
             AddCriteria(new ConditionExpression(_whereAttribute, ConditionOperator.BeginsWith, s));
+            return this;
+        }
+
+
+        /// <summary>
+        /// Add criteria that the Where-attribute contains the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="s">Select entity records where the given attribute contains with this string value.</param>
+        public IEntitySet Contains(string s)
+        {
+            Trace($"Contains...{s}");
+            AddCriteria(new ConditionExpression(_whereAttribute, ConditionOperator.Like, $"%{s}%"));
+            return this;
+        }
+
+        /// <summary>
+        /// Add criteria that the Where-attribute does not contain the given value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="s">Select entity records where the given attribute does not contain this string value.</param>
+        public IEntitySet DoesNotContain(string s)
+        {
+            Trace($"Does not contain...{s}");
+            AddCriteria(new ConditionExpression(_whereAttribute, ConditionOperator.NotLike, $"%{s}%"));
             return this;
         }
 

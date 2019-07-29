@@ -66,6 +66,24 @@ namespace FluentCRM
         IEntitySet BeginsWith(string s);
 
         /// <summary>
+        /// Add criteria to determine if the given Where-attribute contains the given string.
+        /// Note that this is intended to match the Advanced Find "Contains" criteria rather than the SDK "Contains" condition
+        /// which requires use of free text indexing etc.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        IEntitySet Contains(string value);
+
+        /// <summary>
+        /// Add criteria to determine if the given Where-attribute contains the given string.
+        /// Note that this is intended to match the Advanced Find "Contains" criteria rather than the SDK "Contains" condition
+        /// which requires use of free text indexing etc.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        IEntitySet DoesNotContain(string value);
+
+        /// <summary>
         /// Add criteria that the Where-attribute matches the given (unary) condition 
         /// </summary>
         /// <returns>FluentCRM object</returns>

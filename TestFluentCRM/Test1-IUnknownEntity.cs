@@ -83,6 +83,58 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
+        public void TestWhereContains()
+        {
+            int? count = 0;
+            FluentAccount.Account(_orgService).Where("name").Contains("Account").Count(c => count = c).Execute();
+
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(4, count);
+
+            count = -1;
+            FluentAccount.Account(_orgService).Where("name").Contains("Account").And.Where("name").Contains("1").Count(c => count = c).Execute();
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(1, count);
+
+            count = -1;
+            FluentAccount.Account(_orgService).Where("name").Contains("Account").And.Where("name").Contains("xxx").Count(c => count = c).Execute();
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(0, count);
+
+        }
+
+        [TestMethod]
+        public void TestWhereDoesNotContain()
+        {
+            int? count = 0;
+            FluentAccount.Account(_orgService).Where("name").DoesNotContain("Account").Count(c => count = c).Execute();
+
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(0, count);
+
+            count = -1;
+            FluentAccount.Account(_orgService).Where("name").Contains("Account").And.Where("name").DoesNotContain("1").Count(c => count = c).Execute();
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(3, count);
+
+            count = -1;
+            FluentAccount.Account(_orgService).Where("name").DoesNotContain("2").And.Where("name").Contains("1").Count(c => count = c).Execute();
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(1, count);
+
+        }
+
+        [TestMethod]
+        public void TestAll()
+        {
+            int? count = 0;
+            FluentAccount.Account(_orgService).All().Count(c => count = c).Execute();
+
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(4, count);
+        }
+
+        [TestMethod]
         public void TestId1()
         {
             FluentCRM.FluentCRM.StaticService = _orgService;

@@ -23,6 +23,12 @@ namespace FluentCRM
         INeedsWhereCriteria Where(string attributeName);
 
         /// <summary>
+        /// Return All entities of the selected type.
+        /// </summary>
+        /// <returns></returns>
+        IEntitySet All();
+
+        /// <summary>
         /// Used to specify the Guid of the entity record to be returned.
         /// </summary>
         /// <returns>FluentCRM object</returns>
