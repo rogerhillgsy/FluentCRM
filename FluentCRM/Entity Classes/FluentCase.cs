@@ -16,7 +16,7 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private FluentCase(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentCase(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentCase(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentCase(Guid id) : base(_logicalName, id) { }
 

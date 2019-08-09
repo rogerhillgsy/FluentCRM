@@ -16,7 +16,7 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private FluentSecurityRole(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentSecurityRole(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentSecurityRole(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentSecurityRole(Guid id) : base(_logicalName, id) { }
 

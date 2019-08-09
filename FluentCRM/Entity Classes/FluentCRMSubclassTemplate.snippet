@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Usage: -
+In Visual Studio open the Code Snippets Manager (Crl-K Ctrl-B)
+"Import..." this file.
+
+Then create a new empty class file. e.g. "FluentPrimaryContact.cs"
+Type "fluentCRMsub" into the empty file, press tab and type the class name in the snippet that appears. (e.g. PrimaryContact) 
+Press TAB, then type the name of the parent class entity (e.g. Contact )
+Update joinAttributes as required.
+-->
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>FluentCRM Entity Sub Class Template</Title>
+      <Author> Roger Hill</Author>
+      <Description>Template of class to be used to create alternative joins between entities (i.e. Primary Contact.</Description>
+      <Shortcut>fluentCRMsub</Shortcut>
+    </Header>
+    <Snippet>
+	  <Declarations>
+		<Literal>
+			<ID>entity</ID>
+			<ToolTip>Name of FluentCRM entity sub class to be created Fluent*</ToolTip>
+			<Default>PrimaryContact</Default>
+		</Literal>
+		<Literal>
+			<ID>parentclass</ID>
+			<ToolTip>Name of the parent class.</ToolTip>
+			<Default>Contact</Default>
+		</Literal>
+      <Literal>
+        <ID>targetname</ID>
+        <ToolTip>Logical name of target class.</ToolTip>
+        <Default>contact</Default>
+      </Literal>
+      <Literal>
+        <ID>sourcename</ID>
+        <ToolTip>Logical name of source class for join.</ToolTip>
+        <Default>account</Default>
+      </Literal>
+      <Literal>
+        <ID>sourceattributename</ID>
+        <ToolTip>Logical name of source attribute for join.</ToolTip>
+        <Default>primarycontactid</Default>
+      </Literal>
+	  </Declarations>
+      <Code Language="CSharp"
+            Kind="file">
+        <![CDATA[
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xrm.Sdk;
+
+namespace FluentCRM
+{
+    /// <summary>
+    /// FluentCRM class used to encapsulate join access from a $parentclass$ to the $entity$ of that entity.
+    /// </summary>
+    public class Fluent$entity$  : Fluent$parentclass$
+    {
+        /// <summary>
+        /// Internal-use function used to get the name of the "this entity" attribute to be used to join to the specified "foreign" entity .
+        /// </summary>
+        /// <param name="foreignEntityName"></param>
+        /// <returns>Name of "this entity" attribute to be used to join to the given "foreign" entity.</returns>
+        public override string JoinAttribute(string foreignEntityName)
+        {
+            return "$targetname$id";
+        }
+
+        /// <summary>
+        /// Internal-use function used to get the name of the "this entity" attribute to be used to join to the specified "foreign" entity .
+        /// </summary>
+        /// <param name="foreignEntityName"></param>
+        /// <returns>Name of "this entity" attribute to be used to join to the given "foreign" entity.</returns>
+        public override string JoinFromAttribute(string foreignEntityName)
+        {
+            if (foreignEntityName != "$sourcename$")
+            {
+                throw new NotImplementedException("Joining to $targetname$ - left entity must be a $sourcename$");
+            }
+
+            return "$sourceattributename$";
+        }
+
+        /// <summary>
+        /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
+        /// </summary>
+        /// <param name="service">CRM system to fetch entity from</param>
+        /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
+        public override IJoinable Factory(IOrganizationService service)
+        {
+            return new Fluent$entity$(service);
+        }
+
+        private Fluent$entity$(IOrganizationService service) : base(service)
+        {
+        }
+
+        /// <summary>
+        /// Parameterless constructor required by the language, but not necessarily used.
+        /// </summary>
+        public Fluent$entity$() : base()
+        {
+        }
+    }
+}
+]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

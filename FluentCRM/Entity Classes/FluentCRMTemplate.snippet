@@ -49,7 +49,7 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private Fluent$entity$(Guid id, IOrganizationService service) : base (_logicalName,id,service) {}
 
-        private Fluent$entity$(IOrganizationService service) : base(_logicalName, service) {}
+        protected Fluent$entity$(IOrganizationService service) : base(_logicalName, service) {}
 
         private Fluent$entity$(Guid id) : base(_logicalName, id) {}
 

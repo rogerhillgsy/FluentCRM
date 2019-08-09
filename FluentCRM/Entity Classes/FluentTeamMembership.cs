@@ -15,7 +15,7 @@ namespace FluentCRM
 
         private FluentTeamMembership(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentTeamMembership(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentTeamMembership(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentTeamMembership(Guid id) : base(_logicalName, id) { }
 

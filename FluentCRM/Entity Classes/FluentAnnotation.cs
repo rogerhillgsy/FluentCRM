@@ -16,7 +16,7 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private FluentAnnotation(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentAnnotation(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentAnnotation(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentAnnotation(Guid id) : base(_logicalName, id) { }
 

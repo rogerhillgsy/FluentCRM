@@ -16,7 +16,7 @@ namespace FluentCRM
 
         private FluentBusinessUnit(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentBusinessUnit(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentBusinessUnit(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentBusinessUnit(Guid id) : base(_logicalName, id) { }
 

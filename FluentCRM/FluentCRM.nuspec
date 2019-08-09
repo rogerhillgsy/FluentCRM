@@ -16,7 +16,7 @@
     </iconUrl>
 
 	<!-- Ignore, this will get updated at compile time -->
-    <version>9.1.4-beta</version>
+    <version>9.1.5</version>
 
 	<!-- When empty, this will be set at compile time to the [assembly:AssemblyDescription("")] attribute value -->	
     <summary>FluentCRM</summary>
@@ -27,7 +27,7 @@
 	<!-- Set this to false if you don't need to support a license -->
     <!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
 
-	<releaseNotes>Add additional where conditions - All, Contains and DoesNotContain.</releaseNotes>
+	<releaseNotes>Add FluentCRMsub snippet template, adjust constructor visibility to better support template. Add snippet templates to package.</releaseNotes>
 	<tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
 	
     <dependencies>
@@ -47,5 +47,6 @@
 	-->
 
 	<!-- Add any additional files here manually -->
+    <file src="Entity Classes\*.snippet" target="Templates" />
   </files>
 </package>

@@ -81,7 +81,12 @@
     <Compile Include="Entity Classes\FluentCurrency.cs" />
     <Compile Include="Entity Classes\FluentDocumentTemplate.cs" />
     <Compile Include="Entity Classes\FluentPrimaryContact.cs" />
-    <None Include="Entity Classes\FluentCRMTemplate.snippet" />
+    <None Include="Entity Classes\FluentCRMSubclassTemplate.snippet">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Entity Classes\FluentCRMTemplate.snippet">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Compile Include="Entity Classes\FluentQueue.cs" />
     <Compile Include="Entity Classes\FluentSecurityRole.cs" />
     <Compile Include="Entity Classes\FluentSystemUser.cs" />
