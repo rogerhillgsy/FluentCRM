@@ -12,11 +12,10 @@
     <!--<license type="expression">MIT</license>-->
     <licenseUrl>https://raw.githubusercontent.com/rogerhillgsy/FluentCRM/master/FluentCRM/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/rogerhillgsy/FluentCRM/</projectUrl>
-    <iconUrl>https://github.com/rogerhillgsy/FluentCRM/Logo.png
-    </iconUrl>
+    <iconUrl>https://github.com/rogerhillgsy/FluentCRM/Logo.png</iconUrl>
 
 	<!-- Ignore, this will get updated at compile time -->
-    <version>9.1.5</version>
+    <version>9.1.6</version>
 
 	<!-- When empty, this will be set at compile time to the [assembly:AssemblyDescription("")] attribute value -->	
     <summary>FluentCRM</summary>

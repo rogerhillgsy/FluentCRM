@@ -18,6 +18,10 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private FluentSystemUser(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
+        /// <summary>
+        /// Set IOrganizationService to use
+        /// </summary>
+        /// <param name="service"></param>
         protected FluentSystemUser(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentSystemUser(Guid id) : base(_logicalName, id) { }
@@ -112,7 +116,6 @@ namespace FluentCRM
         /// <summary>
         /// Extract systemuser record for the current user.
         /// </summary>
-        /// <param name="service"></param>
         /// <returns></returns>
         public static ICanExecute CurrentUser(){
             var rv = (IUnknownEntity) new FluentSystemUser();
@@ -130,11 +133,22 @@ namespace FluentCRM
             return  (ICanExecute) rv.Where("systemuserid").Condition(ConditionOperator.EqualUserId);
         }
 
+        /// <summary>
+        /// Grant security role to a user.
+        /// </summary>
+        /// <param name="securityRoleId">Id of security Role.</param>
+        /// <returns></returns>
         public ICanExecute AddSecurityRole(Guid securityRoleId)
         {
             return AddSecurityRole(new List<Guid> {securityRoleId});
         }
 
+
+        /// <summary>
+        /// Grant security role to a user.
+        /// </summary>
+        /// <param name="securityRoleIds">Id of security Role.</param>
+        /// <returns></returns>
         public ICanExecute AddSecurityRole(ICollection<Guid> securityRoleIds)
         {
             var roles = new EntityReferenceCollection( (from r in securityRoleIds select new EntityReference("role",r)).ToList());
@@ -148,11 +162,21 @@ namespace FluentCRM
            }, "systemuserid");
         }
 
+        /// <summary>
+        /// Remove security role from a user.
+        /// </summary>
+        /// <param name="securityRoleId">Id of security Role.</param>
+        /// <returns></returns>
         public ICanExecute RemoveSecurityRole(Guid securityRoleId)
         {
             return RemoveSecurityRole(new List<Guid> {securityRoleId});
         }
 
+        /// <summary>
+        /// Remove security role from a user.
+        /// </summary>
+        /// <param name="securityRoleIds">Id of security Role.</param>
+        /// <returns></returns>
         public ICanExecute RemoveSecurityRole(ICollection<Guid> securityRoleIds)
         {
             var roles = new EntityReferenceCollection( (from r in securityRoleIds select new EntityReference("role",r)).ToList());

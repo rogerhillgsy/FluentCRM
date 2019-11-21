@@ -6,22 +6,23 @@ using Microsoft.Xrm.Sdk;
 namespace FluentCRM
 {
     /// <summary>
-    /// FluentCRM class used to encapsulate access to the TeamMembership Entity
+    /// FluentCRM class used to encapsulate access to the PluginAssembly Entity
     /// </summary>
-    public class FluentTeamMembership : FluentCRM
+    public class FluentPluginAssembly : FluentCRM
     {
 
-        private const string _logicalName = "teammembership";
+        private const string _logicalName = "pluginassembly";
 
-        private FluentTeamMembership(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
+        #region "Constructors etc required by Language"
+        private FluentPluginAssembly(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
         /// <summary>
         /// Set IOrganizationService to use
         /// </summary>
         /// <param name="service"></param>
-        protected FluentTeamMembership(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentPluginAssembly(IOrganizationService service) : base(_logicalName, service) { }
 
-        private FluentTeamMembership(Guid id) : base(_logicalName, id) { }
+        private FluentPluginAssembly(Guid id) : base(_logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
@@ -29,9 +30,9 @@ namespace FluentCRM
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet TeamMembership(Guid id, IOrganizationService service)
+        public static IEntitySet PluginAssembly(Guid id, IOrganizationService service)
         {
-            return new FluentTeamMembership(id, service);
+            return new FluentPluginAssembly(id, service);
         }
 
         /// <summary>
@@ -39,9 +40,9 @@ namespace FluentCRM
         /// </summary>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity TeamMembership(IOrganizationService service)
+        public static IUnknownEntity PluginAssembly(IOrganizationService service)
         {
-            return new FluentTeamMembership(service);
+            return new FluentPluginAssembly(service);
         }
 
         /// <summary>
@@ -49,24 +50,24 @@ namespace FluentCRM
         /// </summary>
         /// <param name="id">Guid of entity to operator on</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet TeamMembership(Guid id)
+        public static IEntitySet PluginAssembly(Guid id)
         {
-            return new FluentTeamMembership(id);
+            return new FluentPluginAssembly(id);
         }
 
         /// <summary>
         /// Select a (sub)set of the specified entity using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity TeamMembership()
+        public static IUnknownEntity PluginAssembly()
         {
-            return new FluentTeamMembership();
+            return new FluentPluginAssembly();
         }
 
         /// <summary>
         /// Parameterless constructor required by the language, but not necessarily used.
         /// </summary>
-        public FluentTeamMembership() : base(_logicalName) { }
+        public FluentPluginAssembly() : base(_logicalName) { }
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
@@ -75,16 +76,20 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
-            return new FluentTeamMembership(service);
+            return new FluentPluginAssembly(service);
         }
+        #endregion
 
         /// <summary>
-        /// Use to specify where join parameters to other entites are non-standard.
+        /// Use to specify where join parameters to other entities are non-standard.
         /// </summary>
         private readonly Dictionary<string, string> _joinOn = new Dictionary<string, string>
         {
-            {"systemuser", "systemuserid"},
-            {"team", "teamid"}
+            // if the join to another entity is through the primary id field, (1:N join) nothing is needed here.
+            // If it is through another field (N:1 join) then the details of the foreign entity and lookup field need to be given here.
+            //
+            // { "foreign entity logical name", "logical name of lookup field in this entity" }
+            //   { "account", "parentcustomerid" } 
         };
 
         /// <summary>
@@ -100,7 +105,7 @@ namespace FluentCRM
             }
             else
             {
-                return "teammembershipid";
+                return "pluginassemblyid";
             }
         }
     }

@@ -16,6 +16,10 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private FluentQueue(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
+        /// <summary>
+        /// Set IOrganizationService to use
+        /// </summary>
+        /// <param name="service"></param>
         protected FluentQueue(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentQueue(Guid id) : base(_logicalName, id) { }

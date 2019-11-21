@@ -217,6 +217,7 @@ namespace FluentCRM
             return (IJoinableEntitySet) UseAttribute(default(T), false, action, attribute, optionalAttributes);
         }
 
+        /// <inheritdoc />
         public IJoinableEntitySet UseAttribute<T>(T defaultValue,  Action<string, T> action, string attribute, params string[] optionalAttributes)
         {
             return (IJoinableEntitySet) UseAttribute(defaultValue, true, action, attribute, optionalAttributes);
@@ -248,6 +249,7 @@ namespace FluentCRM
             return (IJoinableEntitySet) UseAttribute(default(T), false, action, attribute, optionalAttributes);
         }
 
+        /// <inheritdoc />
         public IJoinableEntitySet UseAttribute<T>(T defaultValue, Action<T> action, string attribute, params string[] optionalAttributes)
         {
             return (IJoinableEntitySet) UseAttribute(defaultValue, true, action, attribute, optionalAttributes);

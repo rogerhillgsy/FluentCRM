@@ -70,6 +70,11 @@ namespace FluentCRM
             return (IEntitySet) Order(attribute, OrderType.Descending);
         }
 
+        /// <summary>
+        /// Call action function if any data would be returned (rows > 0 )
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         public ICanExecute Exists(Action<bool> action)
         {
             _actionList.Add(new Tuple<string[], Func<EntityWrapper, string, bool?>>(
@@ -85,6 +90,9 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Call action function if any data would be returned (rows > 0 )
+        /// </summary>
         public ICanExecute Exists(Action whenTrue, Action whenFalse)
         {
             return ((ICanExecute) this).Exists(c =>

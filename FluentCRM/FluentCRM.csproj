@@ -36,12 +36,18 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\FluentCRM.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>FluentCRM.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.12\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.20\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.12\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.20\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -82,7 +88,9 @@
     <Compile Include="Entity Classes\FluentDocumentTemplate.cs" />
     <Compile Include="Entity Classes\FluentOpportunity.cs" />
     <Compile Include="Entity Classes\FluentParentAccount.cs" />
+    <Compile Include="Entity Classes\FluentPluginAssembly.cs" />
     <Compile Include="Entity Classes\FluentPluginTraceLog.cs" />
+    <Compile Include="Entity Classes\FluentPluginType.cs" />
     <Compile Include="Entity Classes\FluentPrimaryContact.cs" />
     <None Include="Entity Classes\FluentCRMSubclassTemplate.snippet">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -90,12 +98,15 @@
     <None Include="Entity Classes\FluentCRMTemplate.snippet">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Entity Classes\FluentProcessDependency.cs" />
     <Compile Include="Entity Classes\FluentQueue.cs" />
+    <Compile Include="Entity Classes\FluentSdkMessageProcessingStep.cs" />
     <Compile Include="Entity Classes\FluentSecurityRole.cs" />
     <Compile Include="Entity Classes\FluentSystemUser.cs" />
     <Compile Include="Entity Classes\FluentSystemUserRoles.cs" />
     <Compile Include="Entity Classes\FluentTeam.cs" />
     <Compile Include="Entity Classes\FluentTeamMembership.cs" />
+    <Compile Include="Entity Classes\FluentWorkflow.cs" />
     <Compile Include="FluentUserSettings.cs" />
     <Compile Include="Interfaces\IAnotherWhere.cs" />
     <Compile Include="Interfaces\ICanExecute.cs" />
@@ -115,6 +126,7 @@
     <None Include="FluentCRM.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="FluentCRM.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

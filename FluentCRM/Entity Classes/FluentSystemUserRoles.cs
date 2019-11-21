@@ -16,6 +16,10 @@ namespace FluentCRM
         #region "Constructors etc required by Language"
         private FluentSystemUserRoles(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
+        /// <summary>
+        /// Set IOrganizationService to use
+        /// </summary>
+        /// <param name="service"></param>
         protected FluentSystemUserRoles(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentSystemUserRoles(Guid id) : base(_logicalName, id) { }

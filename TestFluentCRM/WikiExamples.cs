@@ -328,10 +328,8 @@ FluentContact.Contact()
             var context = TestUtilities.TestContext1();
             var contact1 = context.Data["contact"].First().Value;
             FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
-            MyStruct myStruct;
 
             // Consider the difference between these two calls
-            var newNumber = "12345678";
 
             var mobileNumber = string.Empty;
             FluentContact.Contact(contact1.Id)

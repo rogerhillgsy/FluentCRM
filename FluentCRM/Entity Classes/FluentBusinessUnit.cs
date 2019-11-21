@@ -16,6 +16,10 @@ namespace FluentCRM
 
         private FluentBusinessUnit(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
+        /// <summary>
+        /// Set IOrganizationService to use
+        /// </summary>
+        /// <param name="service"></param>
         protected FluentBusinessUnit(IOrganizationService service) : base(_logicalName, service) { }
 
         private FluentBusinessUnit(Guid id) : base(_logicalName, id) { }

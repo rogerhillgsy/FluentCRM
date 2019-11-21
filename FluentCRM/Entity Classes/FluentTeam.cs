@@ -136,8 +136,16 @@ namespace FluentCRM
         }
     }
 
+    /// <summary>
+    /// Represent a set of zero or more teams.
+    /// </summary>
     public interface ITeamSet : IEntitySet
     {
+        /// <summary>
+        /// Add a group of users to a Team.
+        /// </summary>
+        /// <param name="systemUserIds"></param>
+        /// <returns></returns>
         ICanExecute AddMembersToTeam(IEnumerable<Guid> systemUserIds );
     }
 }
