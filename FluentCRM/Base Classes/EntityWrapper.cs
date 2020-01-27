@@ -79,7 +79,7 @@ namespace FluentCRM
         /// <typeparam name="T">Expected type of attribute to be returned.</typeparam>
         /// <param name="attribute">Logical name of attribute to return.</param>
         /// <returns></returns>
-        public T GetAttributeValue<T>(string attribute)
+        public T GetAttributeValue<T>(string attribute, bool throwExceptionOnTypeError = true)
         {
             var  rv  = default(T);
             if (!Entity.Attributes.ContainsKey(attribute))
@@ -96,7 +96,21 @@ namespace FluentCRM
                 }
                 else
                 {
-                    return Entity.GetAttributeValue<T>(attribute);
+                    if (Entity[attribute] is T)
+                    {
+                        return Entity.GetAttributeValue<T>(attribute);
+                    }
+                    else
+                    {
+                        var error =
+                            $"EntityWrapper: For {attribute} returned type {(Entity[attribute] as AliasedValue)?.Value?.GetType().ToString() ?? (Entity[attribute]?.GetType().ToString() ?? "*Unknown*")} but expected type {typeof(T)}";
+                        Trace(error);
+                        if (throwExceptionOnTypeError)
+                        {
+                            throw new InvalidCastException(error);
+                        }
+                        return default;
+                    }
                 }
             }
 

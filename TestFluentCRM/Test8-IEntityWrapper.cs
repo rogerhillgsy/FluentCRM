@@ -179,5 +179,44 @@ namespace TestFluentCRM
             Assert.IsFalse( ew.Contains( "lastname" ));
             Assert.IsTrue( ew.Contains( ewcAlias +  "lastname" ));
         }
+
+        [TestMethod]
+        public void TestEntityWrapperTypeMismatch()
+        {
+            // Test that when there are multiple typing errors, we process all attributes before throwing an exception
+            var calls = 0;
+            var log = new StringBuilder();
+            float fv = 0;
+            Assert.ThrowsException<InvalidCastException>(() =>
+                FluentAccount.Account()
+                    .Trace(s => log.AppendLine(s))
+                    .Where("name").Equals("Account1")
+                    .UseEntity(ew => { fv = ew.GetAttributeValue<float>("doubleWidth"); },"doubleWidth")
+                    .UseAttribute((string n) => Console.WriteLine($"Name {n}"), "name")
+                    .Count((c) => Assert.AreEqual(0, c))
+                    .Execute()
+            );
+
+            Console.WriteLine(log.ToString());
+            Assert.AreEqual(0, calls);
+            Assert.IsTrue(log.ToString().Contains("For doubleWidth returned type System.Double but expected type System.Single"), $"Expected message for doubleWidth not found in ${log.ToString()}");
+            log.Clear();
+            fv = 10;
+
+            FluentAccount.Account()
+                .Trace(s => log.AppendLine(s))
+                .Where("name").Equals("Account1")
+                .UseEntity(ew => { fv = ew.GetAttributeValue<float>("doubleWidth", false); }, "doubleWidth")
+                .UseAttribute((string n) => Console.WriteLine($"Name {n}"), "name")
+                .Count((c) => Assert.AreEqual(1, c))
+                .Execute();
+
+            Console.WriteLine(log.ToString());
+            Assert.AreEqual(0, fv);
+            Assert.AreEqual(0, calls);
+            Assert.IsTrue(log.ToString().Contains("For doubleWidth returned type System.Double but expected type System.Single"), $"Expected message for doubleWidth not found in ${log.ToString()}");
+
+        }
+
     }
 }

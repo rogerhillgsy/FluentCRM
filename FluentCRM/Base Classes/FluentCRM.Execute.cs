@@ -136,7 +136,7 @@ namespace FluentCRM
                     // If any exceptions occurred during attribute processing, raise them all in one go rather than in a piecemeal fashion.
                     if (_allArgExceptions.Length > 0)
                     {
-                        throw new ArgumentException(_allArgExceptions.ToString());
+                        throw new InvalidCastException(_allArgExceptions.ToString());
                     }
 
                     if (_updateRequired)

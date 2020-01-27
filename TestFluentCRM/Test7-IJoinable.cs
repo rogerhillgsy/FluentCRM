@@ -690,7 +690,7 @@ FluentAccount.Account(account1.Id)
             // return join of account3 and primary contact 
             var calls = 0;
             var log = new StringBuilder();
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsException<InvalidCastException>(() =>
                 FluentAccount.Account()
                     .Trace( s => log.AppendLine(s))
                     .Where("name").Equals("Account1")
@@ -713,7 +713,7 @@ FluentAccount.Account(account1.Id)
             var log = new StringBuilder();
             float  fv = 0;
             double dv = 0;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsException<InvalidCastException>(() =>
                 FluentAccount.Account()
                     .Trace(s => log.AppendLine(s))
                     .Where("name").Equals("Account1")
@@ -737,7 +737,7 @@ FluentAccount.Account(account1.Id)
             var log = new StringBuilder();
             float fv = 0;
             int iv = 0;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsException<InvalidCastException>(() =>
                 FluentAccount.Account()
                     .Trace(s => log.AppendLine(s))
                     .Where("name").Equals("Account1")
