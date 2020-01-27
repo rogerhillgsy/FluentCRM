@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
@@ -110,7 +111,8 @@ namespace FluentCRM
                                 else
                                 {
                                     if (alias != null &&
-                                        entity.Entity.Attributes[column] is AliasedValue )
+                                        entity.Entity.Attributes[column] is AliasedValue &&
+                                        (entity.Entity.Attributes[column] as AliasedValue)?.Value is T)
                                     {
                                         var aliasValue = entity.Entity.Attributes[column] as AliasedValue;
                                         var columnOnly = column.Substring(alias.Length);
@@ -119,10 +121,11 @@ namespace FluentCRM
                                     }
                                     else
                                     {
-                                        var error =
-                                            $"For {column} expected type {entity.GetAttributeValue<T>(column).GetType()} found type {typeof(T)}";
+                                         var error =
+                                            $"For {column} returned type {(entity[column] as AliasedValue)?.Value?.GetType().ToString() ??( entity[column]?.GetType().ToString() ?? "*Unknown*")} but expected type {typeof(T)}";
                                         Trace(error);
-                                        throw new ArgumentException(error);
+                                        TopEntity._allArgExceptions.AppendLine(error);
+                                        return true;
                                     }
                                 }
                             }

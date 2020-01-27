@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using FluentCRM.Utility;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
@@ -21,6 +22,7 @@ namespace FluentCRM
         private int _actionsCalled;
         private int _updateCount;
         private bool _updateRequired = false;
+        private StringBuilder _allArgExceptions = new StringBuilder();
         private readonly List<Action<EntityWrapper>> _beforeEachRecordActions = new List<Action<EntityWrapper>>();
         private readonly List<Action<EntityWrapper>> _afterEachRecordActions = new List<Action<EntityWrapper>>();
 
@@ -59,6 +61,7 @@ namespace FluentCRM
         {
             var stopwatch = new Stopwatch();
             var moreRecords = true;
+            _allArgExceptions = new StringBuilder();
 
             var cols = _actionList.SelectMany(c => c.Item1).Where(c => c != AllColumns).Distinct().ToArray();
             if (_actionList.SelectMany(c => c.Item1).Any(c => c == AllColumns))
@@ -129,6 +132,12 @@ namespace FluentCRM
                             }
                         }
                         );
+
+                    // If any exceptions occurred during attribute processing, raise them all in one go rather than in a piecemeal fashion.
+                    if (_allArgExceptions.Length > 0)
+                    {
+                        throw new ArgumentException(_allArgExceptions.ToString());
+                    }
 
                     if (_updateRequired)
                     {

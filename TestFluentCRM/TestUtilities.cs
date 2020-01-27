@@ -23,6 +23,7 @@ namespace TestFluentCRM
                 ["address1_country"] = "UK",
                 ["statecode"] = 0,
                 ["description"] = "",
+                ["doubleWidth"] = 1234.0D,
             };
 
             var account2 = new Entity("account")
@@ -67,7 +68,8 @@ namespace TestFluentCRM
                 ["telephone2"] = "23456789",
                 ["mobilephone"] = "07454115454",
                 ["phone"] = "776543212",
-                ["size"] = 5
+                ["size"] = 5,
+                ["doubleHeight"] = 1234.0D,
             };
 
             var contact2 = new Entity("contact")

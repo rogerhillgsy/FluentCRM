@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using FakeXrmEasy;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,7 +14,7 @@ namespace TestFluentCRM
     public class Test7_IJoinable
     {
         private XrmFakedContext _context;
-        private IOrganizationService _orgService;
+        private IOrganizationService _orgService; 
 
         [TestInitialize]
         public void SetUp()
@@ -678,6 +679,79 @@ FluentAccount.Account(account1.Id)
                 .Execute();
 
             Assert.AreEqual(0 ,calls);
+        }
+
+        /// <summary>
+        /// Test issue #3 When getting joined attribute, typing errors cause an exception.
+        /// </summary>
+        [TestMethod]
+        public void TestOuterUseAttributeTypeMismatch()
+        {
+            // return join of account3 and primary contact 
+            var calls = 0;
+            var log = new StringBuilder();
+            Assert.ThrowsException<ArgumentException>(() =>
+                FluentAccount.Account()
+                    .Trace( s => log.AppendLine(s))
+                    .Where("name").Equals("Account1")
+                    .Join<FluentPrimaryContact>(
+                        c => c.UseAttribute((int n) => calls++, "phone"))
+                    .Count((c) => Assert.AreEqual(0, c))
+                    .Execute()
+            );
+
+            Console.WriteLine(log.ToString());
+            Assert.AreEqual(0, calls);
+            Assert.IsTrue(log.ToString().Contains("For a1.phone returned type System.String but expected type System.Int32"));
+        }
+
+        [TestMethod]
+        public void TestOuterUseAttributeTypeMismatch2()
+        {
+            // Test typing error in UseAttribute after join
+            var calls = 0;
+            var log = new StringBuilder();
+            float  fv = 0;
+            double dv = 0;
+            Assert.ThrowsException<ArgumentException>(() =>
+                FluentAccount.Account()
+                    .Trace(s => log.AppendLine(s))
+                    .Where("name").Equals("Account1")
+                    .Join<FluentPrimaryContact>(
+                        c => c.UseAttribute((double n) => dv = n, "doubleHeight"))
+                    .UseAttribute( (float f ) => fv = f, "doubleWidth")
+                    .Count((c) => Assert.AreEqual(0, c))
+                    .Execute()
+            );
+
+            Assert.AreEqual(0, calls);
+            Assert.IsTrue(log.ToString().Contains("For doubleWidth returned type System.Double but expected type System.Single"), $"Expected message not found in ${log.ToString()}");
+            Console.WriteLine(log.ToString());
+        }
+
+        [TestMethod]
+        public void TestOuterUseAttributeTypeMismatch3()
+        {
+            // Test that when there are multiple typing errors, we process all attributes before throwing an exception
+            var calls = 0;
+            var log = new StringBuilder();
+            float fv = 0;
+            int iv = 0;
+            Assert.ThrowsException<ArgumentException>(() =>
+                FluentAccount.Account()
+                    .Trace(s => log.AppendLine(s))
+                    .Where("name").Equals("Account1")
+                    .UseAttribute((float f) => fv = f, "doubleWidth")
+                    .UseAttribute((int f) => iv = f, "phone1")
+                    .UseAttribute( (string n) => Console.WriteLine($"Name {n}"), "name")
+                    .Count((c) => Assert.AreEqual(0, c))
+                    .Execute()
+            );
+
+            Console.WriteLine(log.ToString());
+            Assert.AreEqual(0, calls);
+            Assert.IsTrue(log.ToString().Contains("For doubleWidth returned type System.Double but expected type System.Single"), $"Expected message for doubleWidth not found in ${log.ToString()}");
+            Assert.IsTrue(log.ToString().Contains("For phone1 returned type System.String but expected type System.Int32"), $"Expected message for phone1 not found in ${log.ToString()}");
         }
 
     }
