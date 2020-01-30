@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using FakeXrmEasy;
 using FluentCRM;
 using Microsoft.Crm.Sdk.Messages;
@@ -142,7 +143,30 @@ namespace TestFluentCRM
 
             Assert.AreEqual(callExpected, called);
         }
-        
+
+        /// <summary>
+        /// Test Case where same attribute is referred to twice in different UseAttribute calls.
+        /// Both callbacks shall be invoked.
+        /// </summary>
+        [TestMethod]
+        public void TestUseAttribute5()
+        {
+            var message = string.Empty;
+            var trace = new StringBuilder();
+            var name1 = string.Empty;
+            var name2 = string.Empty;
+            FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                .Trace( s => trace.AppendLine(s))
+                .UseAttribute((int a) => message = $"Statecode is {a}", "statecode")
+                .UseAttribute((string a) => name1=a, "name")
+                .UseAttribute((string a) => name2=a, "name" ).Execute();
+
+
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
+            Assert.AreEqual("Account1", name1);
+            Assert.AreEqual("Account1", name2);
+        }
+
         [TestMethod]
         public void TestWeakUpdate1()
         {
