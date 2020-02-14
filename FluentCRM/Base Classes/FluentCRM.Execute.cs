@@ -131,7 +131,7 @@ namespace FluentCRM
                                 }
                             }
                         }
-                        );
+                    );
 
                     // If any exceptions occurred during attribute processing, raise them all in one go rather than in a piecemeal fashion.
                     if (_allArgExceptions.Length > 0)
@@ -233,6 +233,7 @@ namespace FluentCRM
                 catch (Exception ex)
                 {
                     Trace($"Error in RetrieveMultiple {ex.Message}");
+                    Trace(ex.StackTrace);
                     if (ex.Message.Contains("entity doesn't contain attribute")) throw;
                 } 
             }

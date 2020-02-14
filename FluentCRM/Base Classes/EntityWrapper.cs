@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
@@ -25,7 +26,7 @@ namespace FluentCRM
         /// </summary>
         public Entity Entity { get; }
 
-        private static MemoryCache _optionSetLabelCache;        
+        private static MemoryCache _optionSetLabelCache;
 
         /// <summary>
         /// Construct a wrapper for the SDK Entity class.
@@ -166,10 +167,10 @@ namespace FluentCRM
                 var attResponse = (RetrieveAttributeResponse) _service.Execute(attributeRequest);
                 metadata = (EnumAttributeMetadata) attResponse.AttributeMetadata;
                 _optionSetLabelCache[key] = metadata;
-                Trace($"Added {metadata.OptionSet.Options.Count} optionset string s for {attribute} to cache");
+                Trace($"Added {metadata?.OptionSet?.Options.Count} optionset string s for {attribute} to cache");
             }
 
-            return metadata.OptionSet.Options.FirstOrDefault(x => x.Value == attributeValue.Value)?.Label
+            return metadata.OptionSet?.Options.FirstOrDefault(x => x.Value == attributeValue.Value)?.Label
                 .UserLocalizedLabel.Label;
         }
 
@@ -186,6 +187,59 @@ namespace FluentCRM
         static EntityWrapper()
         {
             _optionSetLabelCache = new MemoryCache("OptionsetStringCache");
+            Testing.OptionSetCache = _optionSetLabelCache;
+        }
+
+        /// <summary>
+        /// Add test helpers class to allow us to set up the option set cache as required in the absence of a live crm system.
+        /// </summary>
+        public class Testing
+        {
+            static Testing()
+            {
+                if (OptionSetCache == null)
+                {
+                    // Force initialization of static EntityWrapper optionset cache.
+                    var x = EntityWrapper._optionSetLabelCache;
+                }
+            }
+            internal static MemoryCache OptionSetCache { get; set; }
+            public static void AddToOptionSetCache( string key, EnumAttributeMetadata metadata)
+            {
+                if (OptionSetCache.Contains(key))
+                {
+                    OptionSetCache.Remove(key);
+                }
+                OptionSetCache[key] = metadata;
+            }
+
+            public static void AddToOptionSetCache(string key, string label, int value)
+            {
+                EnumAttributeMetadata meta;
+                if (OptionSetCache.Contains(key))
+                {
+                    meta = (EnumAttributeMetadata) OptionSetCache[key];
+                }
+                else
+                {
+                    var names = Regex.Match(key, "/(.*)").Captures;
+                    if (names.Count > 0)
+                    {
+                        meta = new EntityNameAttributeMetadata(names[0].Value)
+                        {
+                            OptionSet = new OptionSetMetadata()
+                            {
+                            }
+                        };
+                        OptionSetCache[key] = meta;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Key must be in format logicalname/attributename");
+                    }
+                }
+                meta.OptionSet.Options.Add( new OptionMetadata( new Label() {UserLocalizedLabel = new LocalizedLabel(label, 1033)},value));
+            }
         }
     }
 }

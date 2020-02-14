@@ -24,6 +24,7 @@ namespace TestFluentCRM
                 ["statecode"] = 0,
                 ["description"] = "",
                 ["doubleWidth"] = 1234.0D,
+                ["type"] = new OptionSetValue(5)
             };
 
             var account2 = new Entity("account")
