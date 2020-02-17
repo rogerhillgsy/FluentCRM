@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using FakeXrmEasy;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -222,6 +223,52 @@ namespace TestFluentCRM
                 .Count(c => Assert.AreEqual(1, c)).Execute();
 
             Assert.IsTrue(!string.IsNullOrWhiteSpace(message));
+        }
+
+        [TestMethod]
+        public void TestTop()
+        {
+            var context = TestUtilities.TestContext2();
+            var expected = "Account1";
+            Entity account = null;
+
+            FluentAccount.Account(context.GetOrganizationService()).Top(1)
+                .Where("address1_country").Equals("UK")
+                .OrderByAsc("phone1")
+                .UseAttribute((string n) =>
+                {
+                    Assert.AreEqual(expected, n);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            expected = "Account";
+            FluentAccount.Account(context.GetOrganizationService()).Top(2)
+                .Where("address1_country").Equals("UK")
+                .OrderByDesc("phone1")
+                .UseAttribute((string n) =>
+                {
+                    Assert.IsTrue(n.StartsWith(expected));
+                }, "name")
+                .Count(c => Assert.AreEqual(2, c))
+                .Execute();
+
+            // Try again with no order clause
+            var trace = new StringBuilder();
+
+            FluentAccount.Account(context.GetOrganizationService()).Top(2)
+                .Where("address1_country").Equals("UK")
+                .Trace(s => trace.AppendLine(s))
+                .Top(1)
+                .UseAttribute((string n) =>
+                {
+                    Assert.IsTrue(n.StartsWith(expected));
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(trace.ToString().Contains("Warning: Top count"));
+
         }
 
     }

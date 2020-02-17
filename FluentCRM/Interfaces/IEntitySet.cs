@@ -164,6 +164,13 @@ namespace FluentCRM
         IEntitySet OrderByDesc(string attribute);
 
         /// <summary>
+        ///  Select first n matching records according to any ordering criteria.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        IEntitySet Top(int n);
+
+        /// <summary>
         /// Indicates that an additional where-clause is being introduced.
         /// </summary>
         /// <value>FluentCRM object</value>

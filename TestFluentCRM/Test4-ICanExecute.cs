@@ -402,6 +402,54 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
+        public void TestTop()
+        {
+            var context = TestUtilities.TestContext2();
+            var expected = "Account1";
+            Entity account = null;
+
+            FluentAccount.Account(context.GetOrganizationService())
+                .Where("address1_country").Equals("UK")
+                .OrderByAsc("phone1")
+                .UseAttribute((string n) =>
+                {
+                    Assert.AreEqual(expected, n);
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Top(1)
+                .Execute();
+
+            expected = "Account";
+            FluentAccount.Account(context.GetOrganizationService())
+                .Where("address1_country").Equals("UK")
+                .OrderByDesc("phone1")
+                .UseAttribute((string n) =>
+                {
+                    Assert.IsTrue(n.StartsWith(expected));
+                }, "name")
+                .Count(c => Assert.AreEqual(2, c))
+                .Top(2)
+                .Execute();
+
+            // Try again with no order clause
+            var trace = new StringBuilder();
+
+            FluentAccount.Account(context.GetOrganizationService())
+                .Where("address1_country").Equals("UK")
+                .Trace(s => trace.AppendLine(s))
+                .UseAttribute((string n) =>
+                {
+                    Assert.IsTrue(n.StartsWith(expected));
+                }, "name")
+                .Count(c => Assert.AreEqual(1, c))
+                .Top(1)
+                .Execute();
+
+            Assert.IsTrue(trace.ToString().Contains("Warning: Top count"));
+
+        }
+
+        [TestMethod]
         public void TestAnd()
         {
             var useCalled = false;

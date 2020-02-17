@@ -190,6 +190,16 @@ namespace FluentCRM
                 QueryExpression.PageInfo.PageNumber = 1;
             }
 
+
+            if (_top != null)
+            {
+                QueryExpression.TopCount = _top;
+                if (_orders.Count == 0)
+                {
+                    Trace($"Warning: Top count of {_top} specified with no order criteria");
+                }
+            }
+
             // Look after any criteria in linked entities.
             PrepareLinkedCriteria();
         }

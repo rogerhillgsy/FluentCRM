@@ -28,6 +28,7 @@ namespace FluentCRM
         private ICollection<Entity> _entities;
         private readonly List<OrderExpression> _orders = new List<OrderExpression>();
         private readonly List<Action> _postExecuteActions = new List<Action>();
+        private int? _top = null;
 
         /// <summary>
         /// List of actions to be carried out on the Entity collection once it has been retrieved from the sever.

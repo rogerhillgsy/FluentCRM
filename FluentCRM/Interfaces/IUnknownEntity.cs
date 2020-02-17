@@ -43,6 +43,13 @@ namespace FluentCRM
         IUnknownEntity Trace(Action<string> action);
 
         /// <summary>
+        ///  Select first n matching records according to any ordering criteria.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        IUnknownEntity Top(int n);
+
+        /// <summary>
         /// Output messages regarding the excution time of create, read and update operations.
         /// </summary>
         /// <returns>FluentCRM Object</returns>

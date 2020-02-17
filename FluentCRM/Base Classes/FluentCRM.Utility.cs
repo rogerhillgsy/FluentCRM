@@ -42,6 +42,27 @@ namespace FluentCRM
             return Order(attribute, OrderType.Descending);
         }
 
+        private ICanExecute Top( int n)
+        {
+            _top = n;
+            return this;
+        }
+
+        ICanExecute ICanExecute.Top(int n)
+        {
+            return (ICanExecute) Top(n);
+        }
+
+        IUnknownEntity IUnknownEntity.Top(int n)
+        {
+            return (IUnknownEntity)Top(n);
+        }
+
+        IEntitySet IEntitySet.Top(int n)
+        {
+            return (IEntitySet)Top(n);
+        }
+
         /// <summary>
         /// Used to indicate that an additional selection criteria will be applied to the set of selected entities.
         /// </summary>
