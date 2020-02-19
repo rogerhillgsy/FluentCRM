@@ -142,7 +142,7 @@ namespace FluentCRM
                             Trace($"Columns not found so no action taken: {string.Join(",", allAttributes)}");
                         }
 
-                        return false;
+                        return true;
                     }
                 ));
             return this;

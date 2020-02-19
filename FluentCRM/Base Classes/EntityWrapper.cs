@@ -54,7 +54,7 @@ namespace FluentCRM
                 object rv = null;
                 if (Entity.Attributes.ContainsKey(key))
                 {
-                    if (Alias == null)
+                    if (string.IsNullOrEmpty(Alias) || !(Entity.Attributes[key] is AliasedValue))
                     {
                         rv = Entity.Attributes[key];
                     }
@@ -133,7 +133,7 @@ namespace FluentCRM
         /// </summary>
         /// <param name="attribute"></param>
         /// <returns></returns>
-        public string OptionString(string attribute)
+        public string OptionString(string attribute, string entityLogicalName = null)
         {
             if (!Contains(attribute))
             {
@@ -141,16 +141,29 @@ namespace FluentCRM
                 return null;
             }
 
-            if (!(Entity[attribute] is OptionSetValue))
+            var rawValue = Entity[attribute] is AliasedValue ? ((AliasedValue) Entity[attribute]).Value : Entity[attribute];
+
+            if (!(rawValue is OptionSetValue))
             {
                 var message = $"Attribute {attribute} was not an option set - found {Entity[attribute].GetType()}";
                 Trace(message);
                 throw new ArgumentException(message,attribute);
             }
 
-            var attributeValue = Entity.GetAttributeValue<OptionSetValue>(attribute);
+            var attributeValue = rawValue as OptionSetValue;
             EnumAttributeMetadata metadata = null;
-            var key = $"{Entity.LogicalName}/{attribute}";
+
+            if (entityLogicalName is null)
+            {
+                entityLogicalName = Entity.LogicalName;
+            }
+
+            if (attribute.Contains("."))
+            {
+                attribute = Regex.Replace(attribute, ".*\\.(.*)", "$1");
+            }
+
+            var key = $"{entityLogicalName}/{attribute}";
             if (_optionSetLabelCache.Contains(key))
             {
                 metadata = (EnumAttributeMetadata) _optionSetLabelCache[key];
@@ -160,7 +173,7 @@ namespace FluentCRM
             {   
                 var attributeRequest = new RetrieveAttributeRequest
                 {
-                    EntityLogicalName = Entity.LogicalName,
+                    EntityLogicalName = entityLogicalName,
                     LogicalName = attribute,
                     RetrieveAsIfPublished = true
                 };

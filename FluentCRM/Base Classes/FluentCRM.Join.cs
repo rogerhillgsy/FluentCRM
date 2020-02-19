@@ -70,7 +70,7 @@ namespace FluentCRM
                 t.LinkEntity.Columns = new ColumnSet(cols);
             }
 
-            var resultCols = cols.Select(s => $"{link.EntityAlias}.{s}");
+            var resultCols = cols.Select(s => $"{link.EntityAlias}.{s}").ToArray();
 
             _actionList.Add(new Tuple<string[], Func<EntityWrapper, string, bool?>>(
                 new string[] {"versionnumber"},
