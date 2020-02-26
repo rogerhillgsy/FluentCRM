@@ -141,6 +141,7 @@
     <Compile Include="LiveTests.cs" />
     <Compile Include="DecommissioningTests.cs" />
     <Compile Include="TestIssues.cs" />
+    <Compile Include="Test11-UtilityClasses.cs" />
     <Compile Include="WikiExamples.cs" />
   </ItemGroup>
   <ItemGroup>
