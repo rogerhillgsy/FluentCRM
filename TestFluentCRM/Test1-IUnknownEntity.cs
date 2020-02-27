@@ -84,6 +84,28 @@ namespace TestFluentCRM
         }
 
         [TestMethod]
+        public void TestWhere3_lookup()
+        {
+            int? count = 0;
+            var accountId = Guid.Empty;
+            FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                .UseAttribute( (Guid id) => accountId = id, "accountid")
+                .Count(c => count = c).Execute();
+
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(1, count);
+            Assert.IsFalse(Guid.Empty.Equals(accountId));
+
+            FluentContact.Contact(_orgService)
+                .Where( "parentcustomerid") .Equals(accountId)
+                .And
+                .Where("size").Equals(5)
+                .Count(c => count=c).Execute();
+
+            Assert.AreEqual(1, count);
+        }
+
+        [TestMethod]
         public void TestWhereContains()
         {
             int? count = 0;
