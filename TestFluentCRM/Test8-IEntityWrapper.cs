@@ -8,6 +8,7 @@ using FakeXrmEasy.Extensions;
 using FluentCRM;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Tooling.Connector;
 
 namespace TestFluentCRM
@@ -26,6 +27,7 @@ namespace TestFluentCRM
             FluentCRM.FluentCRM.StaticService = _orgService;
         }
 
+        private static object _testLock = new object();
 
         [TestMethod]
         public void TestIndexing()
@@ -95,21 +97,25 @@ namespace TestFluentCRM
         [TestMethod]
         public void TestTrace()
         {
-            EntityWrapper ew = null;
-            var traceText = new StringBuilder();
-            FluentAccount.Account().Where("name").Equals("Account1")
-                .Trace((s) => traceText.Append(s))
-                .UseEntity((a) => ew = a, "name")
-                .Execute();
+            lock (_testLock)
+            {
+                EntityWrapper ew = null;
+                var traceText = new StringBuilder();
+                EntityWrapper.SetTracing(null);
+                FluentAccount.Account().Where("name").Equals("Account1")
+                    .Trace((s) => traceText.Append(s))
+                    .UseEntity((a) => ew = a, "name")
+                    .Execute();
 
-            Assert.IsNotNull(ew);
+                Assert.IsNotNull(ew);
 
-            var t1 = traceText.ToString();
+                var t1 = traceText.ToString();
 
-            var missingAttr = ew["notpresent"];
+                var missingAttr = ew["notpresent"];
 
-            Assert.AreNotEqual(t1, traceText.ToString());
-            Assert.IsTrue(traceText.ToString().Contains("Attribute not found: notpresent"));
+                Assert.AreNotEqual(t1, traceText.ToString());
+                Assert.IsTrue(traceText.ToString().Contains("Attribute not found: notpresent"));
+            }
         }
 
         [TestMethod]
@@ -184,43 +190,48 @@ namespace TestFluentCRM
         [TestMethod]
         public void TestEntityWrapperTypeMismatch()
         {
-            // Test that when there are multiple typing errors, we process all attributes before throwing an exception
-            var calls = 0;
-            var log = new StringBuilder();
-            float fv = 0;
-            Assert.ThrowsException<InvalidCastException>(() =>
+            lock (_testLock)
+            {
+                // Test that when there are multiple typing errors, we process all attributes before throwing an exception
+                var calls = 0;
+                var log = new StringBuilder();
+                EntityWrapper.SetTracing(null);
+                float fv = 0;
+                Assert.ThrowsException<InvalidCastException>(() =>
+                    FluentAccount.Account()
+                        .Trace(s => log.AppendLine(s))
+                        .Where("name").Equals("Account1")
+                        .UseEntity(ew => { fv = ew.GetAttributeValue<float>("doubleWidth"); }, "doubleWidth")
+                        .UseAttribute((string n) => Console.WriteLine($"Name {n}"), "name")
+                        .Count((c) => Assert.AreEqual(0, c))
+                        .Execute()
+                );
+
+                Console.WriteLine(log.ToString());
+                Assert.AreEqual(0, calls);
+                Assert.IsTrue(
+                    log.ToString()
+                        .Contains("For doubleWidth returned type System.Double but expected type System.Single"),
+                    $"Expected message for doubleWidth not found in ${log.ToString()}");
+                log.Clear();
+                fv = 10;
+
                 FluentAccount.Account()
                     .Trace(s => log.AppendLine(s))
                     .Where("name").Equals("Account1")
-                    .UseEntity(ew => { fv = ew.GetAttributeValue<float>("doubleWidth"); }, "doubleWidth")
+                    .UseEntity(ew => { fv = ew.GetAttributeValue<float>("doubleWidth", false); }, "doubleWidth")
                     .UseAttribute((string n) => Console.WriteLine($"Name {n}"), "name")
-                    .Count((c) => Assert.AreEqual(0, c))
-                    .Execute()
-            );
+                    .Count((c) => Assert.AreEqual(1, c))
+                    .Execute();
 
-            Console.WriteLine(log.ToString());
-            Assert.AreEqual(0, calls);
-            Assert.IsTrue(
-                log.ToString().Contains("For doubleWidth returned type System.Double but expected type System.Single"),
-                $"Expected message for doubleWidth not found in ${log.ToString()}");
-            log.Clear();
-            fv = 10;
-
-            FluentAccount.Account()
-                .Trace(s => log.AppendLine(s))
-                .Where("name").Equals("Account1")
-                .UseEntity(ew => { fv = ew.GetAttributeValue<float>("doubleWidth", false); }, "doubleWidth")
-                .UseAttribute((string n) => Console.WriteLine($"Name {n}"), "name")
-                .Count((c) => Assert.AreEqual(1, c))
-                .Execute();
-
-            Console.WriteLine(log.ToString());
-            Assert.AreEqual(0, fv);
-            Assert.AreEqual(0, calls);
-            Assert.IsTrue(
-                log.ToString().Contains("For doubleWidth returned type System.Double but expected type System.Single"),
-                $"Expected message for doubleWidth not found in ${log.ToString()}");
-
+                Console.WriteLine(log.ToString());
+                Assert.AreEqual(0, fv);
+                Assert.AreEqual(0, calls);
+                Assert.IsTrue(
+                    log.ToString()
+                        .Contains("For doubleWidth returned type System.Double but expected type System.Single"),
+                    $"Expected message for doubleWidth not found in ${log.ToString()}");
+            }
         }
 
         [TestMethod]
@@ -319,5 +330,81 @@ namespace TestFluentCRM
                     .Execute());
 
         }
+
+        [TestMethod]
+        public void TestEntityWrapperSetTracing()
+        {
+            lock (_testLock)
+            {
+
+                var sb1 = new StringBuilder();
+                Action<string> trace1 = (s) => sb1.AppendLine(s);
+                var ew = new EntityWrapper(new Entity("account", Guid.NewGuid()) {["opts"] = new OptionSetValue(1)},
+                    _orgService, trace1);
+                EntityWrapper.SetTracing(trace1);
+
+                EntityWrapper.Testing.AddToOptionSetCache("account/opts", "Option 1", 1);
+                var opt = ew.OptionString("opts");
+                Assert.IsFalse(string.IsNullOrEmpty(sb1.ToString()));
+
+                sb1.Clear();
+                var sb2 = new StringBuilder();
+                Action<string> trace2 = (s) => sb2.AppendLine(s);
+                EntityWrapper.SetTracing(trace2);
+
+                opt = ew.OptionString("opts");
+                Assert.IsTrue(string.IsNullOrEmpty(sb1.ToString()));
+                Assert.IsFalse(string.IsNullOrEmpty(sb2.ToString()));
+            }
+        }
+
+        [TestMethod]
+        public void TestEntityWrapperSetMetadata()
+        {
+            var meta = new EntityNameAttributeMetadata("optionsetattr")
+            {
+                OptionSet = new OptionSetMetadata()
+                {Options =
+                    {
+                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
+                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2)
+                    }
+                }
+            };
+
+            EntityWrapper.Testing.AddToOptionSetCache("account/optionsetattr", meta);
+
+            var ew = new EntityWrapper(new Entity("account", Guid.NewGuid()) { ["optionsetattr"] = new OptionSetValue(1) }, _orgService, null);
+            var opt = ew.OptionString("optionsetattr");
+
+            Assert.AreEqual("Option 1", opt);
+        }
+
+        [TestMethod]
+        public void TestEntityWrapperDump()
+        {
+            var meta = new EntityNameAttributeMetadata("optionsetattr")
+            {
+                OptionSet = new OptionSetMetadata()
+                {
+                    Options =
+                    {
+                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
+                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2)
+                    }
+                }
+            };
+
+            EntityWrapper.Testing.AddToOptionSetCache("account/optionsetattr", meta);
+
+            var sb = new StringBuilder();
+            EntityWrapper.Testing.Dump(s => sb.AppendLine(s));
+
+            var output = sb.ToString();
+            Assert.IsFalse(string.IsNullOrEmpty(output));
+            Assert.IsTrue( output.Contains( "Option 1"));
+            Assert.IsTrue(output.Contains("Option 2"));
+        }
+
     }
-}
+    }

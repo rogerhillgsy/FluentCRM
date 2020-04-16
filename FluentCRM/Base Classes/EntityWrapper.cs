@@ -14,7 +14,7 @@ namespace FluentCRM
     public class EntityWrapper
     {
         private IOrganizationService _service;
-        private readonly Action<string> _tracer;
+        private static Action<string> _tracer;
 
         /// <summary>
         /// Get or set the Alias value for fields in this entity.
@@ -38,7 +38,8 @@ namespace FluentCRM
         {
             Entity = e;
             _service = service;
-            _tracer = tracer;
+            if (_tracer == null )
+                _tracer = tracer;
         }
 
         /// <summary>
@@ -164,13 +165,15 @@ namespace FluentCRM
             }
 
             var key = $"{entityLogicalName}/{attribute}";
+            Trace($"key: {key}");
             if (_optionSetLabelCache.Contains(key))
             {
                 metadata = (EnumAttributeMetadata) _optionSetLabelCache[key];
                 Trace($"Optionset values in cache for {attribute}");
             }
             else
-            {   
+            {
+                Trace($"Optionset values not found in cache for {attribute}");
                 var attributeRequest = new RetrieveAttributeRequest
                 {
                     EntityLogicalName = entityLogicalName,
@@ -181,11 +184,16 @@ namespace FluentCRM
                 metadata = (EnumAttributeMetadata) attResponse.AttributeMetadata;
                 _optionSetLabelCache[key] = metadata;
                 Trace($"Added {metadata?.OptionSet?.Options.Count} optionset string s for {attribute} to cache");
+                foreach (var opt in metadata?.OptionSet?.Options.OrderBy( o => o.Value)) 
+                {
+                    Trace($"  option { opt.Value,10}  Label: {opt.Label.UserLocalizedLabel.Label}");
+                }
             }
 
             return metadata.OptionSet?.Options.FirstOrDefault(x => x.Value == attributeValue.Value)?.Label
                 .UserLocalizedLabel.Label;
         }
+        
 
         /// <summary>
         /// ID of the underlying entity represented by this EntityWrapper.
@@ -253,6 +261,38 @@ namespace FluentCRM
                 }
                 meta.OptionSet.Options.Add( new OptionMetadata( new Label() {UserLocalizedLabel = new LocalizedLabel(label, 1033)},value));
             }
+
+            public static void Dump(Action<string> output = null)
+            {
+                var trace = output ?? EntityWrapper._tracer;
+                foreach (var optionSet in OptionSetCache)
+                {
+                    var meta = (EnumAttributeMetadata) optionSet.Value;
+
+                    trace($"OptionSet: {optionSet.Value}");
+                    foreach (var opt in meta.OptionSet?.Options)
+                    {
+                        trace($@"    {opt.Value,-10} : {opt.Label.UserLocalizedLabel.Label}");
+                    }
+                }
+            }
+
+            public static void ClearCache()
+            {
+                EntityWrapper.ClearCache();
+            }
+        }
+
+        public static void SetTracing(Action<string> trace)
+        {
+            EntityWrapper._tracer = trace;
+        }
+
+
+        protected static void ClearCache()
+        {
+            _optionSetLabelCache = new MemoryCache("OptionsetStringCache");
+            Testing.OptionSetCache = _optionSetLabelCache;
         }
     }
 }

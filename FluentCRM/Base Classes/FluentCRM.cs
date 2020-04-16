@@ -35,6 +35,9 @@ namespace FluentCRM
         /// </summary>
         private readonly List<Tuple<string[], Func<EntityWrapper, string, bool?>>> _actionList = new List<Tuple<string[], Func<EntityWrapper, string, bool?>>>();
 
+        // Indicate error status
+        public bool HasErrors { get; protected set; } = false;
+        public string LastError { get; protected set; } = String.Empty;
 
         #region "Constructors and Factory functions"
 
