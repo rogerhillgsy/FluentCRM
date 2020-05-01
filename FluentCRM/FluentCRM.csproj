@@ -135,6 +135,7 @@
     <None Include="FluentCRM.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="FluentCRM.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
