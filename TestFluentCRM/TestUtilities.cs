@@ -22,7 +22,8 @@ namespace TestFluentCRM
                 ["statecode"] = 0,
                 ["description"] = "",
                 ["doubleWidth"] = 1234.0D,
-                ["type"] = new OptionSetValue(5)
+                ["type"] = new OptionSetValue(5),
+                ["my_multiselect"] = new OptionSetValueCollection( new [] { new OptionSetValue(1), new OptionSetValue(2) })
             };
 
             var account2 = new Entity("account")

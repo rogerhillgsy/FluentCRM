@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
@@ -364,17 +365,19 @@ namespace TestFluentCRM
             var meta = new EntityNameAttributeMetadata("optionsetattr")
             {
                 OptionSet = new OptionSetMetadata()
-                {Options =
+                {
+                    Options =
                     {
-                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
-                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2)
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2)
                     }
                 }
             };
 
             EntityWrapper.Testing.AddToOptionSetCache("account/optionsetattr", meta);
 
-            var ew = new EntityWrapper(new Entity("account", Guid.NewGuid()) { ["optionsetattr"] = new OptionSetValue(1) }, _orgService, null);
+            var ew = new EntityWrapper(
+                new Entity("account", Guid.NewGuid()) {["optionsetattr"] = new OptionSetValue(1)}, _orgService, null);
             var opt = ew.OptionString("optionsetattr");
 
             Assert.AreEqual("Option 1", opt);
@@ -389,8 +392,8 @@ namespace TestFluentCRM
                 {
                     Options =
                     {
-                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
-                        new OptionMetadata( new Label() { UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2)
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2)
                     }
                 }
             };
@@ -402,9 +405,55 @@ namespace TestFluentCRM
 
             var output = sb.ToString();
             Assert.IsFalse(string.IsNullOrEmpty(output));
-            Assert.IsTrue( output.Contains( "Option 1"));
+            Assert.IsTrue(output.Contains("Option 1"));
             Assert.IsTrue(output.Contains("Option 2"));
         }
 
+        [TestMethod]
+        public void TestOptionSetValueCollection()
+        {
+            var meta = new EntityNameAttributeMetadata("my_multiselect")
+            {
+                OptionSet = new OptionSetMetadata()
+                {
+                    Options =
+                    {
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 1", 1033)}, 1),
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 2", 1033)}, 2),
+                        new OptionMetadata(new Label() {UserLocalizedLabel = new LocalizedLabel("Option 3", 1033)}, 3),
+
+                    }
+                }
+            };
+
+            EntityWrapper.Testing.AddToOptionSetCache("account/my_multiselect", meta);
+            EntityWrapper.Testing.AddToOptionSetCache("account/my_multiselect2", meta);
+            EntityWrapper.Testing.AddToOptionSetCache("account/my_multiselect2", meta);
+            EntityWrapper.Testing.AddToOptionSetCache("account/normalopt", meta);
+
+            var ew = new EntityWrapper(
+                new Entity("account", Guid.NewGuid())
+                {
+                    ["my_multiselect"] =
+                        new OptionSetValueCollection(new[] {new OptionSetValue(1), new OptionSetValue(2),}),
+                    ["my_multiselect2"] = new OptionSetValueCollection(),
+                    ["my_multiselect3"] = null,
+                    ["normalopt"] = new OptionSetValue(3)
+                }, _orgService, null);
+            var multiopts = ew.OptionStringList("my_multiselect").ToList();
+            Assert.AreEqual(2, multiopts.Count);
+            Assert.IsTrue(multiopts.Contains("Option 1"));
+            Assert.IsTrue(multiopts.Contains("Option 2"));
+
+            multiopts = ew.OptionStringList("my_multiselect2").ToList();
+            Assert.AreEqual(0, multiopts.Count);
+
+            Assert.ThrowsException<ArgumentException>( () =>  ew.OptionStringList("my_multiselect3"));
+
+            Assert.ThrowsException<ArgumentException>(() => ew.OptionStringList("normalopt"));
+
+            var opt = ew.OptionStringList("notanopt");
+            Assert.IsNull(opt);
+        }
     }
-    }
+}

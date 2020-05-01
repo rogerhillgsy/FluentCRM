@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
@@ -136,22 +138,8 @@ namespace FluentCRM
         /// <returns></returns>
         public string OptionString(string attribute, string entityLogicalName = null)
         {
-            if (!Contains(attribute))
-            {
-                Trace($"Did not find optionset {attribute}");
-                return null;
-            }
 
-            var rawValue = Entity[attribute] is AliasedValue ? ((AliasedValue) Entity[attribute]).Value : Entity[attribute];
-
-            if (!(rawValue is OptionSetValue))
-            {
-                var message = $"Attribute {attribute} was not an option set - found {Entity[attribute].GetType()}";
-                Trace(message);
-                throw new ArgumentException(message,attribute);
-            }
-
-            var attributeValue = rawValue as OptionSetValue;
+            var attributeValue = GetRawValue<OptionSetValue>(attribute);
             EnumAttributeMetadata metadata = null;
 
             if (entityLogicalName is null)
@@ -164,6 +152,13 @@ namespace FluentCRM
                 attribute = Regex.Replace(attribute, ".*\\.(.*)", "$1");
             }
 
+            return GetOptionLabelFor(entityLogicalName, attribute,  attributeValue);
+        }
+
+        // Get label for a specific eneity/attribuite and attribute value.
+        private string GetOptionLabelFor(string entityLogicalName, string attribute, OptionSetValue attributeValue)
+        {
+            EnumAttributeMetadata metadata;
             var key = $"{entityLogicalName}/{attribute}";
             Trace($"key: {key}");
             if (_optionSetLabelCache.Contains(key))
@@ -184,16 +179,62 @@ namespace FluentCRM
                 metadata = (EnumAttributeMetadata) attResponse.AttributeMetadata;
                 _optionSetLabelCache[key] = metadata;
                 Trace($"Added {metadata?.OptionSet?.Options.Count} optionset string s for {attribute} to cache");
-                foreach (var opt in metadata?.OptionSet?.Options.OrderBy( o => o.Value)) 
+                foreach (var opt in metadata?.OptionSet?.Options.OrderBy(o => o.Value))
                 {
-                    Trace($"  option { opt.Value,10}  Label: {opt.Label.UserLocalizedLabel.Label}");
+                    Trace($"  option {opt.Value,10}  Label: {opt.Label.UserLocalizedLabel.Label}");
                 }
             }
 
             return metadata.OptionSet?.Options.FirstOrDefault(x => x.Value == attributeValue.Value)?.Label
                 .UserLocalizedLabel.Label;
         }
-        
+
+        // Return type checked raw value of attribute 
+        private T GetRawValue<T>(string attribute) where T : class
+        {
+            if (!Contains(attribute))
+            {
+                Trace($"Did not find optionset {attribute}");
+                return null;
+            }
+
+            var rawValue = Entity[attribute] is AliasedValue ? ((AliasedValue) Entity[attribute]).Value : Entity[attribute];
+
+            if (!(rawValue is T))
+            {
+                var message = $"Attribute {attribute} was not an option set or Collection - found {Entity[attribute]?.GetType()}";
+                Trace(message);
+                throw new ArgumentException(message, attribute);
+            }
+
+            return rawValue as T;
+        }
+
+        // Return a list of string corresponding to a multi-value option set.
+        public IEnumerable<string> OptionStringList(string attribute, string entityLogicalName = null)
+        {
+            var optionValueList = GetRawValue<OptionSetValueCollection>(attribute);
+            EnumAttributeMetadata metadata = null;
+
+            if (optionValueList is null)
+            {
+                return null;
+            }
+
+            if (entityLogicalName is null)
+            {
+                entityLogicalName = Entity.LogicalName;
+            }
+
+            if (attribute.Contains("."))
+            {
+                attribute = Regex.Replace(attribute, ".*\\.(.*)", "$1");
+            }
+
+            return (from o in optionValueList select GetOptionLabelFor(entityLogicalName,attribute,o));
+
+        }
+
 
         /// <summary>
         /// ID of the underlying entity represented by this EntityWrapper.
@@ -294,5 +335,7 @@ namespace FluentCRM
             _optionSetLabelCache = new MemoryCache("OptionsetStringCache");
             Testing.OptionSetCache = _optionSetLabelCache;
         }
+
+
     }
 }

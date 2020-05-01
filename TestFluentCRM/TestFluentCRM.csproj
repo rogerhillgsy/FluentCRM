@@ -47,6 +47,9 @@
     <Reference Include="FakeXrmEasy, Version=1.55.0.0, Culture=neutral, PublicKeyToken=dd4e58c4492635a6, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeXrmEasy.9.1.55.0\lib\net452\FakeXrmEasy.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Azure.Services.AppAuthentication, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Services.AppAuthentication.1.4.0\lib\net461\Microsoft.Azure.Services.AppAuthentication.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.22\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
