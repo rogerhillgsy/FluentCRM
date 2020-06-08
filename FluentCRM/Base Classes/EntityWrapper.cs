@@ -184,8 +184,8 @@ namespace FluentCRM
                     Trace($"  option {opt.Value,10}  Label: {opt.Label.UserLocalizedLabel.Label}");
                 }
             }
-
-            return metadata.OptionSet?.Options.FirstOrDefault(x => x.Value == attributeValue.Value)?.Label
+            
+            return metadata.OptionSet?.Options.FirstOrDefault(x => x.Value == attributeValue?.Value)?.Label
                 .UserLocalizedLabel.Label;
         }
 
