@@ -86,6 +86,7 @@
     <Compile Include="Base Classes\FluentCRM.Use.cs" />
     <Compile Include="Base Classes\FluentCRM.Utility.cs" />
     <Compile Include="Entity Classes\FluentAccount.cs" />
+    <Compile Include="Entity Classes\FluentActivity.cs" />
     <Compile Include="Entity Classes\FluentAnnotation.cs" />
     <Compile Include="Entity Classes\FluentAudit.cs" />
     <Compile Include="Entity Classes\FluentBusinessUnit.cs" />
@@ -107,6 +108,7 @@
     </None>
     <Compile Include="Entity Classes\FluentProcessDependency.cs" />
     <Compile Include="Entity Classes\FluentQueue.cs" />
+    <Compile Include="Entity Classes\FluentRegardingOpportunity.cs" />
     <Compile Include="Entity Classes\FluentSdkMessageProcessingStep.cs" />
     <Compile Include="Entity Classes\FluentSecurityRole.cs" />
     <Compile Include="Entity Classes\FluentSystemUser.cs" />
