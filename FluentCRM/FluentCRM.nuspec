@@ -26,7 +26,7 @@
 	<!-- Set this to false if you don't need to support a license -->
     <!--<requireLicenseAcceptance>true</requireLicenseAcceptance>-->
 
-	<releaseNotes>Add OptionSetList function for Multivalues option set to return a list of the labels.</releaseNotes>
+	<releaseNotes>Add OptionSetList function for Multivalues option set to return a list of the labels. + FIx issues with signing</releaseNotes>
 	<tags>Microsoft Dynamics CRM 365 Fluent Interface SDK .Net</tags>
 	
     <dependencies>
