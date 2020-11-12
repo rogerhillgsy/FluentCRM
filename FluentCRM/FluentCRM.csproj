@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <RunNuGetPack>true</RunNuGetPack>
@@ -51,10 +52,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\Azure Integrations\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.25\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.28\lib\net462\Microsoft.Crm.Sdk.Proxy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xrm.Sdk, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\Azure Integrations\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.25\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CrmSdk.CoreAssemblies.9.0.2.28\lib\net462\Microsoft.Xrm.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -110,6 +111,7 @@
     <Compile Include="Entity Classes\FluentQueue.cs" />
     <Compile Include="Entity Classes\FluentRegardingOpportunity.cs" />
     <Compile Include="Entity Classes\FluentSdkMessageProcessingStep.cs" />
+    <Compile Include="Entity Classes\FluentSdkMessageProcessingStepImage.cs" />
     <Compile Include="Entity Classes\FluentSecurityRole.cs" />
     <Compile Include="Entity Classes\FluentSystemUser.cs" />
     <Compile Include="Entity Classes\FluentSystemUserRoles.cs" />
