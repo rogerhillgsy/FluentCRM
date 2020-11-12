@@ -171,8 +171,10 @@ namespace TestFluentCRM
             Assert.IsNotNull(ewa1);
             Assert.IsNotNull(ewa2);
 
-            Assert.AreSame(ew, ewa1);
-            Assert.AreSame(ew, ewa2);
+            // ew and ewa1/ewa2 are basically the same thing, but the wrappers in the scope of the join 
+            // refer to the joined entity.
+            Assert.AreNotSame(ew, ewa1);
+            Assert.AreNotSame(ew, ewa2);
 
             Assert.IsTrue(string.IsNullOrEmpty(ewa1Alias));
             Assert.IsTrue(string.IsNullOrEmpty(ewa2Alias));
@@ -330,6 +332,86 @@ namespace TestFluentCRM
                     .Count((c) => Assert.AreEqual(1, c))
                     .Execute());
 
+        }
+
+        /// <summary>
+        /// Test that a OptionString() handles a null option set value correctly. (returns null)
+        /// </summary>
+        [TestMethod]
+        public void TestEntityWrapperOptionSetNullAttribute()
+        {
+            var log = new StringBuilder();
+            var label = string.Empty;
+
+            EntityWrapper.Testing.AddToOptionSetCache("account/type", "Test Option", 5);
+            EntityWrapper.Testing.AddToOptionSetCache("account/type", "Test Option 2", 100000);
+
+
+            /// Try again with a non-existent value
+            var account1 = _context.Data["account"].First(a => a.Value.GetAttributeValue<string>("name") == "Account1")
+                .Value;
+            account1["type"] = null;
+            FluentAccount.Account()
+                .Trace(s => log.AppendLine(s))
+                .Where("name").Equals("Account1")
+                .UseEntity(ew =>
+                {
+                    // Get label for current option set value.
+                    label = ew.OptionString("type");
+                }, "type")
+                .Count((c) => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(string.IsNullOrEmpty(label));
+        }
+
+        [TestMethod]
+        public void TestEntityWrapperOptionSetNullAttributeInJoin()
+        {
+            var log = new StringBuilder();
+            var label = string.Empty;
+
+            EntityWrapper.Testing.AddToOptionSetCache("account/type", "Test Option", 5);
+            EntityWrapper.Testing.AddToOptionSetCache("account/type", "Test Option 2", 100000);
+
+
+            FluentContact.Contact()
+                .Trace(s => Debug.WriteLine(s))
+                .Where("firstname").Equals("John")
+                .And
+                .Where("lastname").Equals("Doe")
+                .Join<FluentParentAccount>(pa =>
+                    pa.UseEntity((ew, a) =>
+                    {
+                        Assert.AreEqual("account", ew.Entity.LogicalName);
+                        Assert.AreEqual( ew.GetAttributeValue<Guid>(a + "accountid"), ew.Entity.Id);
+                        // Get label for current option set value (which should be null)
+                        label = ew.OptionString(a + "type");
+                    }, "type","accountid"))
+                .UseAttribute( (string s) => Debug.WriteLine(s), "firstname")
+                .Count((c) => Assert.AreEqual(1, c))
+                .Execute();
+            Assert.IsFalse(string.IsNullOrEmpty(label));
+
+            /// Try again with a non-existent value
+            var account1 = _context.Data["account"].First(a => a.Value.GetAttributeValue<string>("name") == "Account1")
+                .Value;
+            account1["type"] = null;
+            FluentContact.Contact()
+                .Trace( s => Debug.WriteLine(s))
+                .Where("firstname").Equals("John")
+                .And
+                .Where("lastname").Equals("Doe")
+                .Join<FluentParentAccount>( pa => 
+                    pa.Outer().UseEntity((ew,a) =>
+                {
+                    // Get label for current option set value (which should be null)
+                    label = ew.OptionString( "type");
+                }, "type"))
+                .Count((c) => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(string.IsNullOrEmpty(label));
         }
 
         [TestMethod]

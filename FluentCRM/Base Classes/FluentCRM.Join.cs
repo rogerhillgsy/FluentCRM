@@ -68,6 +68,7 @@ namespace FluentCRM
             else
             {
                 t.LinkEntity.Columns = new ColumnSet(cols);
+                t.LinkEntity.Columns.AddColumn(t.PrimaryKey);
             }
 
             var resultCols = cols.Select(s => $"{link.EntityAlias}.{s}").ToArray();
@@ -78,9 +79,10 @@ namespace FluentCRM
                 {
                     t._actionList.ForEach(a =>
                     {
+                        var joinedEntity = entity.JoinedEntityFactory(t.LinkEntity.LinkToEntityName, $"{t.LinkEntity.EntityAlias}.{t.PrimaryKey}");
                         foreach (var column in resultCols)
                         {
-                            var result = a.Item2?.Invoke(entity, column);
+                            var result = a.Item2?.Invoke(joinedEntity, column);
                             if (result.HasValue && result.Value)
                             {
                                 return;

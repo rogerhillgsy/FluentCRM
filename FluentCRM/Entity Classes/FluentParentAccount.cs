@@ -30,13 +30,14 @@ namespace FluentCRM
         /// <returns>Name of "this entity" attribute to be used to join to the given "foreign" entity.</returns>
         public override string JoinFromAttribute(string foreignEntityName)
         {
-            if (foreignEntityName != "opportunity")
+            if (! _joinFrom.ContainsKey(foreignEntityName))
             {
                 throw new NotImplementedException("Joining to opportunity - left entity must be a opportunity");
             }
 
-            return "parentaccountid";
+            return _joinFrom[foreignEntityName];
         }
+        private readonly Dictionary<string,string> _joinFrom = new Dictionary<string, string>{{"opportunity", "parentaccountid"},{"contact","parentcustomerid"}};
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.

@@ -152,7 +152,7 @@ namespace FluentCRM
                 attribute = Regex.Replace(attribute, ".*\\.(.*)", "$1");
             }
 
-            return GetOptionLabelFor(entityLogicalName, attribute,  attributeValue);
+            return attributeValue == null ? null : GetOptionLabelFor(entityLogicalName, attribute,  attributeValue);
         }
 
         // Get label for a specific eneity/attribuite and attribute value.
@@ -336,6 +336,14 @@ namespace FluentCRM
             Testing.OptionSetCache = _optionSetLabelCache;
         }
 
-
+        // Deal with the need to have a slightly different entity wrapper value within the scope of joined entities.
+        public EntityWrapper JoinedEntityFactory(string joinedEntityName, string linkToAttribute )
+        {
+            Trace($"Joined to {joinedEntityName}");
+            var joinedEntity = new Entity(joinedEntityName, this.GetAttributeValue<Guid>(linkToAttribute));
+            joinedEntity.Attributes = this.Entity.Attributes;
+            var joinedEntityWrapper = new EntityWrapper( joinedEntity, _service, _tracer);
+            return joinedEntityWrapper;
+        }
     }
 }

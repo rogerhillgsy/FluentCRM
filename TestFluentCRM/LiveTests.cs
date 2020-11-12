@@ -211,6 +211,25 @@ namespace TestFluentCRMLive
                 .Execute();
         }
 
+        [TestMethod]
+        [TestCategory("LiveTest")]
+        public void SetPrimaryContact()
+        {
+            // Set the primary contact on alpine ski house if it is not set in the test org.
+            using (var crmSvc = new CrmServiceClient(_connectionString))
+            {
+                var orgService = crmSvc.OrganizationServiceProxy;
+                FluentCRM.FluentCRM.StaticService = orgService;
+
+                var accountId = Guid.Empty;
+                var contactId = Guid.Empty;
+                FluentContact.Contact().Where("fullname").Equals("Cathan Cook").UseAttribute((Guid id) => contactId= id, "contactid" ).Execute();
+
+                FluentAccount.Account().Where("name").Equals("Alpine Ski House")
+                    .WeakUpdate<EntityReference>( "primarycontactid", new EntityReference("contact", contactId)).Execute();
+            }
+        }
+
         /// <summary>
         /// Test getting option set values. Note requires access to live CRM. So may have to ignore it
         /// Relies on access to a live CRM system with default test data loaded. (online trial eill do)
