@@ -90,7 +90,8 @@ namespace FluentCRM
             //
             // { "foreign entity logical name", "logical name of lookup field in this entity" }
             //   { "account", "parentcustomerid" } 
-            {"plugintype","plugintypeid" }
+            {"plugintype","plugintypeid" },
+            {"sdkmessagefilter","sdkmessagefilterid" },
         };
 
         /// <summary>
