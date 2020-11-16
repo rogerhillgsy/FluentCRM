@@ -8,21 +8,21 @@ namespace FluentCRM
     /// <summary>
     /// FluentCRM class used to encapsulate access to the SDKMessageProcessingStep Entity
     /// </summary>
-    public class FluentSDKMessageProcessingStep : FluentCRM
+    public class FluentSdkMessageProcessingStep : FluentCRM
     {
 
         private const string _logicalName = "sdkmessageprocessingstep";
 
         #region "Constructors etc required by Language"
-        private FluentSDKMessageProcessingStep(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
+        private FluentSdkMessageProcessingStep(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
         /// <summary>
         /// Set IOrganizationService to use
         /// </summary>
         /// <param name="service"></param>
-        protected FluentSDKMessageProcessingStep(IOrganizationService service) : base(_logicalName, service) { }
+        protected FluentSdkMessageProcessingStep(IOrganizationService service) : base(_logicalName, service) { }
 
-        private FluentSDKMessageProcessingStep(Guid id) : base(_logicalName, id) { }
+        private FluentSdkMessageProcessingStep(Guid id) : base(_logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
@@ -32,7 +32,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
         public static IEntitySet SDKMessageProcessingStep(Guid id, IOrganizationService service)
         {
-            return new FluentSDKMessageProcessingStep(id, service);
+            return new FluentSdkMessageProcessingStep(id, service);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public static IUnknownEntity SDKMessageProcessingStep(IOrganizationService service)
         {
-            return new FluentSDKMessageProcessingStep(service);
+            return new FluentSdkMessageProcessingStep(service);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
         public static IEntitySet SDKMessageProcessingStep(Guid id)
         {
-            return new FluentSDKMessageProcessingStep(id);
+            return new FluentSdkMessageProcessingStep(id);
         }
 
         /// <summary>
@@ -61,13 +61,13 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public static IUnknownEntity SDKMessageProcessingStep()
         {
-            return new FluentSDKMessageProcessingStep();
+            return new FluentSdkMessageProcessingStep();
         }
 
         /// <summary>
         /// Parameterless constructor required by the language, but not necessarily used.
         /// </summary>
-        public FluentSDKMessageProcessingStep() : base(_logicalName) { }
+        public FluentSdkMessageProcessingStep() : base(_logicalName) { }
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
@@ -76,7 +76,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
-            return new FluentSDKMessageProcessingStep(service);
+            return new FluentSdkMessageProcessingStep(service);
         }
         #endregion
 

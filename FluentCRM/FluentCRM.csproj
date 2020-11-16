@@ -110,6 +110,7 @@
     <Compile Include="Entity Classes\FluentProcessDependency.cs" />
     <Compile Include="Entity Classes\FluentQueue.cs" />
     <Compile Include="Entity Classes\FluentRegardingOpportunity.cs" />
+    <Compile Include="Entity Classes\FluentSdkMessageFilter.cs" />
     <Compile Include="Entity Classes\FluentSdkMessageProcessingStep.cs" />
     <Compile Include="Entity Classes\FluentSdkMessageProcessingStepImage.cs" />
     <Compile Include="Entity Classes\FluentSecurityRole.cs" />

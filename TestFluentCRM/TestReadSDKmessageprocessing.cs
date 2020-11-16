@@ -20,9 +20,12 @@ namespace TestFluentCRM
             _connectionString = Environment.ExpandEnvironmentVariables(_connectionString);
         }
 
+        /// <summary>
+        /// Poc to demonstrate that we can access the Plugin Config stack.
+        /// </summary>
         [TestMethod]
         [TestCategory("ConfigGeneration")]
-        public void ArupCRMPluginConfig()
+        public void ArupCRMPluginConfig1()
         {
             var count = 0;
             using (var crmSvc = new CrmServiceClient(_connectionString))
@@ -40,7 +43,7 @@ namespace TestFluentCRM
                         Console.WriteLine($"Read plugin Type {ptw.GetAttributeValue<string>(pta + "typename")} id: {ptw.Id}");
                     }, "isworkflowactivity", "name", "plugintypeid", "description", "friendlyname", "typename",
                         "workflowactivitygroupname")
-                        .Join<FluentSDKMessageProcessingStep>(ps => ps.Outer().UseEntity((psw, psa) =>
+                        .Join<FluentSdkMessageProcessingStep>(ps => ps.Outer().UseEntity((psw, psa) =>
                         {
                             Console.WriteLine($"Read plugin Step {psw.GetAttributeValue<string>(psa + "name")} id: {psw.Id}");
                         }, "sdkmessageprocessingstepid", "name", "sdkmessageid", "description", "configuration", "filteringattributes", "impersonatinguserid", "mode",/* "primary entity name", */
