@@ -63,6 +63,56 @@ namespace FluentCRM
                 ));
 
             return this;
+        }       
+        
+        ICanExecute ICanExecute.HardUpdate<T>(string attributeToUpdate, T updateValue)
+        {
+            return ((IEntitySet) this).HardUpdate<T>(attributeToUpdate, f => updateValue);
+        }
+
+        ICanExecute ICanExecute.HardUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
+        {
+            return ((IEntitySet) this).HardUpdate<T>(attributeToUpdate, getUpdateValue);
+        }
+
+        ICanExecute IEntitySet.HardUpdate<T>(string attributeToUpdate, T updateValue)
+        {
+            return ((IEntitySet) this).HardUpdate<T>(attributeToUpdate, f => updateValue);
+        }
+
+        ICanExecute IEntitySet.HardUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
+        {
+            // Avoid problems where getUpdateValue takes an EntityWrapper - hard to pick up with static type checking.
+            if (getUpdateValue is Func<EntityWrapper, T> && typeof(T) != typeof(Object))
+            {
+                throw new ArgumentException("Invalid invocation of HardUpdate - must specify scalar type()");
+            }
+            Trace($"Update {attributeToUpdate} ");
+
+            // Add the action to the first column
+            _actionList.Add(
+                new Tuple<string[], Func<EntityWrapper, string, bool?>>(
+                    new string[] { attributeToUpdate },
+                    (entity, c) =>
+                    {
+                        try
+                        {
+                            var oldVal = entity.GetAttributeValue<T>(attributeToUpdate);
+                            var newVal = getUpdateValue(oldVal);
+                            Trace($"Updating column {attributeToUpdate} = {0}", newVal);
+                            _update.Attributes[attributeToUpdate] = newVal;
+                            _updateRequired = true;
+                        }
+                        catch (InvalidCastException)
+                        {
+                            Trace($"For update of {attributeToUpdate} in {LogicalName} expected type: {entity.Entity.Attributes[attributeToUpdate].GetType()} type supplied: {typeof(T)}");
+                            throw;
+                        }
+                        return true;
+                    }
+                ));
+
+            return this;
         }
 
         ICanExecute ICanExecute.Clear(string attributeToClear, params string[] additionalAttributesToClear)

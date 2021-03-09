@@ -129,6 +129,26 @@ namespace FluentCRM
         /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
         ICanExecute WeakUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
 
+         /// <summary>
+        /// Update a given attribute in the current entity. Ignore any existing value and force the update to happen whether the is a change or not.
+        /// Note that this is not recommended as it can lead to unnecessary updates and triggering of plugins and workflows.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="updateValue">Value to be used to update the attribute</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
+        ICanExecute HardUpdate<T>(string attributeToUpdate, T updateValue);
+
+        /// <summary>
+        /// Update a given attribute in the current entity. Ignore any existing value and force the update to happen whether the is a change or not.
+        /// Note that this is not recommended as it can lead to unnecessary updates and triggering of plugins and workflows.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="getUpdateValue">Closure that is called with the current value of the attribute and returns the value to be used to update the attribute.</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
+        ICanExecute HardUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
+
         /// <summary>
         /// Calls the action function with the number of records read from CRM when the FluentCRM object is executed.
         /// </summary>

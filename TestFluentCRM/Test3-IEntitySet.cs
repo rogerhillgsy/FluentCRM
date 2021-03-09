@@ -391,6 +391,54 @@ namespace TestFluentCRM
             Debug.WriteLine(result);
         }
 
+        // Test that if we update with the same value, the update is written to CRM anyway.
+        [TestMethod]
+        public void TestHardUpdate1()
+        {
+            var acc1 = _context.Data["account"].Values.Single(n => (string) n["name"] == "Account1");
+            Assert.AreEqual("123456", acc1["phone1"]);
+            var b = new StringBuilder();
+
+            FluentAccount.Account(acc1.Id)
+                .Trace((s => b.AppendLine(s)))
+                .HardUpdate("phone1", (string t) => t)
+                .Execute();
+
+            Assert.AreEqual("123456", acc1["phone1"]);
+
+            var result = b.ToString();
+            Assert.IsTrue( result.Contains("Updating column phone1") );
+            Assert.IsTrue( result.Contains("Updating entity account/") );
+            Debug.WriteLine(result);
+        }
+        
+        // Test that if we update with the same value, the update is written to CRM anyway.
+        // Test via ICanExecute interface.
+        [TestMethod]
+        public void TestHardUpdate2()
+        {
+            var acc1 = _context.Data["account"].Values.Single(n => (string) n["name"] == "Account1");
+            Assert.AreEqual("123456", acc1["phone1"]);
+            var b = new StringBuilder();
+
+            FluentAccount.Account()
+                .Trace((s => b.AppendLine(s)))
+                .Where("name").Equals("Account1")
+                .Distinct()
+                .WeakUpdate("phone1", (string t) => t)
+                .HardUpdate("phone1", "123456")
+                .Execute();
+
+            Assert.AreEqual("123456", acc1["phone1"]);
+
+            var result = b.ToString();
+            Assert.IsTrue( result.Contains("Updating column phone1") );
+            Assert.IsTrue( result.Contains("Updating entity account/") );
+            Assert.AreEqual("123456", acc1["phone1"]);
+            Debug.WriteLine(result);
+        }
+
+
         [TestMethod]
         public void TestCount1()
         {

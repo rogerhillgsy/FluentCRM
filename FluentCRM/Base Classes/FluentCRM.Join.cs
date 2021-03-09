@@ -186,6 +186,30 @@ namespace FluentCRM
             return (IJoinableEntitySet) ((IEntitySet)this).WeakUpdate(attributeToUpdate, getUpdateValue);
             throw new NotImplementedException();
         }
+        
+        /// <summary>
+        /// Update a given attribute in the current entity. Do so irrespective of the existing value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="updateValue">Value to be used to update the attribute</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
+        public IJoinableEntitySet HardUpdate<T>(string attributeToUpdate, T updateValue)
+        {
+            return (IJoinableEntitySet) ((IEntitySet) this).HardUpdate(attributeToUpdate, updateValue);
+        }
+
+        /// <summary>
+        /// Update a given attribute in the current entity. Do so irrespective of the existing value
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="getUpdateValue">Closure that returns the value to be used to update the attribute.</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
+        public IJoinableEntitySet HardUpdate<T>(string attributeToUpdate, Func<T, T> getUpdateValue)
+        {
+            return (IJoinableEntitySet) ((IEntitySet)this).HardUpdate(attributeToUpdate, getUpdateValue);
+        }
 
         IJoinableEntitySet IJoinableEntitySet.Exists(Action<bool> action)
         {

@@ -53,7 +53,7 @@ namespace FluentCRM
 
 
         /// <summary>
-        /// Carry out CRM operations described in the FLuentCRM object.
+        /// Carry out CRM operations described in the FluentCRM object.
         /// </summary>
         /// <param name="preExecute"></param>
         /// <param name="postExecute"></param>

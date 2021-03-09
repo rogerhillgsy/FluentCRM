@@ -96,6 +96,25 @@ namespace FluentCRM
         /// <param name="getUpdateValue">Closure that returns the value to be used to update the attribute.</param>
         /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
         IJoinableEntitySet WeakUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
+        /// <summary>
+        /// Update a given attribute in the current entity. Ignore any existing value and force the update to happen whether the is a change or not.
+        /// Note that this is not recommended as it can lead to unnecessary updates and triggering of plugins and workflows.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="updateValue">Value to be used to update the attribute</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
+        IJoinableEntitySet HardUpdate<T>(string attributeToUpdate, T updateValue);
+
+        /// <summary>
+        /// Update a given attribute in the current entity. Ignore any existing value and force the update to happen whether the is a change or not.
+        /// Note that this is not recommended as it can lead to unnecessary updates and triggering of plugins and workflows.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attributeToUpdate">Attribute to be updated.</param>
+        /// <param name="getUpdateValue">Closure that returns the value to be used to update the attribute.</param>
+        /// <typeparam name="T">The type of the attribute that will be updated</typeparam>
+        IJoinableEntitySet HardUpdate<T>(string attributeToUpdate, Func<T,T> getUpdateValue);
 
         /// <summary>
         /// Calls the action function with a value that indicates whether the specified entity records exists.
