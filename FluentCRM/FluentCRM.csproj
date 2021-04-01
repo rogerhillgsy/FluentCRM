@@ -95,6 +95,7 @@
     <Compile Include="Entity Classes\FluentCase.cs" />
     <Compile Include="Entity Classes\FluentCurrency.cs" />
     <Compile Include="Entity Classes\FluentDocumentTemplate.cs" />
+    <Compile Include="Entity Classes\FluentLead.cs" />
     <Compile Include="Entity Classes\FluentOpportunity.cs" />
     <Compile Include="Entity Classes\FluentParentAccount.cs" />
     <Compile Include="Entity Classes\FluentPluginAssembly.cs" />
