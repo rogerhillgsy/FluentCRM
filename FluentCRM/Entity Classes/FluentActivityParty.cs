@@ -85,6 +85,7 @@ namespace FluentCRM
             //
             // { "foreign entity logical name", "logical name of lookup field in this entity" }
             //   { "account", "parentcustomerid" } 
+            {"activitypointer", "activityid"},
             {"appointment", "activityid"},
             {"bulkoperation", "activityid"},
             {"campaignactivity", "activityid"},
