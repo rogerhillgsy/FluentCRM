@@ -211,6 +211,38 @@ namespace TestFluentCRMLive
                 .Execute();
         }
 
+        [TestCategory("LiveTests")] // Not convinced that FetchXrmEasy supports linked entity order by clauses....
+        [TestMethod]
+        public void TestJoinOrderByDesc()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            var expected = new[] { "Sam","John"};
+            var current = 0;
+
+            Debug.WriteLine($"Account1 Id is {account1.Id}");
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id )
+                .Trace(s => Debug.WriteLine(s))
+                .UseAttribute((string s) => Debug.WriteLine(s), "name")
+                .Join<FluentPrimaryContact>(
+                    c => c.UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual(expected[current++], s);
+                        }, "firstname")
+                        .OrderByDesc("firstname"))
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+
+
         [TestMethod]
         [TestCategory("LiveTest")]
         public void SetPrimaryContact()

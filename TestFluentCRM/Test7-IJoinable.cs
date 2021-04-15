@@ -315,21 +315,23 @@ namespace TestFluentCRM
         {
             // Tests the mechanics of the join call
             var context = TestUtilities.TestContext2();
-            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var account1 = context.Data["account"]
+                .Where(a => a.Value.GetAttributeValue<string>("name").Equals("Account1")).First().Value;
             var called = false;
             FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
-            
+
             // Join account to contact entity via the primary
             FluentAccount.Account(account1.Id)
                 .Trace(s => Debug.WriteLine(s))
                 .Join<FluentContact>(
-                    c => c.Where("firstname").NotEqual("John").And.Where("telephone1").IsNull.UseEntity((name, e, alias) =>
-                        {
-                            Assert.AreEqual(e.Alias + "firstname", name);
-                            Assert.AreEqual(alias + "firstname", name);
-                            Debug.WriteLine(
-                                $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
-                        }, "firstname")
+                    c => c.Where("firstname").NotEqual("John").And.Where("telephone1").IsNull.UseEntity(
+                            (name, e, alias) =>
+                            {
+                                Assert.AreEqual(e.Alias + "firstname", name);
+                                Assert.AreEqual(alias + "firstname", name);
+                                Debug.WriteLine(
+                                    $"Joined entity called with element logical name {e.Entity.LogicalName}, alias {alias}");
+                            }, "firstname")
                         .UseAttribute<string>(s =>
                         {
                             called = true;
@@ -347,21 +349,15 @@ namespace TestFluentCRM
 
 
             // Join account to contact entity via the primary
-FluentAccount.Account(account1.Id)
-.Join<FluentContact>(
-    c => c.UseAttribute<string>(s =>
-        {
-            Debug.WriteLine(s);
-        }, "lastname"))
-.Execute();
+            FluentAccount.Account(account1.Id)
+                .Join<FluentContact>(
+                    c => c.UseAttribute<string>(s => { Debug.WriteLine(s); }, "lastname"))
+                .Execute();
 
-FluentAccount.Account(account1.Id)
-    .Join<FluentPrimaryContact>(
-        c => c.UseAttribute<string>(s =>
-        {
-            Debug.WriteLine(s);
-        }, "lastname"))
-    .Execute();
+            FluentAccount.Account(account1.Id)
+                .Join<FluentPrimaryContact>(
+                    c => c.UseAttribute<string>(s => { Debug.WriteLine(s); }, "lastname"))
+                .Execute();
 
 
         }
@@ -679,6 +675,70 @@ FluentAccount.Account(account1.Id)
                 .Execute();
 
             Assert.AreEqual(0 ,calls);
+        }
+
+        [TestMethod]
+        public void TestJoinOrderBy()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            var expected = new[] {"John", "Sam"};
+            var current = 0;
+
+            Debug.WriteLine($"Account1 Id is {account1.Id}");
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id )
+                .Trace(s => Debug.WriteLine(s))
+                .UseAttribute((string s) => Debug.WriteLine(s), "name")
+                .Join<FluentPrimaryContact>(
+                    c => c.UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual(expected[current++], s);
+                        }, "firstname")
+                        .OrderByAsc("firstname"))
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
+        }
+        
+        [Ignore] /**
+                  *   Not convinced that FetchXrmEasy supports linked entity order by clauses....
+                  * It seems to work on a live system...
+                 */ 
+        [TestMethod]
+        public void TestJoinOrderByDesc()
+        {
+            // Tests the mechanics of the join call
+            var context = TestUtilities.TestContext2();
+            var account1 = context.Data["account"].Where(a => a.Value.GetAttributeValue<string>("name") .Equals("Account1")).First().Value;
+            var called = false;
+            FluentCRM.FluentCRM.StaticService = context.GetOrganizationService();
+            var expected = new[] { "Sam","John"};
+            var current = 0;
+
+            Debug.WriteLine($"Account1 Id is {account1.Id}");
+            
+            // Join account to contact entity via the primary
+            FluentAccount.Account(account1.Id )
+                .Trace(s => Debug.WriteLine(s))
+                .UseAttribute((string s) => Debug.WriteLine(s), "name")
+                .Join<FluentPrimaryContact>(
+                    c => c.UseAttribute<string>(s =>
+                        {
+                            called = true;
+                            Assert.AreEqual(expected[current++], s);
+                        }, "firstname")
+                        .OrderByDesc("firstname"))
+                .Count(c => Assert.AreEqual(1, c))
+                .Execute();
+
+            Assert.IsTrue(called);
         }
 
         /// <summary>

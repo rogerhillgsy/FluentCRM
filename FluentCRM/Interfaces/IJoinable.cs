@@ -106,6 +106,20 @@ namespace FluentCRM
         IJoinable Outer();
 
         /// <summary>
+        /// Returns records (or calls closures) in the order indicated by the given attribute.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attribute">Attribute by which the returned records will be sorted</param>
+        IJoinable OrderByAsc(string attribute);
+
+        /// <summary>
+        /// Returns records (or calls closures) in the reverse order indicated by the given attribute.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attribute">Attribute by which the returned records will be sorted</param>
+        IJoinable OrderByDesc(string attribute);
+
+        /// <summary>
         /// Internal function used to return a new instance of the joined-to FluentCRM object.
         /// </summary>
         /// <returns>FluentCRM object</returns>

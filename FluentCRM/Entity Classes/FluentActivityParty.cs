@@ -1,38 +1,23 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 
 namespace FluentCRM
 {
     /// <summary>
-    /// FluentCRM class used to encapsulate access to the Activity Entity
+    /// FluentCRM class used to encapsulate access to the ActivityParty Entity
     /// </summary>
-    public class FluentActivity : FluentCRM
+    public class FluentActivityParty : FluentCRM
     {
 
-        private static string _logicalName = "activitypointer";
-
-        // All activities use the same primary  key "activityid"
-        public override string PrimaryKey { get => "activityid"; }
+        private const string _logicalName = "activityparty";
 
         #region "Constructors etc required by Language"
+        private FluentActivityParty(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentActivity(Guid id, IOrganizationService service, string logicalName) : base(logicalName, id,
-            service)
-        {
-            _logicalName = logicalName;
-        }
+        protected FluentActivityParty(IOrganizationService service) : base(_logicalName, service) { }
 
-        protected FluentActivity(IOrganizationService service, string logicalName) : base(logicalName, service)
-        {
-            _logicalName = logicalName;
-        }
-
-        private FluentActivity(Guid id, string logicalName) : base(logicalName, id)
-        {
-            _logicalName = logicalName;
-        }
+        private FluentActivityParty(Guid id) : base(_logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
@@ -40,9 +25,9 @@ namespace FluentCRM
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Activity(Guid id, IOrganizationService service, string logicalName)
+        public static IEntitySet ActivityParty(Guid id, IOrganizationService service)
         {
-            return new FluentActivity(id, service, logicalName);
+            return new FluentActivityParty(id, service);
         }
 
         /// <summary>
@@ -50,35 +35,34 @@ namespace FluentCRM
         /// </summary>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Activity(IOrganizationService service, string logicalName)
+        public static IUnknownEntity ActivityParty(IOrganizationService service)
         {
-            return new FluentActivity(service, logicalName);
+            return new FluentActivityParty(service);
         }
 
         /// <summary>
         /// Select specific entity with given id value using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <param name="id">Guid of entity to operator on</param>
-        /// <param name="logicalName">Logical name of specific activity</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Activity(Guid id,string logicalName)
+        public static IEntitySet ActivityParty(Guid id)
         {
-            return new FluentActivity(id, logicalName);
+            return new FluentActivityParty(id);
         }
 
         /// <summary>
         /// Select a (sub)set of the specified entity using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Activity()
+        public static IUnknownEntity ActivityParty()
         {
-            return new FluentActivity();
+            return new FluentActivityParty();
         }
 
         /// <summary>
         /// Parameterless constructor required by the language, but not necessarily used.
         /// </summary>
-        public FluentActivity() : base(_logicalName) { }
+        public FluentActivityParty() : base(_logicalName) { }
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
@@ -87,7 +71,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
-            return new FluentActivity(service, _logicalName);
+            return new FluentActivityParty(service);
         }
         #endregion
 
@@ -101,6 +85,23 @@ namespace FluentCRM
             //
             // { "foreign entity logical name", "logical name of lookup field in this entity" }
             //   { "account", "parentcustomerid" } 
+            {"appointment", "activityid"},
+            {"bulkoperation", "activityid"},
+            {"campaignactivity", "activityid"},
+            {"campaignresponse", "activityid"},
+            {"email", "activityid"},
+            {"fax", "activityid"},
+            {"incidentresolution", "activityid"},
+            {"letter", "activityid"},
+            {"opportunityclose", "activityid"},
+            {"orderclose", "activityid"},
+            {"phonecall", "activityid"},
+            {"quoteclose", "activityid"},
+            {"recurringappointmentmaster", "activityid"},
+            {"serviceappointment", "activityid"},
+            {"socialactivity", "activityid"},
+            {"task", "activityid"},
+            {"untrackedemail", "activityid"},
         };
 
         /// <summary>
@@ -116,7 +117,8 @@ namespace FluentCRM
             }
             else
             {
-                return "activityid";
+                // Most entities join via the partyid.
+                return "partyid";
             }
         }
     }

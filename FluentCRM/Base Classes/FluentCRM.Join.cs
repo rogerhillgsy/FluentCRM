@@ -311,6 +311,26 @@ namespace FluentCRM
             LinkEntity.JoinOperator = JoinOperator.LeftOuter;
             return this;
         }
+
+        IJoinable IJoinable.OrderByAsc(string attribute)
+        {
+            return (IJoinable) Order(attribute, OrderType.Ascending);
+        }
+
+        IJoinable IJoinable.OrderByDesc(string attribute)
+        {
+            return (IJoinable) Order(attribute, OrderType.Descending);
+        }
+        
+        IJoinableEntitySet IJoinableEntitySet.OrderByAsc(string attribute)
+        {
+            return (IJoinableEntitySet) Order(attribute, OrderType.Ascending);
+        }
+
+        IJoinableEntitySet IJoinableEntitySet.OrderByDesc(string attribute)
+        {
+            return (IJoinableEntitySet) Order(attribute, OrderType.Descending);
+        }
         #endregion
 
         /// <summary>
@@ -448,6 +468,7 @@ namespace FluentCRM
             if (LinkEntity != null)
             {
                 LinkEntity.LinkCriteria = Query?.Criteria;
+                LinkEntity.Orders.AddRange(_orders);
             }
         }
     }

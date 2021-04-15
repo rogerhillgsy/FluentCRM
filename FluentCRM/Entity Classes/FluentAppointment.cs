@@ -6,33 +6,19 @@ using Microsoft.Xrm.Sdk;
 namespace FluentCRM
 {
     /// <summary>
-    /// FluentCRM class used to encapsulate access to the Activity Entity
+    /// FluentCRM class used to encapsulate access to the Appointment Entity
     /// </summary>
-    public class FluentActivity : FluentCRM
+    public class FluentAppointment : FluentCRM
     {
 
-        private static string _logicalName = "activitypointer";
-
-        // All activities use the same primary  key "activityid"
-        public override string PrimaryKey { get => "activityid"; }
+        private const string _logicalName = "appointment";
 
         #region "Constructors etc required by Language"
+        private FluentAppointment(Guid id, IOrganizationService service) : base(_logicalName, id, service) { }
 
-        private FluentActivity(Guid id, IOrganizationService service, string logicalName) : base(logicalName, id,
-            service)
-        {
-            _logicalName = logicalName;
-        }
+        protected FluentAppointment(IOrganizationService service) : base(_logicalName, service) { }
 
-        protected FluentActivity(IOrganizationService service, string logicalName) : base(logicalName, service)
-        {
-            _logicalName = logicalName;
-        }
-
-        private FluentActivity(Guid id, string logicalName) : base(logicalName, id)
-        {
-            _logicalName = logicalName;
-        }
+        private FluentAppointment(Guid id) : base(_logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
@@ -40,9 +26,9 @@ namespace FluentCRM
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Activity(Guid id, IOrganizationService service, string logicalName)
+        public static IEntitySet Appointment(Guid id, IOrganizationService service)
         {
-            return new FluentActivity(id, service, logicalName);
+            return new FluentAppointment(id, service);
         }
 
         /// <summary>
@@ -50,35 +36,34 @@ namespace FluentCRM
         /// </summary>
         /// <param name="service">CRM system to fetch entity from</param>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Activity(IOrganizationService service, string logicalName)
+        public static IUnknownEntity Appointment(IOrganizationService service)
         {
-            return new FluentActivity(service, logicalName);
+            return new FluentAppointment(service);
         }
 
         /// <summary>
         /// Select specific entity with given id value using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <param name="id">Guid of entity to operator on</param>
-        /// <param name="logicalName">Logical name of specific activity</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
-        public static IEntitySet Activity(Guid id,string logicalName)
+        public static IEntitySet Appointment(Guid id)
         {
-            return new FluentActivity(id, logicalName);
+            return new FluentAppointment(id);
         }
 
         /// <summary>
         /// Select a (sub)set of the specified entity using the static organization service specified by FluentCRM.StaticService
         /// </summary>
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
-        public static IUnknownEntity Activity()
+        public static IUnknownEntity Appointment()
         {
-            return new FluentActivity();
+            return new FluentAppointment();
         }
 
         /// <summary>
         /// Parameterless constructor required by the language, but not necessarily used.
         /// </summary>
-        public FluentActivity() : base(_logicalName) { }
+        public FluentAppointment() : base(_logicalName) { }
 
         /// <summary>
         /// Factory method to return an instance of the FluentCRM entity class with the given CRM connection.
@@ -87,7 +72,7 @@ namespace FluentCRM
         /// <returns>FluentCRM subclass that can be used to filter and operate on the specified entity type.</returns>
         public override IJoinable Factory(IOrganizationService service)
         {
-            return new FluentActivity(service, _logicalName);
+            return new FluentAppointment(service);
         }
         #endregion
 
@@ -119,5 +104,7 @@ namespace FluentCRM
                 return "activityid";
             }
         }
+
+        public override string PrimaryKey { get; } = "activityid";
     }
 }

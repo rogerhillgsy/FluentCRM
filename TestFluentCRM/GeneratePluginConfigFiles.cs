@@ -35,8 +35,11 @@ namespace TestFluentCRM
             _connectionString = Environment.ExpandEnvironmentVariables(_connectionString);
         }
 
+        /// <summary>
+        /// Generate the JSON plugin config file that is required by devops deployment tools.
+        /// </summary>
         [TestMethod]
-        public void ArupCRMPluginConfig()
+        public void GenerateCRMPluginConfig()
         {
             using (var crmSvc = new CrmServiceClient(_connectionString))
             {

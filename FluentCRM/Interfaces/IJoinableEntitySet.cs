@@ -166,5 +166,19 @@ namespace FluentCRM
         /// <returns>FluentCRM object</returns>
         /// <param name="action">Called after the entity has been read with the entity value.</param>
         IJoinableEntitySet AfterEachRecord(Action<EntityWrapper> action);
+
+        /// <summary>
+        /// Returns records (or calls closures) in the order indicated by the given attribute.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attribute">Attribute by which the returned records will be sorted</param>
+        IJoinableEntitySet OrderByAsc(string attribute);
+
+        /// <summary>
+        /// Returns records (or calls closures) in the reverse order indicated by the given attribute.
+        /// </summary>
+        /// <returns>FluentCRM object</returns>
+        /// <param name="attribute">Attribute by which the returned records will be sorted</param>
+        IJoinableEntitySet OrderByDesc(string attribute);
     }
 }

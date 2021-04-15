@@ -196,7 +196,8 @@ namespace FluentCRM
                 QueryExpression.TopCount = _top;
                 if (_orders.Count == 0)
                 {
-                    Trace($"Warning: Top count of {_top} specified with no order criteria");
+                    Trace($"Warning: Top count of {_top} specified with no order criteria (at top level)");
+                    QueryExpression.PageInfo = null;
                 }
             }
 
@@ -238,8 +239,12 @@ namespace FluentCRM
                     // Trace($"_queryexpression = {XMLUtilities.ToString(_queryExpression)}");
                     result = Service.RetrieveMultiple(QueryExpression);
                     _entities = result.Entities;
-                    QueryExpression.PageInfo.PageNumber++;
-                    QueryExpression.PageInfo.PagingCookie = result.PagingCookie;
+                    if (QueryExpression.TopCount == 0)
+                    {
+                        QueryExpression.PageInfo.PageNumber++;
+                        QueryExpression.PageInfo.PagingCookie = result.PagingCookie;
+                    }
+
                     return result.MoreRecords;
                 }
                 catch (Exception ex)
