@@ -41,10 +41,10 @@ namespace FluentCRM
         /// <returns></returns>
         protected void Trace(string format, params object[] args)
         {
-            _traceFunction?.Invoke(String.Format(format, args));
+            _traceFunction?.Invoke(SafeFormat(format, args));
         }
 
-        /// <summary>
+       /// <summary>
         /// Output messages regarding the excution time of create, read and update operations.
         /// </summary>
         /// <param name="timerAction">Action function that can be used to log timer messasges</param>
@@ -94,6 +94,24 @@ namespace FluentCRM
             return this;
         }
 
+        /// <summary>
+        /// Safely format a string avoiding issues where the format string may contain {} that would otherwise break this.
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private string SafeFormat(string format, object[] args)
+        {
+            var rv = format;
+            try
+            {
+                rv = string.Format(format, args);
+            }
+            catch (FormatException ex) {
+            }
+
+            return rv;
+        }
         #endregion
     }
 }
