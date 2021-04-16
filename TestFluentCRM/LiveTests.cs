@@ -25,7 +25,7 @@ namespace TestFluentCRMLive
         public void Setup()
         {
             // Obtain connection string from app.config and expand any environment variables e.g. for Passwords, usernames)
-            _connectionString = ConfigurationManager.ConnectionStrings["CrmOnline"].ConnectionString;
+            _connectionString = ConfigurationManager.ConnectionStrings["CrmAppConnection"].ConnectionString;
             _connectionString = Environment.ExpandEnvironmentVariables(_connectionString);
         }
 
@@ -211,7 +211,7 @@ namespace TestFluentCRMLive
                 .Execute();
         }
 
-        [TestCategory("LiveTests")] // Not convinced that FetchXrmEasy supports linked entity order by clauses....
+        [TestCategory("LiveTest")] // Not convinced that FetchXrmEasy supports linked entity order by clauses....
         [TestMethod]
         public void TestJoinOrderByDesc()
         {
@@ -342,6 +342,55 @@ namespace TestFluentCRMLive
                 Assert.IsTrue(entity2.Contains("contactid"));
                 Assert.IsTrue(entity2.Contains("fullname"));
                 Assert.IsFalse(entity2.Contains("telephone1"));
+            }
+        }
+
+        /// <summary>
+        /// Test an issue where Top appears to cause an error
+        /// </summary>
+        [TestMethod]
+        [TestCategory("LiveTest")]
+        public void Test5_TopUse()
+        {
+            using (var crmSvc = new CrmServiceClient(_connectionString))
+            {
+                DateTime? nextMeetingDate = null;
+                var nextMeetingType = string.Empty;
+                Guid? nextMeetingId = Guid.Empty;
+                EntityReference nextMeeting = null;
+                var meetingType = string.Empty;
+
+                FluentActivityParty.ActivityParty(crmSvc.OrganizationWebProxyClient)
+                    .Trace(s => Debug.WriteLine(s))
+                    .Where("partyid").Equals(Guid.Parse("e5621966-7435-eb11-a813-002248003e25"))
+                    .And
+                    .Where("participationtypemask").In(new int[] {1, 2, 5, 8})
+                    .And
+                    .Where("scheduledstart").GreaterThan(DateTime.Today)
+                    .Join<FluentActivity>(
+                        a => a.Where("activitytypecode").In("phonecall", "appointment")
+                            .UseAttribute(string.Empty, (s) =>  {/*Read activitytypecode, use below */},"activitytypecode")
+                    )
+                    .UseEntity((ew) =>
+                    {
+                        if (!nextMeetingDate.HasValue)
+                        {
+                            // Using "Top" on complex CRM queries can return more than one record, but they are in the correct order,
+                            // So just take the first one and ignore the rest.
+                            nextMeetingDate = ew.GetAttributeValue<DateTime>("scheduledstart");
+                            nextMeetingType = ew.GetAttributeValue<string>("a1.activitytypecode");
+                            nextMeeting = ew.GetAttributeValue<EntityReference>("activityid");
+                            nextMeetingId = nextMeeting?.Id ;
+                        }
+                    },"partyid","participationtypemask","scheduledstart","activityid")
+                    .OrderByAsc("scheduledstart")
+                    .Top(1)
+                    .Execute();
+
+                
+                Assert.IsFalse(string.IsNullOrEmpty(nextMeetingType));
+                Assert.IsNotNull(nextMeeting);
+                Assert.IsNotNull(nextMeetingId);
             }
         }
     }

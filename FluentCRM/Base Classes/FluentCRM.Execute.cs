@@ -197,8 +197,8 @@ namespace FluentCRM
                 if (_orders.Count == 0)
                 {
                     Trace($"Warning: Top count of {_top} specified with no order criteria (at top level)");
-                    QueryExpression.PageInfo = null;
                 }
+                QueryExpression.PageInfo = null;
             }
 
             // Look after any criteria in linked entities.
