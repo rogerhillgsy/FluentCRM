@@ -16,6 +16,13 @@ namespace FluentCRM
         IEntitySet Trace(Action<string> action);
 
         /// <summary>
+        /// Cause any errors returned on call to be thrown.
+        /// </summary>
+        /// <param name="throwAll"></param>
+        /// <returns></returns>
+        IEntitySet ThrowAllErrors(bool throwAll = true);
+
+        /// <summary>
         /// Output messages regarding the excution time of create, read and update operations.
         /// </summary>
         /// <returns>FluentCRM Object</returns>

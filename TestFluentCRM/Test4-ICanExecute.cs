@@ -32,6 +32,7 @@ namespace TestFluentCRM
             var message = string.Empty;
             var account1 = _context.Data["account"].First().Value;
             var accountId = account1.Id;
+            FluentCRM.FluentCRM.StaticService = _orgService;
 
             FluentAccount.Account(accountId).UseAttribute((string a) => Debug.Write($"Name is {a}"), "name").Trace(m =>
             {

@@ -7,6 +7,7 @@ namespace FluentCRM
     {
         private Action<string> _traceFunction;
         private Action<string> _timerFunction;
+        private bool _throwAllErrors = false;
         private Action<EntityWrapper> _dryRunCreate;
         private Action<EntityWrapper> _dryRunUpdate;
         private Action<EntityReference> _dryRunDelete;
@@ -42,6 +43,12 @@ namespace FluentCRM
         protected void Trace(string format, params object[] args)
         {
             _traceFunction?.Invoke(SafeFormat(format, args));
+        }
+
+        IEntitySet IEntitySet.ThrowAllErrors(bool throwAll )
+        {
+            _throwAllErrors = throwAll;
+            return this;
         }
 
        /// <summary>

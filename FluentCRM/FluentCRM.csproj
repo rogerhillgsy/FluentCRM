@@ -48,7 +48,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>FluentCRM.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>FluentCRM2.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Crm.Sdk.Proxy, Version=9.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -143,6 +143,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="FluentCRM.pfx" />
+    <None Include="FluentCRM2.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -229,6 +229,7 @@ namespace FluentCRM
                     Trace($"Error fetching {LogicalName} id {_id} message: {ex.Message}");
                     HasErrors = true;
                     LastError = ex.Message;
+                    if (_throwAllErrors) throw;
                 }
             }
             else if (QueryExpression != null)
@@ -254,6 +255,7 @@ namespace FluentCRM
                     HasErrors = true;
                     LastError = ex.Message;
                     if (ex.Message.Contains("entity doesn't contain attribute")) throw;
+                    if (_throwAllErrors) throw;
                 } 
             }
             else
