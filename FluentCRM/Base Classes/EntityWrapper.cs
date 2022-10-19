@@ -140,7 +140,6 @@ namespace FluentCRM
         {
 
             var attributeValue = GetRawValue<OptionSetValue>(attribute);
-            EnumAttributeMetadata metadata = null;
 
             if (entityLogicalName is null)
             {
@@ -214,7 +213,6 @@ namespace FluentCRM
         public IEnumerable<string> OptionStringList(string attribute, string entityLogicalName = null)
         {
             var optionValueList = GetRawValue<OptionSetValueCollection>(attribute);
-            EnumAttributeMetadata metadata = null;
 
             if (optionValueList is null)
             {

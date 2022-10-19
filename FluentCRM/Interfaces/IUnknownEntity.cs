@@ -43,6 +43,13 @@ namespace FluentCRM
         IUnknownEntity Trace(Action<string> action);
 
         /// <summary>
+        /// Cause any errors returned on call to be thrown.
+        /// </summary>
+        /// <param name="throwAll"></param>
+        /// <returns></returns>
+        IUnknownEntity ThrowAllErrors(bool throwAll = true);
+        
+        /// <summary>
         ///  Select first n matching records according to any ordering criteria.
         /// </summary>
         /// <param name="n"></param>

@@ -104,6 +104,7 @@ namespace FluentCRM
             foreach (var entity in _entities.ToList())
             {
                 _update = new Entity(entity.LogicalName, entity.Id);
+                _updateRequired = false;
 
                 if (_distinct && ids.Contains(entity.Id))
                 {
@@ -240,7 +241,7 @@ namespace FluentCRM
                     // Trace($"_queryexpression = {XMLUtilities.ToString(_queryExpression)}");
                     result = Service.RetrieveMultiple(QueryExpression);
                     _entities = result.Entities;
-                    if (QueryExpression.TopCount == 0)
+                    if ((QueryExpression.TopCount ?? 0) == 0)
                     {
                         QueryExpression.PageInfo.PageNumber++;
                         QueryExpression.PageInfo.PagingCookie = result.PagingCookie;

@@ -45,13 +45,23 @@ namespace FluentCRM
             _traceFunction?.Invoke(SafeFormat(format, args));
         }
 
-        IEntitySet IEntitySet.ThrowAllErrors(bool throwAll )
+        IUnknownEntity IUnknownEntity.ThrowAllErrors(bool throwAll)
         {
             _throwAllErrors = throwAll;
             return this;
         }
 
-       /// <summary>
+        IEntitySet IEntitySet.ThrowAllErrors(bool throwAll )
+        {
+            return (IEntitySet)((IUnknownEntity)this).ThrowAllErrors(throwAll);
+        }
+
+        ICanExecute ICanExecute.ThrowAllErrors(bool throwAll)
+        {
+            return (ICanExecute)((IUnknownEntity)this).ThrowAllErrors(throwAll);
+        }
+
+        /// <summary>
         /// Output messages regarding the excution time of create, read and update operations.
         /// </summary>
         /// <param name="timerAction">Action function that can be used to log timer messasges</param>
@@ -114,7 +124,8 @@ namespace FluentCRM
             {
                 rv = string.Format(format, args);
             }
-            catch (FormatException ex) {
+            catch (Exception)
+            {
             }
 
             return rv;
