@@ -78,6 +78,12 @@ namespace FluentCRM
         {
             return new FluentSystemUserRoles(service);
         }
+
+        /// <summary>
+        /// Primary key is non-standard - users the singular form of the logical name systemuserroles
+        /// </summary>
+        public override string PrimaryKey => "systemuserroleid";
+
         #endregion
 
         /// <summary>
