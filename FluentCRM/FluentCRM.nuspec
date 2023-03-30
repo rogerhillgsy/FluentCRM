@@ -10,12 +10,12 @@
     <authors>Roger Hill</authors>
     <owners>Roger Hill</owners>
     <!--<license type="expression">MIT</license>-->
-    <licenseUrl>https://raw.githubusercontent.com/rogerhillgsy/FluentCRM/master/FluentCRM/LICENSE.txt</licenseUrl>
+	<licenseUrl>https://raw.githubusercontent.com/rogerhillgsy/FluentCRM/master/FluentCRM/LICENSE.txt</licenseUrl>
     <projectUrl>https://github.com/rogerhillgsy/FluentCRM/</projectUrl>
     <iconUrl>https://github.com/rogerhillgsy/FluentCRM/Logo.png</iconUrl>
 
 	<!-- Ignore, this will get updated at compile time -->
-    <version>9.1.25</version>
+    <version>9.1.29</version>
 
 	<!-- When empty, this will be set at compile time to the [assembly:AssemblyDescription("")] attribute value -->	
     <summary>FluentCRM</summary>
@@ -47,5 +47,6 @@
 
 	<!-- Add any additional files here manually -->
     <file src="Entity Classes\*.snippet" target="Templates" />
+    <file src="FluentCRM.dll" target="lib" />
   </files>
 </package>

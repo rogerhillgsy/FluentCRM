@@ -15,7 +15,7 @@ namespace FluentCRM
         /// <summary>
         /// IOrganizationService that will be used by the FluentCRM instance.
         /// </summary>
-        public IOrganizationService Service { get; }
+        public IOrganizationService Service { get; private set; }
 
         /// <summary>
         /// Logical name of the entity associated with the current FluentCRM instance.
@@ -61,6 +61,24 @@ namespace FluentCRM
         protected FluentCRM(string logicalName, Guid id, IOrganizationService service) : this(logicalName, service)
         {
             _id = id;
+        }
+
+        /// <summary>
+        /// Generic All returns all records of a particular entity type.
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public IEntitySet All(IOrganizationService service = null)
+        {
+            if (service != null )
+            {
+                this.Service = service;
+            }
+            else
+            {
+                this.Service = StaticService;
+            }
+            return ((IEntitySet)this);
         }
 
         /// <summary>
