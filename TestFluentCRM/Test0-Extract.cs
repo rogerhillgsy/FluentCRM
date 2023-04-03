@@ -161,5 +161,22 @@ namespace TestFluentCRM
 
         }
 
+        /// <summary>
+        /// Test to see if we can use a generic "All" to return all records
+        /// </summary>
+        [TestMethod]
+        public void TestGenericAll()
+        {
+            var context = TestUtilities.TestContext1();
+            var account1 = context.Data["account"].First().Value;
+
+            var a = new FluentAccount();
+
+            a.All(context.GetOrganizationService()).Trace(s => Debug.WriteLine(s) )
+                .UseAttribute((string s) => Console.WriteLine($"Read account: s"), "name")
+                .Count((c) => Assert.AreEqual(4, c))
+                .Execute();
+        }
+
     }
 }
