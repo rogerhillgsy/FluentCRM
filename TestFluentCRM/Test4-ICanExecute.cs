@@ -545,6 +545,60 @@ namespace TestFluentCRM
                 .Exists((e) => Assert.IsFalse(e))
                 .Execute();
         }
+
+
+        [TestMethod]
+        public void TestDeleteById()
+        {
+            var message = string.Empty;
+            var acc1 = _context.Data["account"].Values.Single(n => (string)n["name"] == "Account1");
+            var expectedOrder = new List<string> { "Account4", "Account3", "Account2", "Account1" };
+            Assert.AreEqual(4, _context.Data["account"].Count);
+
+            FluentAccount.Account(acc1.Id, _orgService)
+                .Delete()
+                .Execute();
+
+            Assert.AreEqual(3, _context.Data["account"].Count);
+            acc1 = _context.Data["account"].Values.FirstOrDefault(n => (string)n["name"] == "Account1");
+            Assert.IsNull(acc1);
+
+            FluentAccount.Account(_orgService).Where("name").Equals("Account1")
+                .Exists((e) => Assert.IsFalse(e))
+                .Execute();
+        }
+
+
+        /// <summary>
+        /// Activities have a non-standard id attribute (i.e. the id attribute of appointment is activityid *not* appointmentid)
+        /// </summary>
+        [TestMethod]
+        public void TestDeleteAppointmentById()
+        {
+            var appointmentId = Guid.NewGuid();
+            _context = TestUtilities.TestContext3(new Entity("appointment")
+            {
+                Id = appointmentId,
+                ["activityid"] = appointmentId,
+                ["subject"] = "Appointment1"
+            });
+            _orgService = _context.GetOrganizationService();
+
+            var message = string.Empty;
+            var appt1 = _context.Data["appointment"].Values.Single(n => (string)n["subject"] == "Appointment1");
+
+            FluentAppointment.Appointment(appointmentId, _orgService)
+                .Delete()
+                .Execute();
+
+            appt1 = _context.Data["appointment"].Values.FirstOrDefault(n => (string)n["subject"] == "Appointment1");
+            Assert.IsNull(appt1);
+
+            FluentAppointment.Appointment(_orgService).Where("subject").Equals("Appointment1")
+                .Exists((e) => Assert.IsFalse(e))
+                .Execute();
+        }
+
         [TestMethod]
         public void TestJoin()
         {

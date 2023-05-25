@@ -13,7 +13,7 @@ namespace FluentCRM
             // Add action to delete the selected set of entities.
             _actionList.Add(
                 new Tuple<string[], Func<EntityWrapper, string, bool?>>(
-                    new string[] { $"{LogicalName}id" },
+                    new string[] { "versionnumber" },
                         (wrapper, id) =>
                         {
                             Trace($"Deleting {wrapper.Entity.LogicalName} {wrapper.Entity.Id}");
