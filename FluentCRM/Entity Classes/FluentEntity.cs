@@ -14,22 +14,30 @@ namespace FluentCRM
         private string _logicalName = String.Empty;
 
         #region "Constructors etc required by Language"
-        private FluentEntity(Guid id, IOrganizationService service, string logicalName) : base(logicalName, id, service) { }
+        public FluentEntity(Guid id, IOrganizationService service, string logicalName) : base(logicalName, id, service) { }
 
         /// <summary>
         /// Set IOrganizationService to use
+        /// Note there are use cases where this constructor needs to be public.
         /// </summary>
         /// <param name="service"></param>
-        protected FluentEntity(IOrganizationService service, string logicalName) : base(logicalName, service) { }
+        /// <param name="logicalName"></param>
+        public FluentEntity(IOrganizationService service, string logicalName) : base(logicalName, service) { }
 
-        private FluentEntity(Guid id, string logicalName) : base(logicalName, id) { }
-        private FluentEntity( string logicalName) : base(logicalName) { }
+        /// <summary>
+        /// Create generic fluent entity for given logical name.
+        /// </summary>
+        /// <param name="logicalName"></param>
+        public FluentEntity(string logicalName) : base(logicalName) { }
+
+        public FluentEntity(Guid id, string logicalName) : base(logicalName, id) { }
 
         /// <summary>
         /// Select specific entity with given id value using specified IOrganizationService
         /// </summary>
         /// <param name="id">Guid of entity to select</param>
         /// <param name="service">CRM system to fetch entity from</param>
+        /// <param name="logicalName">entity for which to create a fluent entity.</param>
         /// <returns>FluentCRM subclass - returns even if ID does not exist.</returns>
         public static IEntitySet Entity(Guid id, IOrganizationService service, string logicalName)
         {
